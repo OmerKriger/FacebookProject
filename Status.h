@@ -8,7 +8,7 @@ Notes:
 Everything in note is need to set/finish
 things only for first setup right now
 TODO List:
-0. forward declartion and complete signatures of method inside ()
+0. forward declartion and complete signatures of method inside () (partly completed)
 1. Constructors
 2. add setters/getters
 3. writing methods functions

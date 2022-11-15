@@ -143,11 +143,13 @@
     <ClCompile Include="Pages.cpp" />
     <ClCompile Include="Person.cpp" />
     <ClCompile Include="Status.cpp" />
+    <ClCompile Include="supportFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Page.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Status.h" />
+    <ClInclude Include="supportFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

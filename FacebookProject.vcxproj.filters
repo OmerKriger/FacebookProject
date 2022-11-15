@@ -27,6 +27,9 @@
     <ClCompile Include="Status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="supportFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Person.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Status.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="supportFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

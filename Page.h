@@ -26,6 +26,7 @@ public:
 	bool removeFan(char* fName);
 	bool showFans();
 	bool addStatus();
+	const char* getName();
 
 private:
 	char* name;
@@ -35,7 +36,7 @@ private:
 	Status** wall;
 	unsigned int logSizeWall;
 	unsigned int phySizeWall;
-	bool setName(char* str); // will be inside use (private) for constructors
+	bool setName(char* str); // will be use inside constructors  (why private) 
 };
 
 

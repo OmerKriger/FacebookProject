@@ -19,18 +19,18 @@ TODO List:
 class Status
 {
 public:
-	enum sType { text,photo,video };
+	enum sType { tText,tPhoto,tVideo };
 	/*
 	Constructors
 	*/
-	bool setTime(time_t time);
+	bool setTime(); // set the currect time
 	time_t getTime();
-	bool setText(char* str, sType statusType = text);
+	bool setText(char* str, sType type);
 	const char* getText();
 private:
 	time_t timestamp;
-	char* Text;
-	unsigned char statusType; // default value will be text for text status
+	char* text; // status text
+	sType statusType; // default value will be text for text status
 };
 
 

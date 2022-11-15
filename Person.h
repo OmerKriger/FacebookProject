@@ -6,10 +6,10 @@ Notes:
 Everything in note is need to set/finish 
 things only for first setup right now
 TODO:
-0. forward declartion and complete signatures of method inside ()    (partly completed, need to figure out addStatus)
-1. Constructors
-2. add setters/getters
-3. writing methods functions
+0. forward declartion and complete signatures of method inside || (Done) || for Nir double check it that everything is really done
+1. add setters/getters
+2. writing methods functions
+3. Constructors
 */
 
 class Status;
@@ -26,8 +26,8 @@ public:
 	bool removeFriend(Person* dFriend);
 	bool searchFriend(char* fName);
 	bool addPage(Page* newPage);
-	bool showMyStatus(const Status& myStatus); // const by ref so we could not change the status and save space. 
-	bool addStatus(); // self status, we need to think about how to hande it with different status types.
+	bool showMyStatus(const Status& myStatus); // const by ref so we could not change the status and save space.
+	bool addStatus(); // i think we should send from inside this function to outter function that will deal with types and in this function we will handle only with the types and change calls
 private:
 	char* name;
 	int birthDay;
@@ -43,7 +43,7 @@ private:
 	unsigned int phySizeMyStatus; // set to zero
 	unsigned int phySizeFriendsStatus; // set to zero
 	unsigned int phySizeInterestInPages; // set to zero
-	bool postStatus;
+	bool postStatus();
 };
 
 

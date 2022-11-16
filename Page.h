@@ -12,7 +12,7 @@ TODO List:
 3. Constructors
 */
 
-class Person;
+class Member;
 class Status;
 
 class Page
@@ -21,8 +21,7 @@ public:
 	/*
 	Constructors
 	*/
-	bool addFan(Person* Friend);
-	bool searchFriend(char* fName);
+	bool addFan(Member* Friend);
 	bool removeFan(char* fName);
 	bool showFans();
 	bool addStatus();
@@ -30,13 +29,15 @@ public:
 
 private:
 	char* name;
-	Person** Fans;
+	Member** Fans;
 	unsigned int logSizeFans;
 	unsigned int phySizeFans;
 	Status** wall;
 	unsigned int logSizeWall;
 	unsigned int phySizeWall;
 	bool setName(char* str); // will be use inside constructors  (why private) 
+	bool searchFan(char* fName);
+
 };
 
 

@@ -141,13 +141,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pages.cpp" />
-    <ClCompile Include="Person.cpp" />
+    <ClCompile Include="Member.cpp" />
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="supportFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Page.h" />
-    <ClInclude Include="Person.h" />
+    <ClInclude Include="Member.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="supportFunctions.h" />
   </ItemGroup>

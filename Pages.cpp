@@ -1,11 +1,11 @@
 #include "Page.h"
-#include "Person.h"
+#include "Member.h"
 #include "supportFunctions.h"
 #include <iostream>
 using namespace std;
 
-bool Page::addFan(Person* Friend) {}
-bool Page::searchFriend(char* fName) {}
+bool Page::addFan(Member* Friend) {}
+bool Page::searchFan(char* fName) {}
 bool Page::removeFan(char* fName) {}
 bool Page::showFans() {}
 bool Page::addStatus() {}
@@ -32,8 +32,3 @@ const char* Page::getName()
 {
 	return name;
 }
-
-
-
-
-

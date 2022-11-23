@@ -3,14 +3,22 @@
 #include "supportFunctions.h"
 #include <iostream>
 using namespace std;
+#include "supportFunctions.h"
+Page::Page(const char* name)
+{
+	this->name = _strdup(name);
+	logSizeWall = logSizeFans = phySizeFans = phySizeWall = 0;
+	fans = nullptr;
+	wall = nullptr;
+}
 
-bool Page::addFan(Member* Friend) {}
-bool Page::searchFan(char* fName) {}
-bool Page::removeFan(char* fName) {}
-bool Page::showFans() {}
-bool Page::addStatus() {}
+bool Page::addFan(Member* Friend) { return 0; }
+bool Page::searchFan(char* name) { return 0; }
+bool Page::removeFan(char* name) { return 0; }
+bool Page::showFans() { return 0; }
+bool Page::addStatus() { return 0; }
 
-bool Page::setName(char* str)
+bool Page::setName(const char* str)
 {
 	if (name != nullptr)
 	{
@@ -28,7 +36,7 @@ bool Page::setName(char* str)
 		return checkAllocate(name);
 	}
 }
-const char* Page::getName() 
+const char* Page::getName() const
 {
 	return name;
 }

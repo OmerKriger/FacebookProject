@@ -16,13 +16,12 @@ class Facebook
 	Facebook(Facebook&);
 public:
 	Facebook();
+	~Facebook();
 	void __Init__();
 	bool createMember(const char* name, int day, int month, int year);
 	bool createFanPage(const char* name);
-	void showAllFriends() const;
+	void showAllMembers() const;
 	void showAllPages() const;
-	bool menu(char selection);
-	void printMenu() const;
 };
 
 #endif

@@ -7,6 +7,7 @@ using namespace std;
 #include "Date.h"
 #define MATCH 0
 
+
 Facebook::Facebook()
 {
 	lSizeMembers = lSizeFanPages = pSizeFanPages = pSizeMembers = 0;
@@ -16,7 +17,12 @@ Facebook::Facebook()
 
 Facebook::~Facebook()
 {
-	// need to complete
+	for (int i = 0; i < lSizeFanPages; i++)
+		delete fanPages[i];
+	delete[] fanPages;
+	for (int i = 0; i < lSizeFanPages; i++)
+		delete members[i];
+	delete[] members;
 }
 
 void Facebook::__Init__()
@@ -40,11 +46,10 @@ bool Facebook::addSpaceForMembers()
 	Member** pNewMembers = new Member* [newSize];
 	if (checkAllocate(pNewMembers) == false)
 		return false;
-	if (members == nullptr)
-		members = pNewMembers;
-	else
-		for (int i = 0; i < lSizeMembers; i++)
+	if (members != nullptr)
+		for (int i = 0; i < lSizeMembers ; i++)
 			pNewMembers[i] = members[i];
+	members = pNewMembers;
 	pSizeMembers = newSize;
 	return true;
 }
@@ -59,11 +64,10 @@ bool Facebook::addSpaceForFanPages()
 	Page** pNewPages = new Page * [newSize];
 	if (checkAllocate(pNewPages) == false)
 		return false;
-	if (fanPages == nullptr)
-		fanPages = pNewPages;
-	else
+	if (fanPages != nullptr)
 		for (int i = 0; i < lSizeMembers; i++)
 			pNewPages[i] = fanPages[i];
+	fanPages = pNewPages;
 	pSizeFanPages = newSize;
 	return true;
 }
@@ -111,43 +115,18 @@ bool Facebook::createFanPage(const char* name)
 	return true;
 }
 
-bool Facebook::menu(char selection) 
+void Facebook::showAllMembers() const 
 {
-	switch(selection)
-	{
-	case 1: break;
-	case 2: break;
-	case 3: break;
-	case 4: break;
-	case 5: break;
-	case 6: break;
-	case 7: break;
-	case 8: break;
-	case 9: break;
-	case 10: break;
-	case 11: break;
-	case 12: break;
-	default:
-		return false;
-	}
-	return true;
+	cout << "All Members in Facebook:" << endl;
+	for (int i = 0; i < lSizeMembers; i++)
+		cout << "Member #" << i+1 << ": " << members[i]->getName() << endl;
+	cout << "---- End of Member List ----" << endl << endl;
 }
 
-void Facebook::printMenu() const 
+void Facebook::showAllPages() const 
 {
-	cout << "1 - create Member: " << endl; // V
-	cout << "2 - create Page: " << endl; // V
-	cout << "3 - create Status: " << endl; // X
-	cout << "4 - Show of Friend/Page Status: " << endl; 
-	cout << "5 - Show of Friens 10 Latest Status: " << endl;
-	cout << "6 - friend" << endl;
-	cout << "7 - Unfriend" << endl;
-	cout << "8 - add member to page:" << endl;
-	cout << "9 - remove members from page:" << endl;
-	cout << "10 - show all friends:" << endl;
-	cout << "11 - show friends of friend:" << endl;
-	cout << "12 - exit" << endl;
-	}
-
-void Facebook::showAllFriends() const {}
-void Facebook::showAllPages() const {}
+	cout << "All Pages in Facebook:" << endl;
+	for (int i = 0; i < lSizeFanPages; i++)
+		cout << "Fan Page #" << i + 1 << ": " << fanPages[i]->getName() << endl;
+	cout << "---- End of Fan Page List ----" << endl << endl;
+}

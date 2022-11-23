@@ -11,12 +11,12 @@ bool Status::setTime()
 		return true;
 }
 
-time_t Status::getTime() 
+const time_t& Status::getTime() const
 {
-	return timestamp;
+	return time;
 }
 
-bool Status::setText(char* str, sType type = tText) 
+bool Status::setText(char* str, sType type = tText)
 {
 	if (text != nullptr)
 	{
@@ -41,7 +41,7 @@ bool Status::setText(char* str, sType type = tText)
 
 }
 
-const char* Status::getText() 
+const char* Status::getText() const 
 {
 	return text;
 }

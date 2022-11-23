@@ -15,7 +15,7 @@ Page::Page(const char* name)
 bool Page::addFan(Member* Friend) { return 0; }
 bool Page::searchFan(char* name) { return 0; }
 bool Page::removeFan(char* name) { return 0; }
-bool Page::showFans() { return 0; }
+void Page::showFans() const { }
 bool Page::addStatus() { return 0; }
 
 bool Page::setName(const char* str)

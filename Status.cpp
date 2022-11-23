@@ -1,10 +1,27 @@
 #include "Status.h"
 #include "supportFunctions.h"
 #pragma warning(disable : 4996)
+
+Status::Status(const char* text, Date date, sType statusType)
+{
+	if (statusType == tText) // right now only text status
+	{
+		this->statusType = tText;
+		setText(text, statusType);
+	}
+	this->date = date;
+	time = setTime();
+}
+
+Status::~Status()
+{
+	delete[] text;
+}
+
 bool Status::setTime() 
 {
-	char* Test = ctime(&timestamp);
-	cout << "Status Time set to " << timestamp << endl << "Test: " << Test << endl; // test after run can be removed
+	char* Test = ctime(&time);
+	cout << "Status Time set to " << time << endl << "Test: " << Test << endl; // test after run can be removed
 	if (Test == nullptr)
 		return false;
 	else
@@ -16,7 +33,7 @@ const time_t& Status::getTime() const
 	return time;
 }
 
-bool Status::setText(char* str, sType type = tText)
+bool Status::setText(const char* str, sType type = tText)
 {
 	if (text != nullptr)
 	{
@@ -30,13 +47,13 @@ bool Status::setText(char* str, sType type = tText)
 	}
 	else if (statusType != tText)
 	{
-		cout << "This status Type isn't support right now\n";
+		cout << "This status Type isn't supported right now\n";
 		return false;
 	}
 	else
 	{
 		text = _strdup(str);
-		return checkAllocate(time);
+		return checkAllocate(text);
 	}
 
 }
@@ -44,4 +61,9 @@ bool Status::setText(char* str, sType type = tText)
 const char* Status::getText() const 
 {
 	return text;
+}
+
+const Date& Status::getDate() const
+{
+	return date;
 }

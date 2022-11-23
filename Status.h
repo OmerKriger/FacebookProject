@@ -24,12 +24,12 @@ private:
 	char* text; // status text
 	sType statusType; // default value will be text for text status
 	bool setTime(); // set the currect time
-	bool setText(char* str, sType type);
+	bool setText(const char* str, sType type);
 	Status(Status&);
 public:
 	Status() = delete;
-	Status(const char* text, Date date); // ---
-	~Status(); // ---
+	Status(const char* text, Date date, sType statusType);
+	~Status();
 	const time_t& getTime() const;
 	const Date& getDate() const; // ---
 	const char* getText() const;

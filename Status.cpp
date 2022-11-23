@@ -2,15 +2,16 @@
 #include "supportFunctions.h"
 #pragma warning(disable : 4996)
 
-Status::Status(const char* text, Date date, sType statusType)
+Status::Status(const char* text, sType statusType = sType::tText)
 {
-	if (statusType == tText) // right now only text status
+	if (statusType != sType::tText) // right now only text status
 	{
-		this->statusType = tText;
+		this->statusType = sType::tText;
 		setText(text, statusType);
 	}
+	Date date;
 	this->date = date;
-	time = setTime();
+	setTime();
 }
 
 Status::~Status()
@@ -33,7 +34,7 @@ const time_t& Status::getTime() const
 	return time;
 }
 
-bool Status::setText(const char* str, sType type = tText)
+bool Status::setText(const char* str, sType type = sType::tText)
 {
 	if (text != nullptr)
 	{
@@ -45,7 +46,7 @@ bool Status::setText(const char* str, sType type = tText)
 		cout << "Status can't be empty\n";
 		return false;
 	}
-	else if (statusType != tText)
+	else if (statusType != sType::tText)
 	{
 		cout << "This status Type isn't supported right now\n";
 		return false;

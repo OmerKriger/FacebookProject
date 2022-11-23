@@ -16,7 +16,12 @@ Facebook::Facebook()
 
 Facebook::~Facebook()
 {
-	// need to complete
+	for (int i = 0; i < lSizeFanPages; i++)
+		delete fanPages[i];
+	delete[] fanPages;
+	for (int i = 0; i < lSizeFanPages; i++)
+		delete members[i];
+	delete[] members;
 }
 
 void Facebook::__Init__()
@@ -147,5 +152,18 @@ void Facebook::printMenu() const
 	cout << "12 - exit" << endl;
 	}
 
-void Facebook::showAllFriends() const {}
-void Facebook::showAllPages() const {}
+void Facebook::showAllMembers() const 
+{
+	cout << "All Members in Facebook:" << endl;
+	for (int i = 0; i < lSizeMembers; i++)
+		cout << "Member #" << i+1 << ": " << members[i]->getName() << endl;
+	cout << "---- End of Member List ----" << endl << endl;
+}
+
+void Facebook::showAllPages() const 
+{
+	cout << "All Pages in Facebook:" << endl;
+	for (int i = 0; i < lSizeFanPages; i++)
+		cout << "Fan Page #" << i + 1 << ": " << fanPages[i]->getName() << endl;
+	cout << "---- End of Fan Page List ----" << endl << endl;
+}

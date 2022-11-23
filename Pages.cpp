@@ -3,6 +3,7 @@ using namespace std;
 #include "Page.h"
 #include "Member.h"
 #include "Date.h"
+#include "Status.h"
 #include "supportFunctions.h"
 #define NOT_FOUND -1
 #define MATCH 0
@@ -84,17 +85,24 @@ bool Page::removeFan(const char* name)
 		return false;
 	fans[index] = fans[lSizeFans - 1];
 	lSizeFans--;
+	return true;
 }
 void Page::showFans() const 
 {
 	cout << "The Fan List of Page " << name << ":" << endl;
-	for (int i = 1; i <= lSizeFans; i++)
-		cout << "Fan #" << i << ": " << fans[i]->getName() << endl;
+	for (int i = 0; i <= lSizeFans; i++)
+		cout << "Fan #" << i+1 << ": " << fans[i]->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
 }
-bool Page::addStatus(const char* str) 
+bool Page::addStatus(const char* str)
 { 
-
+	Status* status = new Status(str,sType::tText);
+	if (pSizeWall <= lSizeWall + 1)
+		if (addSpaceInWall() == false)
+			return false;
+	wall[lSizeWall] = status;
+	lSizeFans++;
+	return true;
 }
 bool Page::setName(const char* str)
 {

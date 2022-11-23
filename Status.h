@@ -5,36 +5,23 @@
 using namespace std;
 #include "Date.h"
 
-/*
-Notes:
-Everything in note is need to set/finish
-things only for first setup right now
-TODO List:
-1. add setters/getters
-2. writing methods functions
-3. Constructors
-*/
+enum class sType { tText, tPhoto, tVideo };
 class Status
 {
-public:
-	enum sType { tText, tPhoto, tVideo };
-private:
 	time_t time;
 	Date date;
-	char* text; // status text
+	char* text;
 	sType statusType; // default value will be text for text status
 	bool setTime(); // set the currect time
 	bool setText(const char* str, sType type);
 	Status(Status&);
 public:
 	Status() = delete;
-	Status(const char* text, Date date, sType statusType);
 	~Status();
+	Status(const char* text, sType statusType);
 	const time_t& getTime() const;
-	const Date& getDate() const; // ---
+	const Date& getDate() const;
 	const char* getText() const;
-
-
 };
 
 

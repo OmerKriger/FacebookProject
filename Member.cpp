@@ -2,13 +2,21 @@
 #include "Page.h"
 #include "Status.h"
 #include "supportFunctions.h"
-
+#include "Date.h"
 #define DAY_SHIFT 1000000
 #define MONTH_SHIFT 10000
 #define YEAR_SHIFT 1
 #define MAX_FRIEND_LATEST_STATUS 10
 #define MATCH_STRING 0
 #define NOT_FOUND -1
+
+// C'tors in Members
+
+Member::Member(const char* name, Date bDay)
+{
+	setName(name);
+	
+}
 
 // Friends functions in Member
  
@@ -20,29 +28,22 @@ bool Member::addFriend(Member* newFriend)
 		addSpaceFriendList();
 	friends[logSizeFriends] = newFriend;
 	logSizeFriends++;
+	/*
+	Place to put somecode for remove the friendship from the friend
+	*/
 	return true;
 }
-bool Member::removeFriend(Member* dFriend) 
+bool Member::removeFriend(Member* Friend) 
 {
-	int indexOfFriend = searchFriend(dFriend->name);
+	int indexOfFriend = searchFriend(Friend->name);
 	if (indexOfFriend != NOT_FOUND) // we can't remove friend who is not in friends
 		return false;
-	Member** newFriendArr = nullptr;
-	if (phySizeFriends / 2 >= logSizeFriends - 1)
-	{
-		newFriendArr = new Member * [phySizeFriends / 2];
-		if (checkAllocate(newFriendArr) == false)
-			return false;
-		else
-			phySizeFriends /= 2;
-		for (int i = 0 ; i < indexOfFriend; i++)
-			newFriendArr[i] = friends[i];
-	}
-	else
-		newFriendArr = friends;
-
-	for (int i = indexOfFriend; i < logSizeFriends-1; i++)
-		newFriendArr[i] = friends[i+1];
+	friends[indexOfFriend] = friends[logSizeFriends - 1];
+	logSizeFriends--;
+	/*
+	Place to put somecode for remove the friendship from the friend
+	*/
+	return true;
 }
 int Member::searchFriend(char* fName) 
 {
@@ -85,8 +86,8 @@ void Member::showMyStatus()
 	}
 } 
 
-bool Member::addStatus() {}
-bool Member::postStatus() {}
+bool Member::addStatus() { return 0; }
+bool Member::postStatus() { return 0; }
 
 // add space to lists functions
 bool Member::addSpaceFriendList()
@@ -153,9 +154,8 @@ bool Member::addSpaceInterestPagesList()
 //	return allocateSuccess;
 //} 
 
-
 // setters/getters
-bool Member::setName(char* str)
+bool Member::setName(const char* str)
 {
 	if (name != nullptr)
 	{
@@ -173,23 +173,9 @@ bool Member::setName(char* str)
 		return checkAllocate(name);
 	}
 }
-const char* Member::getName()
+const char* Member::getName() const
 {
 	return name;
-}
-bool Member::setBirthDay(int day, int month, int year)
-{
-	if (birthDay != -1)
-	{
-		birthDay = day * DAY_SHIFT + month * MONTH_SHIFT + year*YEAR_SHIFT;
-		return true;
-	}
-	else
-	{
-		cout << "Birthday date is already setted and can't be change\n";
-		return false;
-	}
-
 }
 
 

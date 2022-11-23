@@ -18,25 +18,25 @@ class Status;
 class Page
 {
 public:
+	Page() = delete;
+	Page(const char* name);
 	/*
-	Constructors
+	Constructors - move/copy ?
 	*/
 	bool addFan(Member* Friend);
-	bool removeFan(char* fName);
+	bool removeFan(char* name);
 	bool showFans();
 	bool addStatus();
-	const char* getName();
+	const char* getName() const;
 
 private:
 	char* name;
-	Member** Fans;
-	unsigned int logSizeFans;
-	unsigned int phySizeFans;
+	Member** fans;
+	int logSizeFans, phySizeFans;
 	Status** wall;
-	unsigned int logSizeWall;
-	unsigned int phySizeWall;
-	bool setName(char* str); // will be use inside constructors  (why private) 
-	bool searchFan(char* fName);
+	int logSizeWall, phySizeWall;
+	bool setName(const char* str); // will be use inside constructors  (why private) 
+	bool searchFan(char* name);
 
 };
 

@@ -18,20 +18,22 @@ TODO:
 
 class Status;
 class Page; 
-
+class Date;
 
 class Member
 { 
 public:
+	Member() = delete;
+	Member(const char* name, Date bDay);
 	/*
-	Constructors (destroy copy make)
+	Constructors (destroy ,copy ,move(?))
 	*/
 	bool addFriend(Member* newFriend); // we can update the to objects with a pointer to the friend
 	bool removeFriend(Member* dFriend);
 	bool addPage(Page* newPage);
 	void showMyStatus();
 	bool addStatus(); // i think we should send from inside this function to outter function that will deal with types and in this function we will handle only with the types and change calls
-	const char* getName();
+	const char* getName() const;
 private:
 	char* name;
 	int birthDay; // maybe we will change use for time_t type later
@@ -40,21 +42,15 @@ private:
 	unsigned char F_S_newestStatusIndex; // set to zero (this index will show us where is the newest status without overwrite the order of array
 	Page** InterestPages; //= nullptr to set in c'tor
 	Member** friends; // arr of pointers to Members friends, set to nullptr
-	unsigned int logSizeFriends; // set to zero
-	unsigned int logSizeMyStatus; // set to zero
-	unsigned int logSizeFriendsStatus; // set to zero
-	unsigned int logSizeInterestPages; // set to zero
-	unsigned int phySizeFriends; // set to zero
-	unsigned int phySizeMyStatus; // set to zero
-	unsigned int phySizeInterestPages; // set to zero
+	unsigned int logSizeFriends , logSizeMyStatus, logSizeFriendsStatus, logSizeInterestPages; // set to zero
+	unsigned int phySizeFriends , phySizeMyStatus, phySizeInterestPages; // set to zero
 	bool postStatus();
 	bool addSpaceFriendList();
 	bool addSpaceMyStatusList();
 	bool addSpaceInterestPagesList();
 	int searchFriend(char* fName);
 	int searchPage(const char* pName);
-	bool setName(char* str);
-	bool setBirthDay(int day, int month, int year);
+	bool setName(const char* str);
 };
 
 

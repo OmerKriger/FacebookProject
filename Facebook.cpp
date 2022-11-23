@@ -7,6 +7,7 @@ using namespace std;
 #include "Date.h"
 #define MATCH 0
 
+
 Facebook::Facebook()
 {
 	lSizeMembers = lSizeFanPages = pSizeFanPages = pSizeMembers = 0;
@@ -113,44 +114,6 @@ bool Facebook::createFanPage(const char* name)
 	lSizeFanPages++;
 	return true;
 }
-
-bool Facebook::menu(char selection) 
-{
-	switch(selection)
-	{
-	case 1: break;
-	case 2: break;
-	case 3: break;
-	case 4: break;
-	case 5: break;
-	case 6: break;
-	case 7: break;
-	case 8: break;
-	case 9: break;
-	case 10: break;
-	case 11: break;
-	case 12: break;
-	default:
-		return false;
-	}
-	return true;
-}
-
-void Facebook::printMenu() const 
-{
-	cout << "1 - create Member: " << endl; // V
-	cout << "2 - create Page: " << endl; // V
-	cout << "3 - create Status: " << endl; // X
-	cout << "4 - Show of Friend/Page Status: " << endl; 
-	cout << "5 - Show of Friens 10 Latest Status: " << endl;
-	cout << "6 - friend" << endl;
-	cout << "7 - Unfriend" << endl;
-	cout << "8 - add member to page:" << endl;
-	cout << "9 - remove members from page:" << endl;
-	cout << "10 - show all friends:" << endl;
-	cout << "11 - show friends of friend:" << endl;
-	cout << "12 - exit" << endl;
-	}
 
 void Facebook::showAllMembers() const 
 {

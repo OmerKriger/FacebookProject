@@ -22,8 +22,6 @@ public:
 	bool createFanPage(const char* name);
 	void showAllMembers() const;
 	void showAllPages() const;
-	bool menu(char selection);
-	void printMenu() const;
 };
 
 #endif

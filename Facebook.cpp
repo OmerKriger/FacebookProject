@@ -27,6 +27,7 @@ void Facebook::__Init__()
 	createFanPage("Eduardo Saverin");
 	createFanPage("Nike");
 	createFanPage("Google");
+	// need add init for status and connections to friends and pages
 }
 
 bool Facebook::addSpaceForMembers() 
@@ -132,18 +133,21 @@ bool Facebook::menu(char selection)
 	return true;
 }
 
-void Facebook::printMenu() 
+void Facebook::printMenu() const 
 {
-	cout << "1 - create Member: " << endl;
-	cout << "2 - create Page: " << endl;
-	cout << "3 - create Status: " << endl;
-	cout << "4 - Show of Friend/Page Status: " << endl;
+	cout << "1 - create Member: " << endl; // V
+	cout << "2 - create Page: " << endl; // V
+	cout << "3 - create Status: " << endl; // X
+	cout << "4 - Show of Friend/Page Status: " << endl; 
 	cout << "5 - Show of Friens 10 Latest Status: " << endl;
-	cout << "6 - Make two members friends:" << endl;
-	cout << "7 - remove two members from be friends:" << endl;
+	cout << "6 - friend" << endl;
+	cout << "7 - Unfriend" << endl;
 	cout << "8 - add member to page:" << endl;
 	cout << "9 - remove members from page:" << endl;
 	cout << "10 - show all friends:" << endl;
 	cout << "11 - show friends of friend:" << endl;
 	cout << "12 - exit" << endl;
 	}
+
+void Facebook::showAllFriends() const {}
+void Facebook::showAllPages() const {}

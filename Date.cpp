@@ -2,6 +2,13 @@
 using namespace std;
 #include "Date.h"
 
+Date::Date()
+{
+	this->day = 07;
+	this->month = 01;
+	this->year = 2022;
+	// default date from now
+}
 Date::Date(int day, int month, int year)
 {
 	this->day = day;

@@ -5,7 +5,7 @@ class Date
 {
 	int day, month, year;
 public:
-	Date() = delete;
+	Date();
 	Date(int day, int month, int year);
 	bool setDate(int day,int month,int year);
 	bool setDay(int day);
@@ -15,5 +15,4 @@ public:
 	int getMonth() { return month; }
 	int getYear() { return year; }
 };
-
 #endif

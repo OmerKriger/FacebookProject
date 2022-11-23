@@ -20,23 +20,22 @@ class Page
 	char* name;
 	Member** fans;
 	Status** wall;
-	int logSizeFans, phySizeFans;
-	int logSizeWall, phySizeWall;
+	int lSizeFans, pSizeFans;
+	int lSizeWall, pSizeWall;
 	bool setName(const char* str);
-	bool searchFan(char* name);
+	int searchFan(const char* name);
+	bool addSpaceInFans();
+	bool addSpaceInWall();
 	Page(const Page&);
 public:
 	Page() = delete;
 	Page(const char* name);
-	~Page(); // ---
-	bool addFan(Member* Friend);
-	bool removeFan(char* name);
+	~Page();
+	bool addFan(Member* member);
+	bool removeFan(const char* name);
 	void showFans() const;
-	bool addStatus();
+	bool addStatus(const char* str);
 	const char* getName() const;
-
-
-
 };
 
 

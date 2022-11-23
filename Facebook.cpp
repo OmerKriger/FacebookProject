@@ -40,11 +40,10 @@ bool Facebook::addSpaceForMembers()
 	Member** pNewMembers = new Member* [newSize];
 	if (checkAllocate(pNewMembers) == false)
 		return false;
-	if (members == nullptr)
-		members = pNewMembers;
-	else
-		for (int i = 0; i < lSizeMembers; i++)
+	if (members != nullptr)
+		for (int i = 0; i < lSizeMembers ; i++)
 			pNewMembers[i] = members[i];
+	members = pNewMembers;
 	pSizeMembers = newSize;
 	return true;
 }
@@ -59,11 +58,10 @@ bool Facebook::addSpaceForFanPages()
 	Page** pNewPages = new Page * [newSize];
 	if (checkAllocate(pNewPages) == false)
 		return false;
-	if (fanPages == nullptr)
-		fanPages = pNewPages;
-	else
+	if (fanPages != nullptr)
 		for (int i = 0; i < lSizeMembers; i++)
 			pNewPages[i] = fanPages[i];
+	fanPages = pNewPages;
 	pSizeFanPages = newSize;
 	return true;
 }

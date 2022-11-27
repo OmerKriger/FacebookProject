@@ -2,7 +2,7 @@
 using namespace std;
 #include "supportFunctions.h"
 #include "Facebook.h"
-
+#include <string.h>
 
 void printMenu()
 {
@@ -82,4 +82,15 @@ void actionsForMenu(char selection, Facebook& facebook)
 	default:
 		cout << "** Your choice isn't in the menu, please try again **" << endl << endl;
 	}
+}
+
+void* mRealloc(void* ptr, int newSize, int oldSize)
+{
+	// might be problematic without sizeof()
+	void* newPtr = new void* [newSize];
+	if (!checkAllocate(newPtr))
+		return nullptr;
+	newPtr = memcpy(newPtr, ptr, sizeof(void*));
+	delete[] ptr;
+	return newPtr;
 }

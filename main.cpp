@@ -3,6 +3,7 @@ using namespace std;
 #include "Facebook.h"
 #include "supportFunctions.h"
 #define TEST 1 // TEST == 0 is no test setup
+#define STATUS_TEST 0 
 #include "Status.h"
 
 int main()
@@ -27,11 +28,12 @@ int main()
 	delete facebook;
 	
 
-	// tests need to reverse everything later
-	char text[12] = "hello world";
-	Status s1(text, sType::tText);
-	s1.showStatus();
-	
+	if (STATUS_TEST)
+	{
+		char text[12] = "hello world";
+		Status s1(text, sType::tText);
+		s1.showStatus();
+	}
 
 }
 

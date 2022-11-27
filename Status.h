@@ -17,8 +17,8 @@ class Status
 	Status(Status&);
 public:
 	Status() = delete;
-	~Status();
 	Status(const char* text, sType statusType);
+	~Status();
 	//const time_t& getTime() const;
 	//const char* getTime() const;
 	const Date& getDate() const;

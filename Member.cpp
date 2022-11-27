@@ -15,7 +15,13 @@
 Member::Member(const char* name, Date bDay)
 {
 	setName(name);
-	
+	birthDay = bDay;
+	myStatus = nullptr;
+	F_S_newestStatusIndex = 0;
+	InterestPages = nullptr;
+	friends = nullptr;
+	logSizeFriends = logSizeMyStatus = logSizeFriendsStatus = logSizeInterestPages = 0;
+	phySizeFriends = phySizeMyStatus = phySizeInterestPages = 0;
 }
 
 // Friends functions in Member
@@ -24,7 +30,7 @@ bool Member::addFriend(Member* newFriend)
 {
 	if (searchFriend(newFriend->name) == NOT_FOUND) // we can't add friend already in friends
 		return false;
-	if (phySizeFriends <= logSizeFriends + 1)
+	if (phySizeFriends <= logSizeFriends)
 		addSpaceFriendList();
 	friends[logSizeFriends] = newFriend;
 	logSizeFriends++;
@@ -66,7 +72,7 @@ bool Member::addPage(Page* newPage)
 {
 	if (searchPage(newPage->getName()) == NOT_FOUND) // we can't add friend already in friends
 		return false;
-	if (phySizeInterestPages <= logSizeInterestPages + 1)
+	if (phySizeInterestPages <= logSizeInterestPages)
 		addSpaceFriendList();
 	InterestPages[logSizeInterestPages] = newPage;
 	logSizeInterestPages++;
@@ -86,7 +92,16 @@ void Member::showMyStatus()
 	}
 } 
 
-bool Member::addStatus() { return 0; }
+bool Member::addStatus(const char* text, sType type)
+{
+	if (phySizeMyStatus <= logSizeMyStatus)
+		addSpaceMyStatusList();
+	Status* status = new Status(text, type);
+	myStatus[logSizeMyStatus] = status;
+	logSizeMyStatus++;
+	return true;
+}
+
 bool Member::postStatus() { return 0; }
 
 // add space to lists functions
@@ -95,13 +110,21 @@ bool Member::addSpaceFriendList()
 	int newSize;
 	if (phySizeFriends == 0)
 		newSize = 1;
-	else
-		newSize = phySizeFriends*2;
 
-	friends = new Member * [newSize];
+	else
+		newSize = phySizeFriends * 2;
+	Member** newFriends = new Member * [newSize];
+	for (int i = 0; i < logSizeFriends; i++)
+		newFriends[i] = friends[i];
+
+
 	bool allocateSuccess = checkAllocate(friends);
 	if (allocateSuccess)
+	{
 		phySizeFriends = newSize;
+		delete[] friends;
+		friends = newFriends;
+	}
 	return allocateSuccess;
 }
 bool Member::addSpaceMyStatusList()
@@ -112,10 +135,17 @@ bool Member::addSpaceMyStatusList()
 	else
 		newSize = phySizeMyStatus * 2;
 
-	myStatus = new Status * [newSize];
-	bool allocateSuccess = checkAllocate(myStatus);
+	Status** newMyStatus = new Status * [newSize];
+	for (int i = 0; i < logSizeMyStatus; i++)
+		newMyStatus[i] = myStatus[i];
+
+	bool allocateSuccess = checkAllocate(newMyStatus);
 	if (allocateSuccess)
+	{
 		phySizeMyStatus = newSize;
+		delete[] myStatus;
+		myStatus = newMyStatus;
+	}
 	return allocateSuccess;
 }
 bool Member::addSpaceInterestPagesList()
@@ -126,10 +156,17 @@ bool Member::addSpaceInterestPagesList()
 	else
 		newSize = phySizeInterestPages * 2;
 
-	InterestPages = new Page * [newSize];
+	Page ** newInterestPages = new Page * [newSize];
+	for (int i = 0; i < logSizeInterestPages; i++)
+		newInterestPages[i] = InterestPages[i];
+
 	bool allocateSuccess = checkAllocate(InterestPages);
 	if (allocateSuccess)
+	{
 		phySizeInterestPages = newSize;
+		delete[] InterestPages;
+		InterestPages = newInterestPages;
+	}
 	return allocateSuccess;
 }
 // need to decide if remove or not

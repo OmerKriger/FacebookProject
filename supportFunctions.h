@@ -22,5 +22,5 @@ class Facebook;
 bool checkAllocate(void* ptr);
 void printMenu();
 void actionsForMenu(char selection, Facebook& facebook);
-
+void* mRealloc(void* ptr, int newSize, int oldSize);
 #endif

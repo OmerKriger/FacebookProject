@@ -25,20 +25,19 @@ class Member
 public:
 	Member() = delete;
 	Member(const char* name, Date bDay);
-	/*
-	Constructors (destroy ,copy ,move(?))
-	*/
+	//~Member(); need to add that.
+
 	bool addFriend(Member* newFriend); // we can update the to objects with a pointer to the friend
 	bool removeFriend(Member* dFriend);
 	bool addPage(Page* newPage);
 	void showMyStatus();
-	bool addStatus(); // i think we should send from inside this function to outter function that will deal with types and in this function we will handle only with the types and change calls
+	bool addStatus(const char* text, sType type); // i think we should send from inside this function to outter function that will deal with types and in this function we will handle only with the types and change calls
 	const char* getName() const;
 private:
 	char* name;
-	int birthDay; // maybe we will change use for time_t type later
+	Date birthDay; // changed it to DATE type
 	Status** myStatus;// =nullptr to set in c'tor
-	Status* FriendsStatus[MAX_FRIEND_LATEST_STATUS] = { nullptr }; // temp 
+	Status* FriendsStatus[MAX_FRIEND_LATEST_STATUS] = { nullptr };; // temp 
 	unsigned char F_S_newestStatusIndex; // set to zero (this index will show us where is the newest status without overwrite the order of array
 	Page** InterestPages; //= nullptr to set in c'tor
 	Member** friends; // arr of pointers to Members friends, set to nullptr

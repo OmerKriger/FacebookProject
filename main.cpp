@@ -3,9 +3,11 @@ using namespace std;
 #include "Facebook.h"
 #include "supportFunctions.h"
 #define TEST 1 // TEST == 0 is no test setup
+#include "Status.h"
 
 int main()
 {	
+	
 	Facebook* facebook = new Facebook;
 	if(TEST)
 		facebook->__Init__();
@@ -15,7 +17,7 @@ int main()
 	do
 	{
 		printMenu();
-		cout << "What is you choice ?: " << endl;
+		cout << "What is your choice ?: " << endl;
 		cin >> selection;
 		// system("cls"); after test maybe remove note
 		actionsForMenu(selection, *facebook);
@@ -23,5 +25,13 @@ int main()
 	} while (selection != EXIT);
 	
 	delete facebook;
+	
+
+	// tests need to reverse everything later
+	char text[12] = "hello world";
+	Status s1(text, sType::tText);
+	s1.showStatus();
+	
+
 }
 

@@ -4,14 +4,12 @@
 
 Status::Status(const char* text, sType statusType = sType::tText)
 {
-	if (statusType != sType::tText) // right now only text status
+	this->statusType = sType::tText;
+	if (statusType == sType::tText) // right now only text status
 	{
-		this->statusType = sType::tText;
 		setText(text, statusType);
 	}
-	Date date;
-	this->date = date;
-	setTime();
+	setDate();
 }
 
 Status::~Status()
@@ -19,21 +17,24 @@ Status::~Status()
 	delete[] text;
 }
 
-bool Status::setTime() 
+bool Status::setDate() 
 {
-	char* Test = ctime(&time);
-	cout << "Status Time set to " << time << endl << "Test: " << Test << endl; // test after run can be removed
-	if (Test == nullptr)
+	time_t now = time(NULL);
+	if (!now)
 		return false;
-	else
-		return true;
+	struct tm nowLocal;
+	nowLocal = *localtime(&now);
+	Date date(nowLocal.tm_mday, nowLocal.tm_mon + 1, nowLocal.tm_year + 1900, nowLocal.tm_min, nowLocal.tm_hour);
+	this->date = date;
+	return true;
 }
 
-const time_t& Status::getTime() const
+/* for now through date
+const char* Status::getTime() const
 {
-	return time;
+	return ;
 }
-
+*/
 bool Status::setText(const char* str, sType type = sType::tText)
 {
 	if (text != nullptr)
@@ -67,4 +68,12 @@ const char* Status::getText() const
 const Date& Status::getDate() const
 {
 	return date;
+}
+
+
+void Status::showStatus()
+{
+	cout << "date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << "\n";
+	cout << "time: " << date.getHours() << ":" << date.getMin() << "\n";
+	cout << "" << text;
 }

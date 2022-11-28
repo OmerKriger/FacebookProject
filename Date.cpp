@@ -11,7 +11,6 @@ Date::Date() // can't delete for some reason the build won't work
 	this->hours = 00;
 	// default date from now
 }
-
 Date::Date(int day, int month, int year)
 {
 	this->day = day;

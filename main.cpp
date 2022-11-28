@@ -2,11 +2,14 @@
 using namespace std;
 #include "Facebook.h"
 #include "supportFunctions.h"
+
+//#include "Status.h"
 #define TEST 1 // TEST == 0 is no test setup
 #define STATUS_TEST 0 
-#include "Status.h"
+
 
 int main()
+#include "supportFunctions.h"
 {	
 	
 	Facebook* facebook = new Facebook;
@@ -17,23 +20,24 @@ int main()
 	cout << "Welcome to Facebook !" << endl << endl;
 	do
 	{
+		cout << "--------------------------" << endl;
 		printMenu();
 		cout << "What is your choice ?: " << endl;
 		cin >> selection;
-		// system("cls"); after test maybe remove note
+		cin.get();
+		system("cls");
 		actionsForMenu(selection, *facebook);
 	
 	} while (selection != EXIT);
 	
 	delete facebook;
-	
 
-	if (STATUS_TEST)
+	/*if (STATUS_TEST)
 	{
 		char text[12] = "hello world";
 		Status s1(text, sType::tText);
 		s1.showStatus();
-	}
+	}*/
 
 }
 

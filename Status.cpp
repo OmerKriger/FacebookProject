@@ -1,6 +1,7 @@
+#include <iostream>
+using namespace std;
 #include "Status.h"
-#include "supportFunctions.h"
-#pragma warning(disable : 4996)
+
 
 Status::Status(const char* text, sType statusType = sType::tText)
 {
@@ -29,12 +30,6 @@ bool Status::setDate()
 	return true;
 }
 
-/* for now through date
-const char* Status::getTime() const
-{
-	return ;
-}
-*/
 bool Status::setText(const char* str, sType type = sType::tText)
 {
 	if (text != nullptr)
@@ -69,7 +64,6 @@ const Date& Status::getDate() const
 {
 	return date;
 }
-
 
 void Status::showStatus()
 {

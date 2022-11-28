@@ -1,3 +1,5 @@
+#include <iostream>
+using namespace std;
 #include "Member.h"
 #include "Page.h"
 #include "Status.h"
@@ -15,7 +17,22 @@
 Member::Member(const char* name, Date bDay)
 {
 	setName(name);
-	
+	birthDay = bDay;
+	myStatus = nullptr;
+	//F_S_newestStatusIndex = 0;
+	InterestPages = nullptr;
+	friends = nullptr;
+	logSizeFriends = logSizeMyStatus = logSizeFriendsStatus = logSizeInterestPages = 0;
+	phySizeFriends = phySizeMyStatus = phySizeInterestPages = 0;
+}
+Member::~Member()
+{
+	delete[] name;
+	for (int i = 0; i < logSizeMyStatus; i++)
+		delete myStatus[i];
+	delete[] myStatus;
+	delete[] InterestPages;
+	delete[] friends;
 }
 
 // Friends functions in Member
@@ -24,7 +41,7 @@ bool Member::addFriend(Member* newFriend)
 {
 	if (searchFriend(newFriend->name) == NOT_FOUND) // we can't add friend already in friends
 		return false;
-	if (phySizeFriends <= logSizeFriends + 1)
+	if (phySizeFriends <= logSizeFriends)
 		addSpaceFriendList();
 	friends[logSizeFriends] = newFriend;
 	logSizeFriends++;
@@ -47,14 +64,14 @@ bool Member::removeFriend(Member* Friend)
 }
 int Member::searchFriend(char* fName) 
 {
-	for (unsigned int i = 0; i < logSizeFriends; i++)
+	for (int i = 0; i < logSizeFriends; i++)
 		if (strcmp(friends[i]->name,fName) == MATCH_STRING)
 			return i; // return index (for right now returned value is really a bool)
-	return -1;
+	return NOT_FOUND;
 }
 int Member::searchPage(const char* pName)
 {
-	for (unsigned int i = 0; i < logSizeInterestPages; i++)
+	for (int i = 0; i < logSizeInterestPages; i++)
 		if (strcmp(InterestPages[i]->getName(), pName) == MATCH_STRING)
 			return i; // return index (for right now returned value is really a bool)
 	return -1;
@@ -62,46 +79,89 @@ int Member::searchPage(const char* pName)
 
 // Pages functions in Member
 
-bool Member::addPage(Page* newPage)
+bool Member::addPage(Page& newPage)
 {
-	if (searchPage(newPage->getName()) == NOT_FOUND) // we can't add friend already in friends
+	if (searchPage(newPage.getName()) != NOT_FOUND)
 		return false;
-	if (phySizeInterestPages <= logSizeInterestPages + 1)
-		addSpaceFriendList();
-	InterestPages[logSizeInterestPages] = newPage;
+	if (phySizeInterestPages <= logSizeInterestPages)
+		addSpaceInterestPagesList();
+	InterestPages[logSizeInterestPages] = &newPage;
 	logSizeInterestPages++;
+	// say to page add this friend to his list
+	newPage.addFan(this);
 	return true;
+}
+bool Member::removePage(const Page* dPage)
+{
+	int index = searchPage(dPage->getName());
+	if (index == NOT_FOUND)
+	{
+		cout << "This member isn't follow after this page !" << endl;
+		return false;
+	}
+	this->InterestPages[index] = this->InterestPages[logSizeInterestPages - 1];
+	logSizeInterestPages--;
+	return true;	
+}
+void Member::showMyInterestPages() const
+{
+	if (logSizeInterestPages == 0)
+	{
+		cout << "System: " << this->getName() << " has no page followed." << endl << endl;
+		return;
+	}
+	cout << "-------- All Followed Pages by " << this->getName() << " --------" << endl;
+	for (int i = 0; i < logSizeInterestPages; i++)
+		cout << "Fan Page #" << i + 1 << " Name: " << InterestPages[i]->getName() << endl;
+	cout << "----------- End of Followed Pages List -----------" << endl << endl;
 }
 
 // Status Functions in Members
 
-void Member::showMyStatus() 
+void Member::showMyStatus() const
 {
-	const char* text;
-	cout << "My Statuses are:" << endl;
-	for (unsigned int i = 0; i < logSizeMyStatus; i++)
+	if (logSizeMyStatus == 0)
 	{
-		text = myStatus[i]->getText();
-		cout << "Status " << i + 1 << "# : " << text << endl;
+		cout << "System: " << this->getName() << " has no Status." << endl << endl;
+		return;
 	}
+	cout << "-------- All Status of " << this->getName() << " --------" << endl;
+	for (int i = 0; i < logSizeMyStatus; i++)
+		cout << "Status " << i + 1 << "# : " << myStatus[i]->getText() << endl;
+	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
+
 } 
+bool Member::addStatus(const char* text, sType type)
+{
+	if (phySizeMyStatus <= logSizeMyStatus)
+		if (addSpaceMyStatusList() == false)
+			return false;
+	Status* status = new Status(text, type);
+	myStatus[logSizeMyStatus] = status;
+	logSizeMyStatus++;
+	return true;
+}
 
-bool Member::addStatus() { return 0; }
-bool Member::postStatus() { return 0; }
+// adding space to lists functions
 
-// add space to lists functions
 bool Member::addSpaceFriendList()
 {
 	int newSize;
 	if (phySizeFriends == 0)
 		newSize = 1;
 	else
-		newSize = phySizeFriends*2;
+		newSize = phySizeFriends * 2;
+	Member** newFriends = new Member * [newSize];
+	for (int i = 0; i < logSizeFriends; i++)
+		newFriends[i] = friends[i];
 
-	friends = new Member * [newSize];
-	bool allocateSuccess = checkAllocate(friends);
+	bool allocateSuccess = checkAllocate(newFriends);
 	if (allocateSuccess)
+	{
 		phySizeFriends = newSize;
+		delete[] friends;
+		friends = newFriends;
+	}
 	return allocateSuccess;
 }
 bool Member::addSpaceMyStatusList()
@@ -112,10 +172,17 @@ bool Member::addSpaceMyStatusList()
 	else
 		newSize = phySizeMyStatus * 2;
 
-	myStatus = new Status * [newSize];
-	bool allocateSuccess = checkAllocate(myStatus);
+	Status** newMyStatus = new Status * [newSize];
+	for (int i = 0; i < logSizeMyStatus; i++)
+		newMyStatus[i] = myStatus[i];
+
+	bool allocateSuccess = checkAllocate(newMyStatus);
 	if (allocateSuccess)
+	{
 		phySizeMyStatus = newSize;
+		delete[] myStatus;
+		myStatus = newMyStatus;
+	}
 	return allocateSuccess;
 }
 bool Member::addSpaceInterestPagesList()
@@ -126,35 +193,21 @@ bool Member::addSpaceInterestPagesList()
 	else
 		newSize = phySizeInterestPages * 2;
 
-	InterestPages = new Page * [newSize];
-	bool allocateSuccess = checkAllocate(InterestPages);
+	Page ** newInterestPages = new Page * [newSize];
+	for (int i = 0; i < logSizeInterestPages; i++)
+		newInterestPages[i] = InterestPages[i];
+
+	bool allocateSuccess = checkAllocate(newInterestPages);
 	if (allocateSuccess)
+	{
 		phySizeInterestPages = newSize;
+		delete[] InterestPages;
+		InterestPages = newInterestPages;
+	}
 	return allocateSuccess;
 }
-// need to decide if remove or not
 
-//bool Member::addSpaceFriendsStatusList()
-//{
-//	if (phySizeFriendsStatus == MAX_FRIEND_LATEST_STATUS) // check if trying to add more space than defined
-//		return false;
-//	int newSize;
-//	if (phySizeFriendsStatus == 0)
-//		newSize = 1;
-//	else
-//	{
-//		newSize = phySizeFriendsStatus * 2;
-//		if (newSize > MAX_FRIEND_LATEST_STATUS)
-//			newSize = MAX_FRIEND_LATEST_STATUS;
-//	}
-//	FriendsStatus = new Status * [newSize];
-//	bool allocateSuccess = checkAllocate(FriendsStatus);
-//	if (allocateSuccess)
-//		phySizeFriendsStatus = newSize;
-//	return allocateSuccess;
-//} 
-
-// setters/getters
+// setters/getters/voids
 bool Member::setName(const char* str)
 {
 	if (name != nullptr)
@@ -177,6 +230,19 @@ const char* Member::getName() const
 {
 	return name;
 }
+void Member::showMyFriends() const
+{
+	if (logSizeFriends == 0)
+	{
+		cout << "System: " << this->getName() << " has no friends." << endl << endl;
+		return;
+	}
+	cout << "-------- All Friends of " << this->getName() << " --------" << endl;
+	for (int i = 0; i < logSizeFriends; i++)
+		cout << "Friend #" << i + 1 << " Name: " << friends[i]->getName() << endl;
+	cout << "----------- End of Friends List -----------" << endl << endl;
+}
 
+//bool Member::postStatus() { return 0; }
 
 

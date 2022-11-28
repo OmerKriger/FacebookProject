@@ -1,10 +1,6 @@
 #include <iostream>
 using namespace std;
 #include "Facebook.h"
-#include "Member.h"
-#include "Page.h"
-#include "supportFunctions.h"
-#include "Date.h"
 #define MATCH 0
 
 
@@ -47,8 +43,11 @@ bool Facebook::addSpaceForMembers()
 	if (checkAllocate(pNewMembers) == false)
 		return false;
 	if (members != nullptr)
-		for (int i = 0; i < lSizeMembers ; i++)
+	{
+		for (int i = 0; i < lSizeMembers; i++)
 			pNewMembers[i] = members[i];
+		delete[] members;
+	}
 	members = pNewMembers;
 	pSizeMembers = newSize;
 	return true;
@@ -65,8 +64,11 @@ bool Facebook::addSpaceForFanPages()
 	if (checkAllocate(pNewPages) == false)
 		return false;
 	if (fanPages != nullptr)
-		for (int i = 0; i < lSizeMembers; i++)
+	{
+		for (int i = 0; i < lSizeFanPages; i++)
 			pNewPages[i] = fanPages[i];
+		delete[] fanPages;
+	}
 	fanPages = pNewPages;
 	pSizeFanPages = newSize;
 	return true;
@@ -74,11 +76,14 @@ bool Facebook::addSpaceForFanPages()
 
 bool Facebook::createMember(const char* name, int day, int month, int year) 
 {
-	if (memberNameCheck(name))
+	if (memberNameCheck(name) == true)
+	{
+		cout << "This name already exist in the system" << endl;
 		return false;
-	Date bday(day,month,year);
+	}
+	Date bday(day, month, year);
 	Member* pMember = new Member(name, bday);
-	if (pSizeMembers <= lSizeMembers + 1)
+	if (pSizeMembers <= lSizeMembers)
 		if (addSpaceForMembers() == false)
 			return false;
 	members[lSizeMembers] = pMember;
@@ -90,24 +95,19 @@ bool Facebook::memberNameCheck(const char* name)
 {
 	for (int i = 0; i < lSizeMembers; i++)
 		if (strcmp(members[i]->getName(), name) == MATCH)
-			return false;
-	return true;
-}
-
-bool Facebook::pageNameCheck(const char* name)
-{
-	for (int i = 0; i < lSizeFanPages; i++)
-		if (strcmp(fanPages[i]->getName(), name) == MATCH)
-			return false;
-	return true;
+			return true;
+	return false;
 }
 
 bool Facebook::createFanPage(const char* name) 
 {
-	if (pageNameCheck(name))
+	if (pageNameCheck(name) == true)
+	{
+		cout << "This name already exist in the system" << endl;
 		return false;
+	}
 	Page* pPage = new Page(name);
-	if (pSizeFanPages <= lSizeFanPages + 1)
+	if (pSizeFanPages <= lSizeFanPages)
 		if (addSpaceForFanPages() == false)
 			return false;
 	fanPages[lSizeFanPages] = pPage;
@@ -115,18 +115,52 @@ bool Facebook::createFanPage(const char* name)
 	return true;
 }
 
+bool Facebook::pageNameCheck(const char* name)
+{
+	for (int i = 0; i < lSizeFanPages; i++)
+		if (strcmp(fanPages[i]->getName(), name) == MATCH)
+			return true;
+	return false;
+}
+
 void Facebook::showAllMembers() const 
 {
-	cout << "All Members in Facebook:" << endl;
+	cout << "-------- All Members in Facebook: --------" << endl;
 	for (int i = 0; i < lSizeMembers; i++)
-		cout << "Member #" << i+1 << ": " << members[i]->getName() << endl;
-	cout << "---- End of Member List ----" << endl << endl;
+		cout << "Member #" << i+1 << " Name: " << members[i]->getName() << endl;
+	cout << "----------- End of Member List -----------" << endl << endl;
 }
 
 void Facebook::showAllPages() const 
 {
-	cout << "All Pages in Facebook:" << endl;
+	cout << "--------- All Pages in Facebook: ---------" << endl;
 	for (int i = 0; i < lSizeFanPages; i++)
-		cout << "Fan Page #" << i + 1 << ": " << fanPages[i]->getName() << endl;
-	cout << "---- End of Fan Page List ----" << endl << endl;
+		cout << "Fan Page #" << i + 1 << " Name: " << fanPages[i]->getName() << endl;
+	cout << "---------- End of Fan Page List ----------" << endl << endl;
+}
+
+Member& Facebook::getMember(const char* name)
+{
+	for (int i = 0; i < lSizeMembers; i++)
+		if (strcmp(name, members[i]->getName()) == MATCH)
+			return *(members[i]);
+}
+const Member& Facebook::getMember(const char* name) const
+{
+	for (int i = 0; i < lSizeMembers; i++)
+		if (strcmp(name, members[i]->getName()) == MATCH)
+			return *(members[i]);
+}
+
+const Page& Facebook::getPage(const char* name) const
+{
+	for (int i = 0; i < lSizeFanPages; i++)
+		if (strcmp(name, fanPages[i]->getName()) == MATCH)
+			return *fanPages[i];
+}
+Page& Facebook::getPage(const char* name)
+{
+	for (int i = 0; i < lSizeFanPages; i++)
+		if (strcmp(name, fanPages[i]->getName()) == MATCH)
+			return *fanPages[i];
 }

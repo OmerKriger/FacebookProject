@@ -2,11 +2,13 @@
 using namespace std;
 #include "Date.h"
 
-Date::Date()
+Date::Date() // can't delete for some reason the build won't work
 {
 	this->day = 07;
 	this->month = 01;
 	this->year = 2022;
+	this->minutes = 00;
+	this->hours = 00;
 	// default date from now
 }
 Date::Date(int day, int month, int year)
@@ -14,6 +16,16 @@ Date::Date(int day, int month, int year)
 	this->day = day;
 	this->month = month;
 	this->year = year;
+	this->minutes = 00;
+	this->hours = 00;
+}
+Date::Date(int day, int month, int year, int minutes, int hours)
+{
+	this->day = day;
+	this->month = month;
+	this->year = year;
+	this->minutes = minutes;
+	this->hours = hours;
 }
 bool Date::setDate(int day, int month, int year) 
 {

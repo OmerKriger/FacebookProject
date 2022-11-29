@@ -18,6 +18,9 @@
 #define SHOW_FRIENDS_OF_FRIEND 15
 #define EXIT 16
 // Some Defines
+#define AMOUNT_SHOW_FRIENDS_STATUSES 10
+#define ENTERS_FREQ 60
+#define MAX_STATUS_LEN 501
 #define MAX_NAME_LEN 32
 #define MAX_PAGE_NAME_LEN 32
 #define MAX_BIRTHDAY_STR 11
@@ -25,24 +28,38 @@
 #define DAY 0
 #define MONTH 1
 #define YEAR 2
+#define MEMBER "Member"
+#define PAGE "Page"
 // class forward decleration
 class Facebook;
 // function declerations
 bool checkAllocate(void* ptr);
 void printMenu();
 void actionsForMenu(char selection, Facebook& facebook);
-void* mRealloc(void* ptr, int newSize, int oldSize);
+//void* mRealloc(void* ptr, int newSize, int oldSize);
 bool getString(char* str, int maxLen);
 bool convertStrToIntDate(char* birthday, int* day, int* month, int* year);
 void askForFriendList(Facebook& facebook);
 void askForPageList(Facebook& facebook);
+bool putEntersInString(char* text);
 // Controlling function
 
 bool createMember(Facebook& facebook);
 bool createPage(Facebook& facebook);
+
 void showFriendsOfMember(Facebook& facebook);
 void showFanPagesOfMember(Facebook& facebook);
+void showStatusOfMember(Facebook& facebook);
+void showStatusOfPage(Facebook& facebook);
+void showLastStatusOfFriends(Facebook& facebook);
+
 bool followMemberToPage(Facebook& facebook);
 bool unfollowMemberToPage(Facebook& facebook);
+
+bool createStatusForMember(Facebook& facebook);
+bool createStatusForPage(Facebook& facebook);
+
+
+
 
 #endif

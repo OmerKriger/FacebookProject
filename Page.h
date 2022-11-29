@@ -27,6 +27,7 @@ public:
 	bool removeFan(const char* name);
 	void showFans() const;
 	bool addStatus(const char* str);
+	void showPageStatus() const;
 	const char* getName() const;
 };
 

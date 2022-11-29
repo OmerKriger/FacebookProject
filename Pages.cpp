@@ -62,8 +62,11 @@ bool Page::addSpaceInWall()
 	if (checkAllocate(pNewWall) == false)
 		return false;
 	if (wall != nullptr)
+	{
 		for (int i = 0; i < logSizeWall; i++)
 			pNewWall[i] = wall[i];
+		delete[] wall;
+	}
 	wall = pNewWall;
 	phySizeWall = newSize;
 	return true;
@@ -94,13 +97,26 @@ void Page::showFans() const
 }
 bool Page::addStatus(const char* str)
 {
-	Status* status = new Status(str, sType::tText);
-	if (phySizeWall <= logSizeWall + 1)
+	Status* status = new Status(str,this->getName());
+	if (phySizeWall <= logSizeWall)
 		if (addSpaceInWall() == false)
 			return false;
 	wall[logSizeWall] = status;
-	logSizeFans++;
+	logSizeWall++;
 	return true;
+}
+void Page::showPageStatus() const
+{
+	if (logSizeWall == 0)
+	{
+		cout << "System: " << this->getName() << " has no Status." << endl << endl;
+		return;
+	}
+	cout << "-------- All Status of Page " << this->getName() << " --------" << endl; // announcement for start print status
+	for (int i = 0; i < logSizeWall; i++) // print all status
+		cout << "Status " << i + 1 << "# : " << wall[i]->getText() << endl; // print one by one
+	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
+
 }
 bool Page::setName(const char* str)
 {

@@ -19,19 +19,23 @@ public:
 	bool addFriend(Member* newFriend);
 	bool removeFriend(Member* dFriend);
 	bool addPage(Page& newPage);
-	bool removePage(const Page* dPage);
+	bool removePage(const Page& dPage);
 	void showMyStatus() const;
 	void showMyFriends() const;
 	void showMyInterestPages() const;
-	bool addStatus(const char* text, sType type); // i think we should send from inside this function to outter function that will deal with types and in this function we will handle only with the types and change calls
-	const char* getName() const;
+	void showLastFriendsStatus() const;
+	void showMyLastStatuses() const;
+	bool addStatus(const char* text, sType type);
+	bool addStatus(const char* text);
+	int getAmountOfStatus() const { return logSizeMyStatus; }
+	const char* getName() const { return name; }
 private:
 	char* name;
 	Date birthDay;
 	Status** myStatus;
 	Page** InterestPages;
 	Member** friends;
-	int logSizeFriends, logSizeMyStatus, logSizeFriendsStatus, logSizeInterestPages;
+	int logSizeFriends, logSizeMyStatus, logSizeInterestPages;
 	int phySizeFriends , phySizeMyStatus, phySizeInterestPages;
 	bool addSpaceFriendList();
 	bool addSpaceMyStatusList();

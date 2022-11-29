@@ -4,14 +4,14 @@
 class Date
 {
 	int day, month, year, minutes, hours;
+	bool setDate(int day, int month, int year);
+	bool setDay(int day);
+	bool setMonth(int month);
+	bool setYear(int year);
 public:
 	Date(); // can't delete for some reason the build won't work
 	Date(int day, int month, int year);
 	Date(int day, int month, int year, int minutes, int hours);
-	bool setDate(int day,int month,int year);
-	bool setDay(int day);
-	bool setMonth(int month);
-	bool setYear(int year);
 	int getDay() { return day; }
 	int getMonth() { return month; }
 	int getYear() { return year; }

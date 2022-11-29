@@ -2,14 +2,10 @@
 using namespace std;
 #include "Status.h"
 
-
-Status::Status(const char* text, sType statusType = sType::tText)
+Status::Status(const char* text, const char* name) : creator(name)
 {
 	this->statusType = sType::tText;
-	if (statusType == sType::tText) // right now only text status
-	{
-		setText(text, statusType);
-	}
+	setText(text, statusType);
 	setDate();
 }
 
@@ -67,7 +63,21 @@ const Date& Status::getDate() const
 
 void Status::showStatus()
 {
-	cout << "date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << "\n";
-	cout << "time: " << date.getHours() << ":" << date.getMin() << "\n";
-	cout << "" << text;
+	int len = strlen(this->text);
+	cout << "--------- " << this->getCreator() << "'s Status Start ---------" << endl;
+	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl;
+	cout << "| Time: " << date.getHours() << ":" << date.getMin() << endl;
+	cout << "| Text: ";
+	for (int i = 0; i < len; i++)
+		if (text[i] == '\n')
+			cout << text[i] << "| ";
+		else
+			cout << text[i];
+	cout << "---------------- Status End ----------------" << endl << endl;
+
+}
+
+const char* Status::getCreator() const
+{
+	return creator;
 }

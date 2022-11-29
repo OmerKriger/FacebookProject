@@ -19,10 +19,9 @@ Member::Member(const char* name, Date bDay)
 	setName(name);
 	birthDay = bDay;
 	myStatus = nullptr;
-	//F_S_newestStatusIndex = 0;
 	InterestPages = nullptr;
 	friends = nullptr;
-	logSizeFriends = logSizeMyStatus = logSizeFriendsStatus = logSizeInterestPages = 0;
+	logSizeFriends = logSizeMyStatus = logSizeInterestPages = 0;
 	phySizeFriends = phySizeMyStatus = phySizeInterestPages = 0;
 }
 Member::~Member()
@@ -91,9 +90,9 @@ bool Member::addPage(Page& newPage)
 	newPage.addFan(this);
 	return true;
 }
-bool Member::removePage(const Page* dPage)
+bool Member::removePage(const Page& dPage)
 {
-	int index = searchPage(dPage->getName());
+	int index = searchPage(dPage.getName());
 	if (index == NOT_FOUND)
 	{
 		cout << "This member isn't follow after this page !" << endl;
@@ -131,17 +130,45 @@ void Member::showMyStatus() const
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
+bool Member::addStatus(const char* text)
+{
+	return addStatus(text, sType::tText);
+}
 bool Member::addStatus(const char* text, sType type)
 {
 	if (phySizeMyStatus <= logSizeMyStatus)
 		if (addSpaceMyStatusList() == false)
 			return false;
-	Status* status = new Status(text, type);
+	Status* status = new Status(text,this->getName());
 	myStatus[logSizeMyStatus] = status;
 	logSizeMyStatus++;
 	return true;
 }
-
+void Member::showLastFriendsStatus() const
+{
+	bool somethingPrinted = false;
+	if (this->logSizeFriends == 0)
+	{
+		cout << "System: This Member has no friends." << endl << endl;
+		return;
+	}
+	else
+	{
+		for (int i = 0; i < logSizeFriends; i++)
+		{
+			if (this->friends[i]->getAmountOfStatus() > 0 && somethingPrinted == false)
+				somethingPrinted = true;
+			this->friends[i]->showMyLastStatuses();
+		}
+	}
+	if (somethingPrinted == false)
+		cout << "System: This Member's friends has no statuses." << endl << endl;
+}
+void Member::showMyLastStatuses() const
+{
+	for (int i = logSizeMyStatus-1 ; i >= 0 && i > (logSizeMyStatus - AMOUNT_SHOW_FRIENDS_STATUSES - 1) ; i--)
+		myStatus[i]->showStatus();
+}
 // adding space to lists functions
 
 bool Member::addSpaceFriendList()
@@ -226,10 +253,6 @@ bool Member::setName(const char* str)
 		return checkAllocate(name);
 	}
 }
-const char* Member::getName() const
-{
-	return name;
-}
 void Member::showMyFriends() const
 {
 	if (logSizeFriends == 0)
@@ -243,6 +266,5 @@ void Member::showMyFriends() const
 	cout << "----------- End of Friends List -----------" << endl << endl;
 }
 
-//bool Member::postStatus() { return 0; }
 
 

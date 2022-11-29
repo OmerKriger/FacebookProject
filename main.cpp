@@ -17,11 +17,13 @@ int main()
 		facebook->__Init__();
 	int selection;
 	system("cls");
-	cout << "Welcome to Facebook !" << endl << endl;
+	cout << "----------------- Welcome to Facebook ! -----------------" << endl << endl;
+	cout << "System notice: Please be aware the typing is case sensitive in names" << endl;
 	do
 	{
 		cout << "--------------------------" << endl;
 		printMenu();
+		cout << "--------------------------" << endl << endl;
 		cout << "What is your choice ?: " << endl;
 		cin >> selection;
 		cin.get();

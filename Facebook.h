@@ -11,8 +11,8 @@ class Facebook
 {
 	Member** members;
 	Page** fanPages;
-	int pSizeMembers, lSizeMembers;
-	int pSizeFanPages, lSizeFanPages;
+	int phySizeMembers, logSizeMembers;
+	int phySizeFanPages, logSizeFanPages;
 	bool addSpaceForMembers();
 	bool addSpaceForFanPages();
 	Facebook(Facebook&);

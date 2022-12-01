@@ -11,11 +11,9 @@ class Status
 	char* text;
 	const char* const creator;
 	sType statusType; // default value will be text for text status
-	bool setDate();
 	bool setText(const char* str, sType type);
 	Status(Status&);
 public:
-	Status() = delete;
 	Status(const char* text, const char* name);
 	~Status();
 	const Date& getDate() const;
@@ -23,7 +21,4 @@ public:
 	void showStatus();
 	const char* getCreator() const;
 };
-
-
-
 #endif

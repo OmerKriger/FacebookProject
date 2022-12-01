@@ -1,6 +1,7 @@
 #ifndef __SUPPORT_FUNCTIONS_H
 #define __SUPPORT_FUNCTIONS_H
 // Menu Defines
+
 #define CREATE_MEMBER 1
 #define CREATE_PAGE 2
 #define CREATE_STATUS_FOR_FRIEND 3
@@ -30,13 +31,15 @@
 #define YEAR 2
 #define MEMBER "Member"
 #define PAGE "Page"
+#define MATCH 0
+#define NOT_FOUND -1
+
 // class forward decleration
 class Facebook;
 // function declerations
 bool checkAllocate(void* ptr);
 void printMenu();
 void actionsForMenu(char selection, Facebook& facebook);
-//void* mRealloc(void* ptr, int newSize, int oldSize);
 bool getString(char* str, int maxLen);
 bool convertStrToIntDate(char* birthday, int* day, int* month, int* year);
 void askForFriendList(Facebook& facebook);
@@ -61,5 +64,4 @@ bool createStatusForPage(Facebook& facebook);
 
 bool setFriendship(Facebook& facebook);
 bool deleteFriendship(Facebook& facebook);
-
 #endif

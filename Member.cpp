@@ -5,12 +5,6 @@ using namespace std;
 #include "Status.h"
 #include "supportFunctions.h"
 #include "Date.h"
-#define DAY_SHIFT 1000000
-#define MONTH_SHIFT 10000
-#define YEAR_SHIFT 1
-#define MAX_FRIEND_LATEST_STATUS 10
-#define MATCH_STRING 0
-#define NOT_FOUND -1
 
 // C'tors in Members
 
@@ -44,10 +38,8 @@ bool Member::addFriend(Member* newFriend)
 		addSpaceFriendList();
 	friends[logSizeFriends] = newFriend;
 	logSizeFriends++;
-	
 	if (newFriend->addFriend(this) == false)
 		return true;
-
 }
 bool Member::removeFriend(Member* Friend) 
 {
@@ -56,22 +48,21 @@ bool Member::removeFriend(Member* Friend)
 		return false;
 	friends[indexOfFriend] = friends[logSizeFriends - 1];
 	logSizeFriends--;
-	
 	if (Friend->removeFriend(this) == false)
 		return true;
 }
 int Member::searchFriend(char* fName) 
 {
 	for (int i = 0; i < logSizeFriends; i++)
-		if (strcmp(friends[i]->name,fName) == MATCH_STRING)
-			return i; // return index (for right now returned value is really a bool)
+		if (strcmp(friends[i]->name,fName) == MATCH)
+			return i; // return index found
 	return NOT_FOUND;
 }
 int Member::searchPage(const char* pName)
 {
 	for (int i = 0; i < logSizeInterestPages; i++)
-		if (strcmp(InterestPages[i]->getName(), pName) == MATCH_STRING)
-			return i; // return index (for right now returned value is really a bool)
+		if (strcmp(InterestPages[i]->getName(), pName) == MATCH)
+			return i; // return index
 	return -1;
 }
 
@@ -155,16 +146,19 @@ void Member::showLastFriendsStatus() const
 	{
 		for (int i = 0; i < logSizeFriends; i++)
 		{
-			if (this->friends[i]->getAmountOfStatus() > 0 && somethingPrinted == false)
+			if (this->friends[i]->getAmountOfStatus() > 0 && somethingPrinted == false) // change flag for status printed
 				somethingPrinted = true;
-			this->friends[i]->showMyLastStatuses();
+			this->friends[i]->showMyLastStatuses(); // print statuses of friends
 		}
 	}
-	if (somethingPrinted == false)
+	if (somethingPrinted == false) // if no status printed
 		cout << "System: This Member's friends has no statuses." << endl << endl;
 }
-void Member::showMyLastStatuses() const
+void Member::showMyLastStatuses() const 
 {
+	/// <summary>
+	/// This function member show his statuses from the list of statuses
+	/// </summary>
 	for (int i = logSizeMyStatus-1 ; i >= 0 && i > (logSizeMyStatus - AMOUNT_SHOW_FRIENDS_STATUSES - 1) ; i--)
 		myStatus[i]->showStatus();
 }
@@ -178,17 +172,17 @@ bool Member::addSpaceFriendList()
 	else
 		newSize = phySizeFriends * 2;
 	Member** newFriends = new Member * [newSize];
-	for (int i = 0; i < logSizeFriends; i++)
-		newFriends[i] = friends[i];
-
-	bool allocateSuccess = checkAllocate(newFriends);
-	if (allocateSuccess)
+	if (checkAllocate(newFriends) == false)
+		return false;
+	if (friends != nullptr) // if there are already array copy data to new one
 	{
-		phySizeFriends = newSize;
+		for (int i = 0; i < logSizeFriends; i++) // copy old data
+			newFriends[i] = friends[i];
 		delete[] friends;
-		friends = newFriends;
 	}
-	return allocateSuccess;
+	friends = newFriends;
+	phySizeFriends = newSize;
+	return true;
 }
 bool Member::addSpaceMyStatusList()
 {
@@ -199,17 +193,17 @@ bool Member::addSpaceMyStatusList()
 		newSize = phySizeMyStatus * 2;
 
 	Status** newMyStatus = new Status * [newSize];
-	for (int i = 0; i < logSizeMyStatus; i++)
-		newMyStatus[i] = myStatus[i];
-
-	bool allocateSuccess = checkAllocate(newMyStatus);
-	if (allocateSuccess)
+	if (checkAllocate(newMyStatus) == false)
+		return false;
+	if (friends != nullptr) // if there are already array copy data to new one
 	{
-		phySizeMyStatus = newSize;
+		for (int i = 0; i < logSizeMyStatus; i++) // copy old data
+			newMyStatus[i] = myStatus[i];
 		delete[] myStatus;
-		myStatus = newMyStatus;
 	}
-	return allocateSuccess;
+	phySizeMyStatus = newSize;
+	myStatus = newMyStatus;
+	return true;
 }
 bool Member::addSpaceInterestPagesList()
 {
@@ -220,17 +214,17 @@ bool Member::addSpaceInterestPagesList()
 		newSize = phySizeInterestPages * 2;
 
 	Page ** newInterestPages = new Page * [newSize];
-	for (int i = 0; i < logSizeInterestPages; i++)
-		newInterestPages[i] = InterestPages[i];
-
-	bool allocateSuccess = checkAllocate(newInterestPages);
-	if (allocateSuccess)
+	if (checkAllocate(newInterestPages) == false)
+		return false;
+	if (friends != nullptr) // if there are already array copy data to new one
 	{
-		phySizeInterestPages = newSize;
+		for (int i = 0; i < logSizeInterestPages; i++) // copy old data
+			newInterestPages[i] = InterestPages[i];
 		delete[] InterestPages;
-		InterestPages = newInterestPages;
 	}
-	return allocateSuccess;
+	InterestPages = newInterestPages;
+	phySizeInterestPages = newSize;
+	return true;
 }
 
 // setters/getters/voids

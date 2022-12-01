@@ -19,8 +19,8 @@ class Page
 	bool addSpaceInFans();
 	bool addSpaceInWall();
 	Page(const Page&);
+
 public:
-	Page() = delete;
 	Page(const char* name);
 	~Page();
 	bool addFan(Member* member);

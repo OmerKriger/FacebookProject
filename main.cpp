@@ -2,22 +2,18 @@
 using namespace std;
 #include "Facebook.h"
 #include "supportFunctions.h"
-
-//#include "Status.h"
+#include "Date.h"
 #define TEST 1 // TEST == 0 is no test setup
-#define STATUS_TEST 0 
-
 
 int main()
-#include "supportFunctions.h"
 {	
-	
-	Facebook* facebook = new Facebook;
-	if(TEST)
+
+	Facebook* facebook = new Facebook; // create facebook
+	if(TEST) // Installiztion for defualt users, pages, connections, statuses and ect. (Only when TEST define isnt 0)
 		facebook->__Init__();
 	int selection;
-	system("cls");
-	cout << "----------------- Welcome to Facebook ! -----------------" << endl << endl;
+	system("cls"); // clear chat
+	cout << "----------------- Welcome to Facebook ! -----------------" << endl << endl; 
 	cout << "System notice: Please be aware the typing is case sensitive in names" << endl;
 	do
 	{
@@ -26,20 +22,13 @@ int main()
 		cout << "--------------------------" << endl << endl;
 		cout << "What is your choice ?: " << endl;
 		cin >> selection;
-		cin.get();
-		system("cls");
-		actionsForMenu(selection, *facebook);
+		cin.get(); // clear the buffer
+		system("cls"); // clear chat after selection
+		actionsForMenu(selection, *facebook); // make action for the selection from menu
 	
 	} while (selection != EXIT);
-	
-	delete facebook;
 
-	/*if (STATUS_TEST)
-	{
-		char text[12] = "hello world";
-		Status s1(text, sType::tText);
-		s1.showStatus();
-	}*/
+	delete facebook;
 
 }
 

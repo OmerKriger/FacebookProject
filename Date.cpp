@@ -1,18 +1,27 @@
+#pragma warning(disable : 4996)
 #include <iostream>
 using namespace std;
 #include "Date.h"
 
-Date::Date() // can't delete for some reason the build won't work
+Date::Date()
 {
-	this->day = 07;
-	this->month = 01;
-	this->year = 2022;
-	this->minutes = 00;
-	this->hours = 00;
-	// default date from now
+	/// <summary>
+	/// Constractor for Date default with time of when it created
+	/// </summary>
+	time_t now = time(NULL);
+	struct tm nowLocal;
+	localtime_s(&nowLocal,&now);
+	this->day = nowLocal.tm_mday;
+	this->month = nowLocal.tm_mon + 1;
+	this->hours = nowLocal.tm_hour;
+	this->minutes = nowLocal.tm_min;
+	this->year = nowLocal.tm_year + 1900;	
 }
 Date::Date(int day, int month, int year)
 {
+	/// <summary>
+	/// Constractor for Date with only date that given
+	/// </summary>
 	this->day = day;
 	this->month = month;
 	this->year = year;
@@ -21,6 +30,9 @@ Date::Date(int day, int month, int year)
 }
 Date::Date(int day, int month, int year, int minutes, int hours)
 {
+	/// <summary>
+	/// Constractor for Date with full date given with time
+	/// </summary>
 	this->day = day;
 	this->month = month;
 	this->year = year;

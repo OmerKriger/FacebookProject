@@ -2,8 +2,8 @@
 using namespace std;
 #include "Page.h"
 
-#define NOT_FOUND -1
 #define MATCH 0
+#define NOT_FOUND -1
 
 Page::Page(const char* name)
 {
@@ -25,7 +25,7 @@ bool Page::addFan(Member* member)
 {
 	if (member == nullptr)
 		return false;
-	if (searchFan(member->getName()))
+	if (searchFan(member->getName()) != NOT_FOUND) // If member already follow this page
 		return false;
 	if (phySizeFans <= logSizeFans)
 		if (addSpaceInFans() == false)
@@ -37,16 +37,19 @@ bool Page::addFan(Member* member)
 bool Page::addSpaceInFans()
 {
 	int newSize;
-	if (phySizeFans == 0)
+	if (phySizeFans == 0) // check if empty put 1 if not multyply by 2
 		newSize = 1;
 	else
 		newSize = phySizeFans * 2;
-	Member** pNewFans = new Member * [newSize];
+	Member** pNewFans = new Member * [newSize]; // create new array
 	if (checkAllocate(pNewFans) == false)
 		return false;
-	if (fans != nullptr)
-		for (int i = 0; i < logSizeFans; i++)
+	if (fans != nullptr) // if there are already array copy data to new one
+	{
+		for (int i = 0; i < logSizeFans; i++) // copy data from old array
 			pNewFans[i] = fans[i];
+		delete[] fans;
+	}
 	fans = pNewFans;
 	phySizeFans = newSize;
 	return true;
@@ -61,9 +64,9 @@ bool Page::addSpaceInWall()
 	Status** pNewWall = new Status * [newSize];
 	if (checkAllocate(pNewWall) == false)
 		return false;
-	if (wall != nullptr)
+	if (wall != nullptr) // if there are already array copy data to new one
 	{
-		for (int i = 0; i < logSizeWall; i++)
+		for (int i = 0; i < logSizeWall; i++) // copy new data
 			pNewWall[i] = wall[i];
 		delete[] wall;
 	}
@@ -97,7 +100,7 @@ void Page::showFans() const
 }
 bool Page::addStatus(const char* str)
 {
-	Status* status = new Status(str,this->getName());
+	Status* status = new Status(str,this->getName()); // create new status with the string sent
 	if (phySizeWall <= logSizeWall)
 		if (addSpaceInWall() == false)
 			return false;

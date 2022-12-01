@@ -59,7 +59,7 @@ bool unfollowMemberToPage(Facebook& facebook);
 bool createStatusForMember(Facebook& facebook);
 bool createStatusForPage(Facebook& facebook);
 
-
-
+bool setFriendship(Facebook& facebook);
+bool deleteFriendship(Facebook& facebook);
 
 #endif

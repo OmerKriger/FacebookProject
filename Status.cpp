@@ -73,7 +73,7 @@ void Status::showStatus()
 			cout << text[i] << "| ";
 		else
 			cout << text[i];
-	cout << "---------------- Status End ----------------" << endl << endl;
+	cout << endl << "---------------- Status End ----------------" << endl << endl;
 
 }
 

@@ -9,19 +9,19 @@ void printMenu()
 {
 	cout << "1 - create Member" << endl;
 	cout << "2 - create Page" << endl; 
-	cout << "3 - create Status for Friend" << endl;
-	cout << "4 - create Status for Page" << endl;
-	cout << "5 - Show of Friend Status" << endl;
-	cout << "6 - Show of Page Status" << endl;
-	cout << "7 - Show of Friends 10 Latest Status: " << endl;
+	cout << "3 - create Status for a member" << endl;
+	cout << "4 - create Status for a Page" << endl;
+	cout << "5 - Show all status of a member" << endl;
+	cout << "6 - Show all Status of a page" << endl;
+	cout << "7 - Show Friends 10 Latest Status: " << endl;
 	cout << "8 - make friendship with member" << endl;
 	cout << "9 - cancel friendship with member" << endl;
-	cout << "10 - make member follow Fan Page" << endl;
-	cout << "11 - make member unfollow Fan Page:" << endl;
+	cout << "10 - follow fan page by member" << endl;
+	cout << "11 - unfollow fan page by member:" << endl;
 	cout << "12 - show all members" << endl;
 	cout << "13 - show all fan pages" << endl;
-	cout << "14 - show all registers to Fan Page" << endl;
-	cout << "15 - show friends of friend" << endl;
+	cout << "14 - show all fans of a fan Page" << endl;
+	cout << "15 - show a member friend's list" << endl;
 	cout << "16 - exit" << endl;
 }
 
@@ -60,10 +60,16 @@ void actionsForMenu(char selection, Facebook& facebook)
 	case SHOW_LATEST10_OF_FRIEND:
 		showLastStatusOfFriends(facebook); break;
 	case MAKE_FRIENDSHIP:
-		cout << "feature: not supported yet";
+		if (setFriendship(facebook))
+			cout << "Friendship Created" << endl;
+		else
+			cout << "The members are already friends" << endl << endl;
 		break;
 	case CANCEL_FRIENDSHIP:
-		cout << "feature: not supported yet";
+		if (deleteFriendship(facebook))
+			cout << "Friendship deleted" << endl;
+		else
+			cout << "The members are not friends" << endl << endl;
 		break;
 	case FOLLOW_PAGE:
 		if (followMemberToPage(facebook))
@@ -153,6 +159,8 @@ bool convertStrToIntDate(char* birthday, int* day, int* month, int* year)
 	else
 		return false;
 }
+
+
 
 void askForFriendList(Facebook& facebook)
 {
@@ -298,6 +306,48 @@ void showStatusOfPage(Facebook& facebook)
 	facebook.getPage(name).showPageStatus();
 }
 
+bool setFriendship(Facebook& facebook)
+{
+	char nameSource[MAX_NAME_LEN], nameDest[MAX_NAME_LEN];
+	askForFriendList(facebook);
+	cout << "Please type the name of the first member: " << endl;
+	getString(nameSource, MAX_NAME_LEN);
+	while (facebook.memberNameCheck(nameSource) == false)
+	{
+		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the first member: ";
+		getString(nameSource, MAX_NAME_LEN);
+	}
+	cout << "Please type the name of the second member: " << endl;
+	getString(nameDest, MAX_NAME_LEN);
+	while (facebook.memberNameCheck(nameDest) == false)
+	{
+		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the second member: ";
+		getString(nameDest, MAX_NAME_LEN);
+	}
+	return facebook.getMember(nameSource).addFriend(&(facebook.getMember(nameDest)));
+}
+
+bool deleteFriendship(Facebook& facebook)
+{
+	char nameSource[MAX_NAME_LEN], nameDest[MAX_NAME_LEN];
+	askForFriendList(facebook);
+	cout << "Please type the name of the first member: " << endl;
+	getString(nameSource, MAX_NAME_LEN);
+	while (facebook.memberNameCheck(nameSource) == false)
+	{
+		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the first member: ";
+		getString(nameSource, MAX_NAME_LEN);
+	}
+	cout << "Please type the name of the second member: " << endl;
+	getString(nameDest, MAX_NAME_LEN);
+	while (facebook.memberNameCheck(nameDest) == false)
+	{
+		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the second member: ";
+		getString(nameDest, MAX_NAME_LEN);
+	}
+	return facebook.getMember(nameSource).removeFriend(&(facebook.getMember(nameDest)));
+}
+
 void showLastStatusOfFriends(Facebook& facebook)
 {
 	char name[MAX_NAME_LEN];
@@ -369,14 +419,14 @@ bool createStatusForMember(Facebook& facebook)
 	char memberName[MAX_NAME_LEN] = { 0 };
 	char statusText[MAX_STATUS_LEN] = { 0 };
 	askForFriendList(facebook);
-	cout << "Please type the name of member you would like create status for: " << endl;
+	cout << "Please type the name of member you would like to create status for: " << endl;
 	getString(memberName, MAX_NAME_LEN);
 	while (facebook.memberNameCheck(memberName) == false)
 	{
 		cout << "This member isn't exist, Please try again." << endl << "Type name of member you would like unfollow page: ";
 		getString(memberName, MAX_NAME_LEN);
 	}
-	cout << "Please type the Text for the status and hit enter to finish (MAX:"<< MAX_STATUS_LEN-1 << " Chars): " << endl;
+	cout << "Please type the Text for the status and press enter to finish (MAX:"<< MAX_STATUS_LEN-1 << " Chars): " << endl;
 	getString(statusText, MAX_STATUS_LEN);
 	putEntersInString(statusText);
 	return facebook.getMember(memberName).addStatus(statusText);
@@ -387,7 +437,7 @@ bool createStatusForPage(Facebook& facebook)
 	char pageName[MAX_PAGE_NAME_LEN] = { 0 };
 	char statusText[MAX_STATUS_LEN] = { 0 };
 	askForPageList(facebook);
-	cout << "Please type the name of fan page you would like create status for: " << endl;
+	cout << "Please type the name of fan page you would like to create status for: " << endl;
 	getString(pageName, MAX_PAGE_NAME_LEN);
 	while (facebook.pageNameCheck(pageName) == false)
 	{

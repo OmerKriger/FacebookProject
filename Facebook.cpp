@@ -41,8 +41,9 @@ void Facebook::__Init__()
 	this->getMember("Nir Peretz").addPage(this->getPage("NBA"));
 	this->getMember("Mark Zuckerberg").addPage(this->getPage("Eduardo Saverin"));
 	// creating default connections between Members
-
-
+	this->getMember("Omer Kriger").addFriend(&(this->getMember("Nir Peretz")));
+	this->getMember("Omer Kriger").addFriend(&(this->getMember("Mark Zuckerberg")));
+	this->getMember("Nir Peretz").addFriend(&(this->getMember("Mark Zuckerberg")));
 	// creating default Status for Pages
 	this->getPage("Eduardo Saverin").addStatus("You wake up in the morning and discover Mark stole your stocks....");
 	this->getPage("Eduardo Saverin").addStatus("I Hate Mark Zuckerberg !!");

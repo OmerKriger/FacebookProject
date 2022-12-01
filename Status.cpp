@@ -66,6 +66,7 @@ void Status::showStatus()
 			cout << text[i];
 	cout << endl << "--------------------------------------------------" << endl << endl; // bottom of status
 
+
 }
 
 const char* Status::getCreator() const

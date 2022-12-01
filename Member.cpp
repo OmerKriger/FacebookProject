@@ -32,24 +32,24 @@ Member::~Member()
  
 bool Member::addFriend(Member* newFriend)
 {
-	if (searchFriend(newFriend->name) == NOT_FOUND) // we can't add friend already in friends
+	if (searchFriend(newFriend->name) != NOT_FOUND) // we can't add friend already in friends
 		return false;
 	if (phySizeFriends <= logSizeFriends)
 		addSpaceFriendList();
 	friends[logSizeFriends] = newFriend;
 	logSizeFriends++;
-	
-	return true;
+	if (newFriend->addFriend(this) == false)
+		return true;
 }
 bool Member::removeFriend(Member* Friend) 
 {
 	int indexOfFriend = searchFriend(Friend->name);
-	if (indexOfFriend != NOT_FOUND) // we can't remove friend who is not in friends
+	if (indexOfFriend == NOT_FOUND) // we can't remove friend who is not in friends
 		return false;
 	friends[indexOfFriend] = friends[logSizeFriends - 1];
 	logSizeFriends--;
-	
-	return true;
+	if (Friend->removeFriend(this) == false)
+		return true;
 }
 int Member::searchFriend(char* fName) 
 {

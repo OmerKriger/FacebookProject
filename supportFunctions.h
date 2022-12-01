@@ -49,6 +49,7 @@ bool putEntersInString(char* text);
 
 bool createMember(Facebook& facebook);
 bool createPage(Facebook& facebook);
+
 void showFriendsOfMember(Facebook& facebook);
 void showFanPagesOfMember(Facebook& facebook);
 void showStatusOfMember(Facebook& facebook);
@@ -61,4 +62,6 @@ bool unfollowMemberToPage(Facebook& facebook);
 bool createStatusForMember(Facebook& facebook);
 bool createStatusForPage(Facebook& facebook);
 
+bool setFriendship(Facebook& facebook);
+bool deleteFriendship(Facebook& facebook);
 #endif

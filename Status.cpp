@@ -6,24 +6,11 @@ Status::Status(const char* text, const char* name) : creator(name)
 {
 	this->statusType = sType::tText;
 	setText(text, statusType);
-	setDate();
 }
 
 Status::~Status()
 {
 	delete[] text;
-}
-
-bool Status::setDate() 
-{
-	time_t now = time(NULL);
-	if (!now)
-		return false;
-	struct tm nowLocal;
-	nowLocal = *localtime(&now);
-	Date date(nowLocal.tm_mday, nowLocal.tm_mon + 1, nowLocal.tm_year + 1900, nowLocal.tm_min, nowLocal.tm_hour);
-	this->date = date;
-	return true;
 }
 
 bool Status::setText(const char* str, sType type = sType::tText)
@@ -63,17 +50,22 @@ const Date& Status::getDate() const
 
 void Status::showStatus()
 {
+	/// <summary>
+	/// The function show individual status and print the time and date created
+	/// and the text of this status
+	/// </summary>
 	int len = strlen(this->text);
-	cout << "--------- " << this->getCreator() << "'s Status Start ---------" << endl;
-	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl;
+	cout << "--------- " << this->getCreator() << "'s Status ------------------" << endl; // header
+	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl; // print the date and time
 	cout << "| Time: " << date.getHours() << ":" << date.getMin() << endl;
-	cout << "| Text: ";
-	for (int i = 0; i < len; i++)
+	cout << "| Text: "; // here starting print the text of status
+	for (int i = 0; i < len; i++) // for loop run on the text and when print \n after it print "| " for the design
 		if (text[i] == '\n')
 			cout << text[i] << "| ";
 		else
 			cout << text[i];
-	cout << "---------------- Status End ----------------" << endl << endl;
+	cout << endl << "--------------------------------------------------" << endl << endl; // bottom of status
+
 
 }
 

@@ -4,6 +4,10 @@
 #include "Page.h"
 #include "supportFunctions.h"
 #include "Date.h"
+
+#define MATCH 0
+
+
 class Member;
 class Page;
 

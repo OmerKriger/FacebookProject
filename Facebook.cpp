@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
 #include "Facebook.h"
-#define MATCH 0
 
 
 Facebook::Facebook()
@@ -22,11 +21,10 @@ Facebook::~Facebook()
 	cout << "Facebook out, over!" << endl;
 }
 
-/// <summary>
-/// need to be finish Init
-/// </summary>
 void Facebook::__Init__()
 {
+	// This function create default data in system
+	
 	// creating defualt Members
 	this->createMember("Omer Kriger", 10, 5, 1998);
 	this->createMember("Nir Peretz", 9, 8, 1997);
@@ -43,8 +41,9 @@ void Facebook::__Init__()
 	this->getMember("Nir Peretz").addPage(this->getPage("NBA"));
 	this->getMember("Mark Zuckerberg").addPage(this->getPage("Eduardo Saverin"));
 	// creating default connections between Members
-
-
+	this->getMember("Omer Kriger").addFriend(&(this->getMember("Nir Peretz")));
+	this->getMember("Omer Kriger").addFriend(&(this->getMember("Mark Zuckerberg")));
+	this->getMember("Nir Peretz").addFriend(&(this->getMember("Mark Zuckerberg")));
 	// creating default Status for Pages
 	this->getPage("Eduardo Saverin").addStatus("You wake up in the morning and discover Mark stole your stocks....");
 	this->getPage("Eduardo Saverin").addStatus("I Hate Mark Zuckerberg !!");
@@ -71,9 +70,9 @@ bool Facebook::addSpaceForMembers()
 	Member** pNewMembers = new Member * [newSize];
 	if (checkAllocate(pNewMembers) == false)
 		return false;
-	if (members != nullptr)
+	if (members != nullptr) // if there are already array copy data to new one
 	{
-		for (int i = 0; i < logSizeMembers; i++)
+		for (int i = 0; i < logSizeMembers; i++) // copy old data
 			pNewMembers[i] = members[i];
 		delete[] members;
 	}
@@ -92,9 +91,9 @@ bool Facebook::addSpaceForFanPages()
 	Page** pNewPages = new Page * [newSize];
 	if (checkAllocate(pNewPages) == false)
 		return false;
-	if (fanPages != nullptr)
+	if (fanPages != nullptr) // if there are already array copy data to new one
 	{
-		for (int i = 0; i < logSizeFanPages; i++)
+		for (int i = 0; i < logSizeFanPages; i++) // copy old data
 			pNewPages[i] = fanPages[i];
 		delete[] fanPages;
 	}
@@ -120,7 +119,7 @@ bool Facebook::createMember(const char* name, int day, int month, int year)
 	return true;
 }
 
-bool Facebook::memberNameCheck(const char* name)
+bool Facebook::memberNameCheck(const char* name) // checking if the name is exist Member return true for found and false for not found
 {
 	for (int i = 0; i < logSizeMembers; i++)
 		if (strcmp(members[i]->getName(), name) == MATCH)
@@ -128,9 +127,9 @@ bool Facebook::memberNameCheck(const char* name)
 	return false;
 }
 
-bool Facebook::createFanPage(const char* name)
+bool Facebook::createFanPage(const char* name) 
 {
-	if (pageNameCheck(name) == true)
+	if (pageNameCheck(name) == true) // is already in the system
 	{
 		cout << "This name already exist in the system" << endl;
 		return false;
@@ -144,8 +143,8 @@ bool Facebook::createFanPage(const char* name)
 	return true;
 }
 
-bool Facebook::pageNameCheck(const char* name)
-{
+bool Facebook::pageNameCheck(const char* name) // checking if the name is exist Page return true for found and false for not found
+{ 
 	for (int i = 0; i < logSizeFanPages; i++)
 		if (strcmp(fanPages[i]->getName(), name) == MATCH)
 			return true;
@@ -168,26 +167,26 @@ void Facebook::showAllPages() const
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 
-Member& Facebook::getMember(const char* name)
+Member& Facebook::getMember(const char* name) // return member by ref from array of members
 {
 	for (int i = 0; i < logSizeMembers; i++)
 		if (strcmp(name, members[i]->getName()) == MATCH)
 			return *(members[i]);
 }
-const Member& Facebook::getMember(const char* name) const
+const Member& Facebook::getMember(const char* name) const // return member by const ref from array of members
 {
 	for (int i = 0; i < logSizeMembers; i++)
 		if (strcmp(name, members[i]->getName()) == MATCH)
 			return *(members[i]);
 }
 
-const Page& Facebook::getPage(const char* name) const
+const Page& Facebook::getPage(const char* name) const // return page by const ref from array of pages
 {
 	for (int i = 0; i < logSizeFanPages; i++)
 		if (strcmp(name, fanPages[i]->getName()) == MATCH)
 			return *fanPages[i];
 }
-Page& Facebook::getPage(const char* name)
+Page& Facebook::getPage(const char* name) // return page by ref from array of pages
 {
 	for (int i = 0; i < logSizeFanPages; i++)
 		if (strcmp(name, fanPages[i]->getName()) == MATCH)

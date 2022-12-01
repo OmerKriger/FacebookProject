@@ -195,7 +195,7 @@ bool Member::addSpaceMyStatusList()
 	Status** newMyStatus = new Status * [newSize];
 	if (checkAllocate(newMyStatus) == false)
 		return false;
-	if (friends != nullptr) // if there are already array copy data to new one
+	if (myStatus != nullptr) // if there are already array copy data to new one
 	{
 		for (int i = 0; i < logSizeMyStatus; i++) // copy old data
 			newMyStatus[i] = myStatus[i];
@@ -216,7 +216,7 @@ bool Member::addSpaceInterestPagesList()
 	Page ** newInterestPages = new Page * [newSize];
 	if (checkAllocate(newInterestPages) == false)
 		return false;
-	if (friends != nullptr) // if there are already array copy data to new one
+	if (InterestPages != nullptr) // if there are already array copy data to new one
 	{
 		for (int i = 0; i < logSizeInterestPages; i++) // copy old data
 			newInterestPages[i] = InterestPages[i];

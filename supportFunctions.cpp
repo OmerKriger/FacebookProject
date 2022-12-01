@@ -7,21 +7,21 @@ using namespace std;
 
 void printMenu()
 {
-	cout << CREATE_MEMBER <<" - create Member" << endl;
-	cout << CREATE_PAGE << " - create Page" << endl; 
-	cout << CREATE_STATUS_FOR_FRIEND << " - create Status for Friend" << endl;
-	cout << CREATE_STATUS_FOR_PAGE << " - create Status for Page" << endl;
-	cout << SHOW_FRIEND_STATUS <<" - Show of Friend Status" << endl;
-	cout << SHOW_PAGE_STATUS <<" - Show of Page Status" << endl;
-	cout << SHOW_LATEST10_OF_FRIEND << " - Show of Friends 10 Latest Status: " << endl;
-	cout << MAKE_FRIENDSHIP << " - make friendship with member" << endl;
-	cout << CANCEL_FRIENDSHIP <<" - cancel friendship with member" << endl;
+	cout << CREATE_MEMBER << " - create Member" << endl;
+	cout << CREATE_PAGE << " - create Page" << endl;
+	cout << CREATE_STATUS_FOR_FRIEND << " - create Status for a Friend" << endl;
+	cout << CREATE_STATUS_FOR_PAGE << " - create Status for a Page" << endl;
+	cout << SHOW_FRIEND_STATUS << " - Show member Status" << endl;
+	cout << SHOW_PAGE_STATUS << " - Show Page Status" << endl;
+	cout << SHOW_LATEST10_OF_FRIEND << " - Show 10 Latest Status of a member's friends: " << endl;
+	cout << MAKE_FRIENDSHIP << " - befriend a member" << endl;
+	cout << CANCEL_FRIENDSHIP << " - unfriend a member" << endl;
 	cout << FOLLOW_PAGE << " - make member follow Fan Page" << endl;
 	cout << UNFOLLOW_PAGE << " - make member unfollow Fan Page:" << endl;
 	cout << SHOW_ALL_MEMBERS << " - show all members" << endl;
 	cout << SHOW_ALL_FANS_OF_PAGE << " - show all fan pages" << endl;
-	cout << SHOW_ALL_MEMBERS_FOLLOW_PAGE << " - show all registers to Fan Page" << endl;
-	cout << SHOW_FRIENDS_OF_FRIEND << " - show friends of friend" << endl;
+	cout << SHOW_ALL_MEMBERS_FOLLOW_PAGE << " - show all followers of Fan Page" << endl;
+	cout << SHOW_FRIENDS_OF_FRIEND << " - show friend list of a member" << endl;
 	cout << EXIT << " - exit" << endl;
 }
 

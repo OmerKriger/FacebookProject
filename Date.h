@@ -9,7 +9,7 @@ class Date
 	bool setMonth(int month);
 	bool setYear(int year);
 public:
-	Date(); // can't delete for some reason the build won't work
+	Date();
 	Date(int day, int month, int year);
 	Date(int day, int month, int year, int minutes, int hours);
 	int getDay() { return day; }

@@ -31,6 +31,7 @@ private:
 	Status** myStatus;
 	Page** InterestPages;
 	Member** friends;
+	Member(const Member&);
 	int logSizeFriends, logSizeMyStatus, logSizeInterestPages;
 	int phySizeFriends , phySizeMyStatus, phySizeInterestPages;
 	bool addSpaceFriendList();

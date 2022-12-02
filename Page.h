@@ -1,35 +1,34 @@
 #ifndef __PAGES_H
 #define __PAGES_H
-
-/*
-Notes:
-Everything in note is need to set/finish
-things only for first setup right now
-TODO List:
-0. forward declartion and complete signatures of method inside () (partly completed)
-1. Constructors
-2. add setters/getters
-3. writing methods functions
-*/
-
-class Person;
+#include "Member.h"
+#include "Date.h"
+#include "Status.h"
+#include "supportFunctions.h"
+class Member;
 class Status;
 
 class Page
 {
-public:
-	/*
-	Constructors
-	*/
-	bool addFan();
-	bool removeFan();
-	bool showFans();
-	bool addStatus();
-
-private:
 	char* name;
-	Person** Fans;
+	Member** fans;
 	Status** wall;
+	int logSizeFans, phySizeFans;
+	int logSizeWall, phySizeWall;
+	bool setName(const char* str);
+	int searchFan(const char* name);
+	bool addSpaceInFans();
+	bool addSpaceInWall();
+	Page(const Page&);
+
+public:
+	Page(const char* name);
+	~Page();
+	bool addFan(Member* member);
+	bool removeFan(const char* name);
+	void showFans() const;
+	bool addStatus(const char* str);
+	void showPageStatus() const;
+	const char* getName() const;
 };
 
 

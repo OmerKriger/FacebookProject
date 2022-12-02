@@ -57,7 +57,11 @@ void Status::showStatus()
 	int len = strlen(this->text);
 	cout << "--------- " << this->getCreator() << "'s Status ------------------" << endl; // header
 	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl; // print the date and time
-	cout << "| Time: " << date.getHours() << ":" << date.getMin() << endl;
+	cout << "| Time: " << date.getHours() << ":";
+	int min = date.getMin();
+	if (min < 10)
+		cout << "0";
+	cout << "" << min << endl;
 	cout << "| Text: "; // here starting print the text of status
 	for (int i = 0; i < len; i++) // for loop run on the text and when print \n after it print "| " for the design
 		if (text[i] == '\n')

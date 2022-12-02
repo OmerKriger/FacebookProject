@@ -116,7 +116,16 @@ void Member::showMyStatus() const
 	}
 	cout << "-------- All Status of " << this->getName() << " --------" << endl;
 	for (int i = 0; i < logSizeMyStatus; i++)
-		cout << "Status " << i + 1 << "# : " << myStatus[i]->getText() << endl;
+	{
+		Date date = myStatus[i]->getDate();
+
+		cout << "Status " << i + 1 << "# : " << myStatus[i]->getText() << " || ";
+		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " " << date.getHours() << ":";
+		int min = date.getMin();
+		if (min < 10)
+			cout << "0";
+		cout << "" << min << endl;
+	}
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 

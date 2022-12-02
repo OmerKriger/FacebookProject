@@ -94,7 +94,7 @@ bool Page::removeFan(const char* name)
 void Page::showFans() const
 {
 	cout << "The Fan List of Page " << name << ":" << endl;
-	for (int i = 0; i <= logSizeFans; i++)
+	for (int i = 0; i < logSizeFans; i++)
 		cout << "Fan #" << i + 1 << ": " << fans[i]->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
 }
@@ -116,10 +116,18 @@ void Page::showPageStatus() const
 		return;
 	}
 	cout << "-------- All Status of Page " << this->getName() << " --------" << endl; // announcement for start print status
-	for (int i = 0; i < logSizeWall; i++) // print all status
-		cout << "Status " << i + 1 << "# : " << wall[i]->getText() << endl; // print one by one
-	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
+	for (int i = 0; i < logSizeWall; i++)
+	{// print all status
+		Date date = wall[i]->getDate();
 
+		cout << "Status " << i + 1 << "# : " << wall[i]->getText() << " || ";
+		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " " << date.getHours() << ":";
+		int min = date.getMin();
+		if (min < 10)
+			cout << "0";
+		cout << "" << min << endl;
+	}
+	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }
 bool Page::setName(const char* str)
 {

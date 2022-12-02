@@ -55,6 +55,7 @@ void showFanPagesOfMember(Facebook& facebook);
 void showStatusOfMember(Facebook& facebook);
 void showStatusOfPage(Facebook& facebook);
 void showLastStatusOfFriends(Facebook& facebook);
+void showAllFansOfPage(Facebook& facebook);
 
 bool followMemberToPage(Facebook& facebook);
 bool unfollowMemberToPage(Facebook& facebook);

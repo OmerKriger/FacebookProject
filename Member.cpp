@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
 #include "Member.h"
 #include "Page.h"
@@ -12,122 +13,103 @@ Member::Member(const char* name, Date bDay)
 {
 	setName(name);
 	birthDay = bDay;
-	myStatus = nullptr;
-	InterestPages = nullptr;
-	friends = nullptr;
-	logSizeFriends = logSizeMyStatus = logSizeInterestPages = 0;
-	phySizeFriends = phySizeMyStatus = phySizeInterestPages = 0;
 }
 Member::~Member()
 {
 	delete[] name;
-	for (int i = 0; i < logSizeMyStatus; i++)
-		delete myStatus[i];
-	delete[] myStatus;
-	delete[] InterestPages;
-	delete[] friends;
+	// Statuses deleting
+	vector<Status*>::iterator itr = this->myStatus.begin();
+	vector<Status*>::iterator itrEnd = this->myStatus.end();
+	for (; itr != itrEnd; ++itr)
+		delete (*itr);
 }
 
 // Friends functions in Member
- 
 bool Member::addFriend(Member* newFriend)
 {
 	if (newFriend == this) // friend cannot add him self
 		return false;
-	if (searchFriend(newFriend->name) != NOT_FOUND) // we can't add friend already in friends
+	vector<Member*>::iterator itrOfFriend = find(friends.begin(), friends.end(), newFriend); // search for newFriend in friends
+	if (itrOfFriend != friends.end()) // if friend is found return false
 		return false;
-	if (phySizeFriends <= logSizeFriends)
-		addSpaceFriendList();
-	friends[logSizeFriends] = newFriend;
-	logSizeFriends++;
+	if (friends.capacity() == friends.size() && friends.capacity() != 0)
+		friends.reserve(friends.capacity() * 2);
+	friends.push_back(newFriend);
+
 	if (newFriend->addFriend(this) == false)
 		return true;
 }
 bool Member::removeFriend(Member* Friend) 
 {
-	int indexOfFriend = searchFriend(Friend->name);
-	if (indexOfFriend == NOT_FOUND) // we can't remove friend who is not in friends
+	vector<Member*>::iterator itrOfFriend = find(friends.begin(),friends.end(), Friend);
+	if (itrOfFriend == friends.end()) // we can't remove friend who is not in friends
 		return false;
-	friends[indexOfFriend] = friends[logSizeFriends - 1];
-	logSizeFriends--;
+	friends.erase(itrOfFriend);
 	if (Friend->removeFriend(this) == false)
 		return true;
 }
-int Member::searchFriend(char* fName) 
-{
-	for (int i = 0; i < logSizeFriends; i++)
-		if (strcmp(friends[i]->name,fName) == MATCH)
-			return i; // return index found
-	return NOT_FOUND;
-}
-int Member::searchPage(const char* pName)
-{
-	for (int i = 0; i < logSizeInterestPages; i++)
-		if (strcmp(InterestPages[i]->getName(), pName) == MATCH)
-			return i; // return index
-	return -1;
-}
-
 // Pages functions in Member
-
 bool Member::addPage(Page& newPage)
 {
-	if (searchPage(newPage.getName()) != NOT_FOUND)
+	vector<Page*>::iterator itrOfPage = find(InterestPages.begin(), InterestPages.end(), &newPage); // search for newFriend in friends
+	if (itrOfPage != InterestPages.end()) // if friend is found return false
 		return false;
-	if (phySizeInterestPages <= logSizeInterestPages)
-		addSpaceInterestPagesList();
-	InterestPages[logSizeInterestPages] = &newPage;
-	logSizeInterestPages++;
+	if (InterestPages.capacity() == InterestPages.size() && InterestPages.capacity() != 0)
+		InterestPages.reserve(InterestPages.capacity()*2);
+	InterestPages.push_back(&newPage);
 	// say to page add this friend to his list
 	newPage.addFan(this);
 	return true;
 }
 bool Member::removePage(const Page& dPage)
 {
-	int index = searchPage(dPage.getName());
-	if (index == NOT_FOUND)
+	vector<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), dPage);
+	if (itrPage == InterestPages.end()) // we can't remove friend who is not in friends
 	{
 		cout << "This member isn't follow after this page !" << endl;
 		return false;
 	}
-	this->InterestPages[index]->removeFan(this->getName());
-	this->InterestPages[index] = this->InterestPages[logSizeInterestPages - 1];
-	logSizeInterestPages--;
+	(*itrPage)->removeFan(this->getName());
+	InterestPages.erase(itrPage);
 	return true;	
 }
 void Member::showMyInterestPages() const
 {
-	if (logSizeInterestPages == 0)
+	if (InterestPages.size() == 0)
 	{
 		cout << "System: " << this->getName() << " has no page followed." << endl << endl;
 		return;
 	}
 	cout << "-------- All Followed Pages by " << this->getName() << " --------" << endl;
-	for (int i = 0; i < logSizeInterestPages; i++)
-		cout << "Fan Page #" << i + 1 << " Name: " << InterestPages[i]->getName() << endl;
+	vector<Page*>::const_iterator itr = this->InterestPages.begin();
+	vector<Page*>::const_iterator itrEnd = this->InterestPages.end();
+	for(int i = 0;itr!=itrEnd;++itr, ++i)
+		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Followed Pages List -----------" << endl << endl;
 }
-
 // Status Functions in Members
 
 void Member::showMyStatus() const
 {
-	if (logSizeMyStatus == 0)
+	if (myStatus.size() == 0)
 	{
 		cout << "System: " << this->getName() << " has no Status." << endl << endl;
 		return;
 	}
 	cout << "-------- All Status of " << this->getName() << " --------" << endl;
-	for (int i = 0; i < logSizeMyStatus; i++)
+	vector<Status*>::const_iterator itr = this->myStatus.begin();
+	vector<Status*>::const_iterator itrEnd = this->myStatus.end();
+	for (int i = 0; itr != itrEnd; ++itr, ++i)
 	{
-		Date date = myStatus[i]->getDate();
-
-		cout << "Status " << i + 1 << "# : " << myStatus[i]->getText() << " || ";
-		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " " << date.getHours() << ":";
-		int min = date.getMin();
-		if (min < 10)
+		const Date& date = (*itr)->getDate();
+		cout << "Status " << i + 1 << "# : " << (*itr)->getText() << " || ";
+		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " ";
+		if (date.getHours() < 10)
 			cout << "0";
-		cout << "" << min << endl;
+		cout << date.getHours() << ":";
+		if (date.getMin() < 10)
+			cout << "0";
+		cout << "" << date.getMin() << endl;
 	}
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
@@ -138,29 +120,29 @@ bool Member::addStatus(const char* text)
 }
 bool Member::addStatus(const char* text, sType type)
 {
-	if (phySizeMyStatus <= logSizeMyStatus)
-		if (addSpaceMyStatusList() == false)
-			return false;
+	if (myStatus.size() == myStatus.capacity() && myStatus.capacity() != 0)
+		myStatus.reserve(myStatus.capacity() * 2);
 	Status* status = new Status(text,this->getName());
-	myStatus[logSizeMyStatus] = status;
-	logSizeMyStatus++;
+	myStatus.push_back(status);
 	return true;
 }
 void Member::showLastFriendsStatus() const
 {
 	bool somethingPrinted = false;
-	if (this->logSizeFriends == 0)
+	if (friends.size() == 0)
 	{
 		cout << "System: This Member has no friends." << endl << endl;
 		return;
 	}
 	else
 	{
-		for (int i = 0; i < logSizeFriends; i++)
+		vector<Member*>::const_iterator itr = this->friends.begin();
+		vector<Member*>::const_iterator itrEnd = this->friends.end();
+		for (int i = 0; itr != itrEnd; ++itr, ++i)
 		{
-			if (this->friends[i]->getAmountOfStatus() > 0 && somethingPrinted == false) // change flag for status printed
+			if ((*itr)->getAmountOfStatus() > 0 && somethingPrinted == false) // change flag for status printed
 				somethingPrinted = true;
-			this->friends[i]->showMyLastStatuses(); // print statuses of friends
+			(*itr)->showMyLastStatuses(); // print statuses of friends
 		}
 	}
 	if (somethingPrinted == false) // if no status printed
@@ -171,72 +153,10 @@ void Member::showMyLastStatuses() const
 	/// <summary>
 	/// This function member show his statuses from the list of statuses
 	/// </summary>
-	for (int i = logSizeMyStatus-1 ; i >= 0 && i > (logSizeMyStatus - AMOUNT_SHOW_FRIENDS_STATUSES - 1) ; i--)
-		myStatus[i]->showStatus();
-}
-// adding space to lists functions
-
-bool Member::addSpaceFriendList()
-{
-	int newSize;
-	if (phySizeFriends == 0)
-		newSize = 1;
-	else
-		newSize = phySizeFriends * 2;
-	Member** newFriends = new Member * [newSize];
-	if (checkAllocate(newFriends) == false)
-		return false;
-	if (friends != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeFriends; i++) // copy old data
-			newFriends[i] = friends[i];
-		delete[] friends;
-	}
-	friends = newFriends;
-	phySizeFriends = newSize;
-	return true;
-}
-bool Member::addSpaceMyStatusList()
-{
-	int newSize;
-	if (phySizeMyStatus == 0)
-		newSize = 1;
-	else
-		newSize = phySizeMyStatus * 2;
-
-	Status** newMyStatus = new Status * [newSize];
-	if (checkAllocate(newMyStatus) == false)
-		return false;
-	if (myStatus != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeMyStatus; i++) // copy old data
-			newMyStatus[i] = myStatus[i];
-		delete[] myStatus;
-	}
-	phySizeMyStatus = newSize;
-	myStatus = newMyStatus;
-	return true;
-}
-bool Member::addSpaceInterestPagesList()
-{
-	int newSize;
-	if (phySizeInterestPages == 0)
-		newSize = 1;
-	else
-		newSize = phySizeInterestPages * 2;
-
-	Page ** newInterestPages = new Page * [newSize];
-	if (checkAllocate(newInterestPages) == false)
-		return false;
-	if (InterestPages != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeInterestPages; i++) // copy old data
-			newInterestPages[i] = InterestPages[i];
-		delete[] InterestPages;
-	}
-	InterestPages = newInterestPages;
-	phySizeInterestPages = newSize;
-	return true;
+	vector<Status*>::const_iterator itr = myStatus.begin();
+	vector<Status*>::const_iterator itrEnd = myStatus.end();
+	for (int i=0; itr != itrEnd && i<= AMOUNT_SHOW_FRIENDS_STATUSES; --itrEnd, ++i)
+		(*itrEnd)->showStatus();
 }
 
 // setters/getters/voids
@@ -260,14 +180,16 @@ bool Member::setName(const char* str)
 }
 void Member::showMyFriends() const
 {
-	if (logSizeFriends == 0)
+	if (friends.size() == 0)
 	{
 		cout << "System: " << this->getName() << " has no friends." << endl << endl;
 		return;
 	}
 	cout << "-------- All Friends of " << this->getName() << " --------" << endl;
-	for (int i = 0; i < logSizeFriends; i++)
-		cout << "Friend #" << i + 1 << " Name: " << friends[i]->getName() << endl;
+	vector<Member*>::const_iterator itr = this->friends.begin();
+	vector<Member*>::const_iterator itrEnd = this->friends.end();
+	for (int i = 0; itr != itrEnd; ++itr, ++i)
+		cout << "Friend #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Friends List -----------" << endl << endl;
 }
 

@@ -2,22 +2,17 @@
 using namespace std;
 #include "Facebook.h"
 
-
-Facebook::Facebook()
-{
-	logSizeMembers = logSizeFanPages = phySizeFanPages = phySizeMembers = 0;
-	members = nullptr;
-	fanPages = nullptr;
-}
-
 Facebook::~Facebook()
 {
-	for (int i = 0; i < logSizeFanPages; i++)
-		delete fanPages[i];
-	delete[] fanPages;
-	for (int i = 0; i < logSizeMembers; i++)
-		delete members[i];
-	delete[] members;
+	vector<Member*>::const_iterator mItr = this->members.begin();
+	vector<Member*>::const_iterator mItrEnd = this->members.end();
+	vector<Page*>::const_iterator pItr = this->fanPages.begin();
+	vector<Page*>::const_iterator pItrEnd = this->fanPages.end();
+
+	for (; pItr != pItrEnd; ++pItr)
+		delete (*pItr);
+	for (; mItr != mItrEnd; ++mItr)
+		delete (*mItr);
 	cout << "Facebook out, over!" << endl;
 }
 
@@ -60,48 +55,6 @@ void Facebook::__Init__()
 	this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.");
 }
 
-bool Facebook::addSpaceForMembers()
-{
-	int newSize;
-	if (phySizeMembers == 0)
-		newSize = 1;
-	else
-		newSize = phySizeMembers * 2;
-	Member** pNewMembers = new Member * [newSize];
-	if (checkAllocate(pNewMembers) == false)
-		return false;
-	if (members != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeMembers; i++) // copy old data
-			pNewMembers[i] = members[i];
-		delete[] members;
-	}
-	members = pNewMembers;
-	phySizeMembers = newSize;
-	return true;
-}
-
-bool Facebook::addSpaceForFanPages()
-{
-	int newSize;
-	if (phySizeFanPages == 0)
-		newSize = 1;
-	else
-		newSize = phySizeFanPages * 2;
-	Page** pNewPages = new Page * [newSize];
-	if (checkAllocate(pNewPages) == false)
-		return false;
-	if (fanPages != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeFanPages; i++) // copy old data
-			pNewPages[i] = fanPages[i];
-		delete[] fanPages;
-	}
-	fanPages = pNewPages;
-	phySizeFanPages = newSize;
-	return true;
-}
-
 bool Facebook::createMember(const char* name, Date bDay)
 {
 	if (memberNameCheck(name) == true)
@@ -115,18 +68,18 @@ bool Facebook::createMember(const char* name, Date bDay)
 		return false;
 	}
 	Member* pMember = new Member(name, bDay);
-	if (phySizeMembers <= logSizeMembers)
-		if (addSpaceForMembers() == false)
-			return false;
-	members[logSizeMembers] = pMember;
-	logSizeMembers++;
+	if (members.capacity() <= members.size())
+		members.reserve(members.capacity() * 2);
+	members.push_back(pMember);
 	return true;
 }
 
-bool Facebook::memberNameCheck(const char* name) // checking if the name is exist Member return true for found and false for not found
+bool Facebook::memberNameCheck(const char* name) const // checking if the name is exist Member return true for found and false for not found
 {
-	for (int i = 0; i < logSizeMembers; i++)
-		if (strcmp(members[i]->getName(), name) == MATCH)
+	vector<Member*>::const_iterator itr = this->members.begin();
+	vector<Member*>::const_iterator itrEnd = this->members.end();
+	for (; itr != itrEnd; ++itr )
+		if (strcmp((*itr)->getName(), name) == MATCH)
 			return true;
 	return false;
 }
@@ -139,60 +92,72 @@ bool Facebook::createFanPage(const char* name)
 		return false;
 	}
 	Page* pPage = new Page(name);
-	if (phySizeFanPages <= logSizeFanPages)
-		if (addSpaceForFanPages() == false)
-			return false;
-	fanPages[logSizeFanPages] = pPage;
-	logSizeFanPages++;
+	if (fanPages.capacity() <= fanPages.size() && fanPages.capacity() != 0)
+		fanPages.reserve(fanPages.capacity() * 2);
+	fanPages.push_back(pPage);
 	return true;
 }
 
-bool Facebook::pageNameCheck(const char* name) // checking if the name is exist Page return true for found and false for not found
+bool Facebook::pageNameCheck(const char* name) const // checking if the name is exist Page return true for found and false for not found
 { 
-	for (int i = 0; i < logSizeFanPages; i++)
-		if (strcmp(fanPages[i]->getName(), name) == MATCH)
+	vector<Page*>::const_iterator itr = this->fanPages.begin();
+	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	for (; itr != itrEnd; ++itr)
+		if (strcmp( (*itr)->getName() , name) == MATCH)
 			return true;
 	return false;
 }
 
 void Facebook::showAllMembers() const
 {
+	vector<Member*>::const_iterator itr = this->members.begin();
+	vector<Member*>::const_iterator itrEnd = this->members.end();
 	cout << "-------- All Members in Facebook: --------" << endl;
-	for (int i = 0; i < logSizeMembers; i++)
-		cout << "Member #" << i + 1 << " Name: " << members[i]->getName() << endl;
+	for (int i = 0; itr != itrEnd; ++itr, ++i)
+		cout << "Member #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Member List -----------" << endl << endl;
 }
 
 void Facebook::showAllPages() const
 {
+	vector<Page*>::const_iterator itr = this->fanPages.begin();
+	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
 	cout << "--------- All Pages in Facebook: ---------" << endl;
-	for (int i = 0; i < logSizeFanPages; i++)
-		cout << "Fan Page #" << i + 1 << " Name: " << fanPages[i]->getName() << endl;
+	for (int i=0; itr != itrEnd; ++itr, ++i)
+		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 
 Member& Facebook::getMember(const char* name) // return member by ref from array of members
 {
-	for (int i = 0; i < logSizeMembers; i++)
-		if (strcmp(name, members[i]->getName()) == MATCH)
-			return *(members[i]);
+	vector<Member*>::const_iterator itr = this->members.begin();
+	vector<Member*>::const_iterator itrEnd = this->members.end();
+	for (; itr != itrEnd; ++itr)
+		if (strcmp(name, (*itr)->getName()) == MATCH)
+			return **itr;
 }
 const Member& Facebook::getMember(const char* name) const // return member by const ref from array of members
 {
-	for (int i = 0; i < logSizeMembers; i++)
-		if (strcmp(name, members[i]->getName()) == MATCH)
-			return *(members[i]);
+	vector<Member*>::const_iterator itr = this->members.begin();
+	vector<Member*>::const_iterator itrEnd = this->members.end();
+	for (; itr != itrEnd; ++itr)
+		if (strcmp(name, (*itr)->getName()) == MATCH)
+			return **itr;
 }
 
 const Page& Facebook::getPage(const char* name) const // return page by const ref from array of pages
 {
-	for (int i = 0; i < logSizeFanPages; i++)
-		if (strcmp(name, fanPages[i]->getName()) == MATCH)
-			return *fanPages[i];
+	vector<Page*>::const_iterator itr = this->fanPages.begin();
+	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	for (; itr != itrEnd; ++itr)
+		if (strcmp(name, (*itr)->getName()) == MATCH)
+			return **itr;
 }
 Page& Facebook::getPage(const char* name) // return page by ref from array of pages
 {
-	for (int i = 0; i < logSizeFanPages; i++)
-		if (strcmp(name, fanPages[i]->getName()) == MATCH)
-			return *fanPages[i];
+	vector<Page*>::const_iterator itr = this->fanPages.begin();
+	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	for (; itr != itrEnd; ++itr)
+		if (strcmp(name, (*itr)->getName()) == MATCH)
+			return **itr;
 }

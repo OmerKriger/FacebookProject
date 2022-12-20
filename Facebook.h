@@ -24,7 +24,7 @@ public:
 	Facebook();
 	~Facebook();
 	void __Init__();
-	bool createMember(const char* name, int day, int month, int year);
+	bool createMember(const char* name, Date bDay);
 	bool createFanPage(const char* name);
 	void showAllMembers() const;
 	void showAllPages() const;

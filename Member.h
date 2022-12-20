@@ -22,7 +22,7 @@ public:
 	void showMyLastStatuses() const;
 	bool addStatus(const char* text, sType type);
 	bool addStatus(const char* text);
-	int getAmountOfStatus() const { return logSizeMyStatus; }
+	const int& getAmountOfStatus() const { return logSizeMyStatus; }
 	const char* getName() const { return name; }
 
 private:

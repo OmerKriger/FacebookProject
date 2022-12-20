@@ -168,7 +168,7 @@ void askForFriendList(Facebook& facebook)
 	cout << "Do you need the member lists ? (Y/N): ";
 	cin >> answer;
 	cin.get();
-	while (answer != 'Y' && answer != 'y' && answer != 'n' && answer != 'N')
+	while (answer != YES_ANSWER_UPPER && answer != YES_ANSWER_LOWER && answer != NO_ANSWER_LOWER && answer != NO_ANSWER_UPPER)
 	{
 		cout << "You choice isn't defined, please try again" << endl;
 		cout << "Do you need the member lists ? (Y/N): ";
@@ -190,7 +190,7 @@ void askForPageList(Facebook& facebook)
 	cout << "Do you need the fan page lists ? (Y/N): ";
 	cin >> answer;
 	cin.get();
-	while (answer != 'Y' && answer != 'y' && answer != 'n' && answer != 'N')
+	while (answer != YES_ANSWER_UPPER && answer != YES_ANSWER_LOWER && answer != NO_ANSWER_LOWER && answer != NO_ANSWER_UPPER)
 	{
 		cout << "You choice isn't defined, please try again" << endl;
 		cout << "Do you need the fan page ? (Y/N): ";
@@ -237,8 +237,13 @@ bool createMember(Facebook& facebook)
 		cout << "Please enter birthday in format DD.MM.YYYY: " << endl;
 		getString(birthday, MAX_BIRTHDAY_STR);
 	} while (convertStrToIntDate(birthday, &day, &month, &year) == false);
-
-	return facebook.createMember(name, day, month, year); // create member and return if successed
+	Date bDay(day, month, year);
+	if (!bDay.isDefined())
+	{
+		cout << "Birthday isn't defined well." << endl;
+		return false;
+	}
+	return facebook.createMember(name, bDay); // create member and return if successed
 }
 
 bool createPage(Facebook& facebook) 
@@ -339,10 +344,16 @@ bool setFriendship(Facebook& facebook)
 	}
 	cout << "Please type the name of the second member: " << endl;
 	getString(nameDest, MAX_NAME_LEN);
-	while (facebook.memberNameCheck(nameDest) == false)
+	bool samePerson = strcmp(nameDest, nameSource);
+	while (facebook.memberNameCheck(nameDest) == false || samePerson == true)
 	{
-		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the second member: ";
+		if (samePerson)
+			cout << "Member can not be friend of himself, Please try again." << endl;
+		else
+			cout << "This member isn't exist, Please try again." << endl;
+		cout << "Please type the name of the second member: ";
 		getString(nameDest, MAX_NAME_LEN);
+		samePerson = strcmp(nameDest, nameSource);
 	}
 	return facebook.getMember(nameSource).addFriend(&(facebook.getMember(nameDest)));
 }

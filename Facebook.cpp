@@ -26,9 +26,9 @@ void Facebook::__Init__()
 	// This function create default data in system
 	
 	// creating defualt Members
-	this->createMember("Omer Kriger", 10, 5, 1998);
-	this->createMember("Nir Peretz", 9, 8, 1997);
-	this->createMember("Mark Zuckerberg", 14, 5, 1984);
+	this->createMember("Omer Kriger", Date(10, 5, 1998));
+	this->createMember("Nir Peretz", Date(9, 8, 1997));
+	this->createMember("Mark Zuckerberg", Date(14, 5, 1984));
 	// creating defualt Pages
 	this->createFanPage("Eduardo Saverin");
 	this->createFanPage("Nike");
@@ -102,15 +102,19 @@ bool Facebook::addSpaceForFanPages()
 	return true;
 }
 
-bool Facebook::createMember(const char* name, int day, int month, int year)
+bool Facebook::createMember(const char* name, Date bDay)
 {
 	if (memberNameCheck(name) == true)
 	{
 		cout << "This name already exist in the system" << endl;
 		return false;
 	}
-	Date bday(day, month, year);
-	Member* pMember = new Member(name, bday);
+	if (!bDay.isDefined())
+	{
+		cout << "The birthday is not defined well." << endl;
+		return false;
+	}
+	Member* pMember = new Member(name, bDay);
 	if (phySizeMembers <= logSizeMembers)
 		if (addSpaceForMembers() == false)
 			return false;

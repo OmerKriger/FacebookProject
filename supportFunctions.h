@@ -33,6 +33,11 @@
 #define PAGE "Page"
 #define MATCH 0
 #define NOT_FOUND -1
+#define YES_ANSWER_UPPER 'Y'
+#define YES_ANSWER_LOWER 'y'
+#define NO_ANSWER_UPPER 'N'
+#define NO_ANSWER_LOWER 'n'
+
 
 // class forward decleration
 class Facebook;

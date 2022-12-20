@@ -32,6 +32,8 @@ Member::~Member()
  
 bool Member::addFriend(Member* newFriend)
 {
+	if (newFriend == this) // friend cannot add him self
+		return false;
 	if (searchFriend(newFriend->name) != NOT_FOUND) // we can't add friend already in friends
 		return false;
 	if (phySizeFriends <= logSizeFriends)
@@ -88,6 +90,7 @@ bool Member::removePage(const Page& dPage)
 		cout << "This member isn't follow after this page !" << endl;
 		return false;
 	}
+	this->InterestPages[index]->removeFan(this->getName());
 	this->InterestPages[index] = this->InterestPages[logSizeInterestPages - 1];
 	logSizeInterestPages--;
 	return true;	

@@ -8,14 +8,17 @@ class Date
 	bool setDay(int day);
 	bool setMonth(int month);
 	bool setYear(int year);
+	bool setHour(int hour);
+	bool setMinutes(int mins);
 public:
 	Date();
 	Date(int day, int month, int year);
 	Date(int day, int month, int year, int minutes, int hours);
-	int getDay() { return day; }
-	int getMonth() { return month; }
-	int getYear() { return year; }
-	int getMin() { return minutes; }
-	int getHours() { return hours; }
+	const int& getDay() const { return day; }
+	const int& getMonth() const { return month; }
+	const int& getYear() const { return year; }
+	const int& getMin() const { return minutes; }
+	const int& getHours() const { return hours; }
+	bool isDefined() const;
 };
 #endif

@@ -2,6 +2,23 @@
 #include <iostream>
 using namespace std;
 #include "Date.h"
+#define UNDEFINED -1
+#define DAY_MIN 1
+#define DAY_MAX 31
+#define MONTH_MIN 1
+#define MONTH_MAX 12
+#define HOUR_MAX 23
+#define HOUR_MIN 0
+#define MINS_MAX 59
+#define MINS_MIN 0
+#define FEB 2
+#define APR 4
+#define JUN 6
+#define SEP 9
+#define NOV 11
+#define FEB30 30
+#define FEB29 29
+#define DIV4 4
 
 Date::Date()
 {
@@ -22,9 +39,10 @@ Date::Date(int day, int month, int year)
 	/// <summary>
 	/// Constractor for Date with only date that given
 	/// </summary>
-	this->day = day;
-	this->month = month;
-	this->year = year;
+	this->day = UNDEFINED, this->month = UNDEFINED, this->year = UNDEFINED;
+	setYear(year);
+	setMonth(month);
+	setDay(day);
 	this->minutes = 00;
 	this->hours = 00;
 }
@@ -33,11 +51,12 @@ Date::Date(int day, int month, int year, int minutes, int hours)
 	/// <summary>
 	/// Constractor for Date with full date given with time
 	/// </summary>
-	this->day = day;
-	this->month = month;
-	this->year = year;
-	this->minutes = minutes;
-	this->hours = hours;
+	this->day = UNDEFINED, this->month = UNDEFINED, this->year = UNDEFINED, this->minutes = UNDEFINED, this->hours = UNDEFINED;
+	setYear(year);
+	setMonth(month);
+	setDay(day);
+	setMinutes(minutes);
+	setHour(hours);
 }
 bool Date::setDate(int day, int month, int year) 
 {
@@ -49,13 +68,32 @@ bool Date::setDate(int day, int month, int year)
 		return false;
 	return true;
 }
+bool Date::setHour(int hour)
+{
+	if (hour < HOUR_MIN || HOUR_MAX < hour)
+		return false;
+	else
+		this->hours = hour;
+	return true;
+
+}
+bool Date::setMinutes(int mins)
+{
+	if (mins < MINS_MIN || MINS_MAX < mins)
+		return false;
+	else
+		this->minutes = mins;
+	return true;
+}
 bool Date::setDay(int day) 
 {
-	if (day < 1 || 31 < day)
+	if (day < DAY_MIN || DAY_MAX < day)
 		return false;
-	if (day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11))
+	if (day == DAY_MAX && (month == FEB || month == APR || month == JUN || month == SEP || month == NOV))
 		return false;
-	if (day == 30 && month == 2)
+	if (day == FEB30 && month == FEB)
+		return false;
+	if (year % 4 != 0 && month == FEB && day == FEB29) // if year divide by four and month febuary so there is 29 in feb and date is legal
 		return false;
 	this->day = day;
 	return true;
@@ -73,4 +111,9 @@ bool Date::setYear(int year)
 		return false;
 	this->year = year;
 	return true;
+}
+
+bool Date::isDefined() const
+{
+	return (year != UNDEFINED) && (month != UNDEFINED) && (day != UNDEFINED) && (hours != UNDEFINED) && (minutes != UNDEFINED);
 }

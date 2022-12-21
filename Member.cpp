@@ -18,8 +18,8 @@ Member::~Member()
 {
 	delete[] name;
 	// Statuses deleting
-	vector<Status*>::iterator itr = this->myStatus.begin();
-	vector<Status*>::iterator itrEnd = this->myStatus.end();
+	list<Status*>::iterator itr = this->myStatus.begin();
+	list<Status*>::iterator itrEnd = this->myStatus.end();
 	for (; itr != itrEnd; ++itr)
 		delete (*itr);
 }
@@ -29,33 +29,29 @@ bool Member::addFriend(Member* newFriend)
 {
 	if (newFriend == this) // friend cannot add him self
 		return false;
-	vector<Member*>::iterator itrOfFriend = find(friends.begin(), friends.end(), newFriend); // search for newFriend in friends
+	list<Member*>::iterator itrOfFriend = find(friends.begin(), friends.end(), newFriend); // search for newFriend in friends
 	if (itrOfFriend != friends.end()) // if friend is found return false
 		return false;
-	if (friends.capacity() == friends.size() && friends.capacity() != 0)
-		friends.reserve(friends.capacity() * 2);
 	friends.push_back(newFriend);
 
 	if (newFriend->addFriend(this) == false)
 		return true;
 }
-bool Member::removeFriend(Member* Friend) 
+bool Member::removeFriend(Member* dFriend)
 {
-	vector<Member*>::iterator itrOfFriend = find(friends.begin(),friends.end(), Friend);
+	list<Member*>::iterator itrOfFriend = find(friends.begin(),friends.end(), dFriend);
 	if (itrOfFriend == friends.end()) // we can't remove friend who is not in friends
 		return false;
 	friends.erase(itrOfFriend);
-	if (Friend->removeFriend(this) == false)
+	if (dFriend->removeFriend(this) == false)
 		return true;
 }
 // Pages functions in Member
 bool Member::addPage(Page& newPage)
 {
-	vector<Page*>::iterator itrOfPage = find(InterestPages.begin(), InterestPages.end(), &newPage); // search for newFriend in friends
+	list<Page*>::iterator itrOfPage = find(InterestPages.begin(), InterestPages.end(), &newPage); // search for newFriend in friends
 	if (itrOfPage != InterestPages.end()) // if friend is found return false
 		return false;
-	if (InterestPages.capacity() == InterestPages.size() && InterestPages.capacity() != 0)
-		InterestPages.reserve(InterestPages.capacity()*2);
 	InterestPages.push_back(&newPage);
 	// say to page add this friend to his list
 	newPage.addFan(this);
@@ -63,13 +59,13 @@ bool Member::addPage(Page& newPage)
 }
 bool Member::removePage(const Page& dPage)
 {
-	vector<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), dPage);
+	list<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), &dPage);
 	if (itrPage == InterestPages.end()) // we can't remove friend who is not in friends
 	{
 		cout << "This member isn't follow after this page !" << endl;
 		return false;
 	}
-	(*itrPage)->removeFan(this->getName());
+	(*itrPage)->removeFan(this);
 	InterestPages.erase(itrPage);
 	return true;	
 }
@@ -81,8 +77,8 @@ void Member::showMyInterestPages() const
 		return;
 	}
 	cout << "-------- All Followed Pages by " << this->getName() << " --------" << endl;
-	vector<Page*>::const_iterator itr = this->InterestPages.begin();
-	vector<Page*>::const_iterator itrEnd = this->InterestPages.end();
+	list<Page*>::const_iterator itr = this->InterestPages.begin();
+	list<Page*>::const_iterator itrEnd = this->InterestPages.end();
 	for(int i = 0;itr!=itrEnd;++itr, ++i)
 		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Followed Pages List -----------" << endl << endl;
@@ -97,8 +93,8 @@ void Member::showMyStatus() const
 		return;
 	}
 	cout << "-------- All Status of " << this->getName() << " --------" << endl;
-	vector<Status*>::const_iterator itr = this->myStatus.begin();
-	vector<Status*>::const_iterator itrEnd = this->myStatus.end();
+	list<Status*>::const_iterator itr = this->myStatus.begin();
+	list<Status*>::const_iterator itrEnd = this->myStatus.end();
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
 	{
 		const Date& date = (*itr)->getDate();
@@ -120,8 +116,6 @@ bool Member::addStatus(const char* text)
 }
 bool Member::addStatus(const char* text, sType type)
 {
-	if (myStatus.size() == myStatus.capacity() && myStatus.capacity() != 0)
-		myStatus.reserve(myStatus.capacity() * 2);
 	Status* status = new Status(text,this->getName());
 	myStatus.push_back(status);
 	return true;
@@ -136,8 +130,8 @@ void Member::showLastFriendsStatus() const
 	}
 	else
 	{
-		vector<Member*>::const_iterator itr = this->friends.begin();
-		vector<Member*>::const_iterator itrEnd = this->friends.end();
+		list<Member*>::const_iterator itr = this->friends.begin();
+		list<Member*>::const_iterator itrEnd = this->friends.end();
 		for (int i = 0; itr != itrEnd; ++itr, ++i)
 		{
 			if ((*itr)->getAmountOfStatus() > 0 && somethingPrinted == false) // change flag for status printed
@@ -153,8 +147,8 @@ void Member::showMyLastStatuses() const
 	/// <summary>
 	/// This function member show his statuses from the list of statuses
 	/// </summary>
-	vector<Status*>::const_iterator itr = myStatus.begin();
-	vector<Status*>::const_iterator itrEnd = myStatus.end();
+	list<Status*>::const_iterator itr = myStatus.begin();
+	list<Status*>::const_iterator itrEnd = myStatus.end();
 	for (int i=0; itr != itrEnd && i<= AMOUNT_SHOW_FRIENDS_STATUSES; --itrEnd, ++i)
 		(*itrEnd)->showStatus();
 }
@@ -186,8 +180,8 @@ void Member::showMyFriends() const
 		return;
 	}
 	cout << "-------- All Friends of " << this->getName() << " --------" << endl;
-	vector<Member*>::const_iterator itr = this->friends.begin();
-	vector<Member*>::const_iterator itrEnd = this->friends.end();
+	list<Member*>::const_iterator itr = this->friends.begin();
+	list<Member*>::const_iterator itrEnd = this->friends.end();
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
 		cout << "Friend #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Friends List -----------" << endl << endl;

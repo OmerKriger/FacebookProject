@@ -2,12 +2,18 @@
 using namespace std;
 #include "Facebook.h"
 
+Facebook::Facebook()
+{
+	if (TEST)
+		__Init__();
+}
+
 Facebook::~Facebook()
 {
-	vector<Member*>::const_iterator mItr = this->members.begin();
-	vector<Member*>::const_iterator mItrEnd = this->members.end();
-	vector<Page*>::const_iterator pItr = this->fanPages.begin();
-	vector<Page*>::const_iterator pItrEnd = this->fanPages.end();
+	list<Member*>::const_iterator mItr = this->members.begin();
+	list<Member*>::const_iterator mItrEnd = this->members.end();
+	list<Page*>::const_iterator pItr = this->fanPages.begin();
+	list<Page*>::const_iterator pItrEnd = this->fanPages.end();
 
 	for (; pItr != pItrEnd; ++pItr)
 		delete (*pItr);
@@ -68,16 +74,14 @@ bool Facebook::createMember(const char* name, Date bDay)
 		return false;
 	}
 	Member* pMember = new Member(name, bDay);
-	if (members.capacity() <= members.size())
-		members.reserve(members.capacity() * 2);
 	members.push_back(pMember);
 	return true;
 }
 
 bool Facebook::memberNameCheck(const char* name) const // checking if the name is exist Member return true for found and false for not found
 {
-	vector<Member*>::const_iterator itr = this->members.begin();
-	vector<Member*>::const_iterator itrEnd = this->members.end();
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
 	for (; itr != itrEnd; ++itr )
 		if (strcmp((*itr)->getName(), name) == MATCH)
 			return true;
@@ -92,16 +96,14 @@ bool Facebook::createFanPage(const char* name)
 		return false;
 	}
 	Page* pPage = new Page(name);
-	if (fanPages.capacity() <= fanPages.size() && fanPages.capacity() != 0)
-		fanPages.reserve(fanPages.capacity() * 2);
 	fanPages.push_back(pPage);
 	return true;
 }
 
 bool Facebook::pageNameCheck(const char* name) const // checking if the name is exist Page return true for found and false for not found
 { 
-	vector<Page*>::const_iterator itr = this->fanPages.begin();
-	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	for (; itr != itrEnd; ++itr)
 		if (strcmp( (*itr)->getName() , name) == MATCH)
 			return true;
@@ -110,8 +112,8 @@ bool Facebook::pageNameCheck(const char* name) const // checking if the name is 
 
 void Facebook::showAllMembers() const
 {
-	vector<Member*>::const_iterator itr = this->members.begin();
-	vector<Member*>::const_iterator itrEnd = this->members.end();
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
 	cout << "-------- All Members in Facebook: --------" << endl;
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
 		cout << "Member #" << i << " Name: " << (*itr)->getName() << endl;
@@ -120,8 +122,8 @@ void Facebook::showAllMembers() const
 
 void Facebook::showAllPages() const
 {
-	vector<Page*>::const_iterator itr = this->fanPages.begin();
-	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	cout << "--------- All Pages in Facebook: ---------" << endl;
 	for (int i=0; itr != itrEnd; ++itr, ++i)
 		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
@@ -130,16 +132,16 @@ void Facebook::showAllPages() const
 
 Member& Facebook::getMember(const char* name) // return member by ref from array of members
 {
-	vector<Member*>::const_iterator itr = this->members.begin();
-	vector<Member*>::const_iterator itrEnd = this->members.end();
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
 	for (; itr != itrEnd; ++itr)
 		if (strcmp(name, (*itr)->getName()) == MATCH)
 			return **itr;
 }
 const Member& Facebook::getMember(const char* name) const // return member by const ref from array of members
 {
-	vector<Member*>::const_iterator itr = this->members.begin();
-	vector<Member*>::const_iterator itrEnd = this->members.end();
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
 	for (; itr != itrEnd; ++itr)
 		if (strcmp(name, (*itr)->getName()) == MATCH)
 			return **itr;
@@ -147,16 +149,16 @@ const Member& Facebook::getMember(const char* name) const // return member by co
 
 const Page& Facebook::getPage(const char* name) const // return page by const ref from array of pages
 {
-	vector<Page*>::const_iterator itr = this->fanPages.begin();
-	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	for (; itr != itrEnd; ++itr)
 		if (strcmp(name, (*itr)->getName()) == MATCH)
 			return **itr;
 }
 Page& Facebook::getPage(const char* name) // return page by ref from array of pages
 {
-	vector<Page*>::const_iterator itr = this->fanPages.begin();
-	vector<Page*>::const_iterator itrEnd = this->fanPages.end();
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	for (; itr != itrEnd; ++itr)
 		if (strcmp(name, (*itr)->getName()) == MATCH)
 			return **itr;

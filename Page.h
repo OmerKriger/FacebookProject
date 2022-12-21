@@ -4,27 +4,24 @@
 #include "Date.h"
 #include "Status.h"
 #include "supportFunctions.h"
+#include <list>
+#include <algorithm>
 class Member;
 class Status;
 
 class Page
 {
 	char* name;
-	Member** fans;
-	Status** wall;
-	int logSizeFans, phySizeFans;
-	int logSizeWall, phySizeWall;
+	list<Member*> fans;
+	list<Status*> wall;
 	bool setName(const char* str);
-	int searchFan(const char* name);
-	bool addSpaceInFans();
-	bool addSpaceInWall();
 	Page(const Page&);
 
 public:
 	Page(const char* name);
 	~Page();
 	bool addFan(Member* member);
-	bool removeFan(const char* name);
+	bool removeFan(Member* member);
 	void showFans() const;
 	bool addStatus(const char* str);
 	void showPageStatus() const;

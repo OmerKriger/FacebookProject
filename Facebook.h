@@ -4,8 +4,9 @@
 #include "Page.h"
 #include "supportFunctions.h"
 #include "Date.h"
-#include <vector>
+#include <list>
 
+#define TEST 1 // TEST == 0 is no test setup
 #define MATCH 0
 
 
@@ -14,10 +15,11 @@ class Page;
 
 class Facebook 
 {
-	std::vector<Member*> members;
-	std::vector<Page*> fanPages;
-	Facebook(Facebook&);
+	std::list<Member*> members;
+	std::list<Page*> fanPages;
+	Facebook(const Facebook&);
 public:
+	Facebook();
 	~Facebook();
 	void __Init__();
 	bool createMember(const char* name, Date bDay);

@@ -9,26 +9,26 @@ class Status;
 
 class Page
 {
-	char* name;
+	std::string name;
 	Member** fans;
 	Status** wall;
 	int logSizeFans, phySizeFans;
 	int logSizeWall, phySizeWall;
-	bool setName(const char* str);
-	int searchFan(const char* name);
+	bool setName(const std::string& str);
+	int searchFan(const std::string& name); // change after merge with vector.
 	bool addSpaceInFans();
 	bool addSpaceInWall();
 	Page(const Page&);
 
 public:
-	Page(const char* name);
+	Page(const std::string& name);
 	~Page();
 	bool addFan(Member* member);
-	bool removeFan(const char* name);
+	bool removeFan(const std::string& name);
 	void showFans() const;
-	bool addStatus(const char* str);
+	bool addStatus(const std::string& str); // change after merge with vector.
 	void showPageStatus() const;
-	const char* getName() const;
+	const std::string& getName() const;
 };
 
 

@@ -24,16 +24,16 @@ public:
 	Facebook();
 	~Facebook();
 	void __Init__();
-	bool createMember(const char* name, Date bDay);
-	bool createFanPage(const char* name);
+	bool createMember(const std::string& name, Date bDay);
+	bool createFanPage(const std::string& name);
 	void showAllMembers() const;
 	void showAllPages() const;
-	bool memberNameCheck(const char* name);
-	bool pageNameCheck(const char* name);
-	const Member& getMember(const char* name) const;
-	Member& getMember(const char* name);
-	const Page& getPage(const char* name) const;
-	Page& getPage(const char* name);
+	bool memberNameCheck(const std::string& name);
+	bool pageNameCheck(const std::string& name);
+	const Member& getMember(const std::string& name) const;
+	Member& getMember(const std::string& name);
+	const Page& getPage(const std::string& name) const;
+	Page& getPage(const std::string& name);
 };
 
 #endif

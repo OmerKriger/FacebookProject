@@ -102,7 +102,7 @@ bool Facebook::addSpaceForFanPages()
 	return true;
 }
 
-bool Facebook::createMember(const char* name, Date bDay)
+bool Facebook::createMember(const string& name, Date bDay)
 {
 	if (memberNameCheck(name) == true)
 	{
@@ -123,15 +123,15 @@ bool Facebook::createMember(const char* name, Date bDay)
 	return true;
 }
 
-bool Facebook::memberNameCheck(const char* name) // checking if the name is exist Member return true for found and false for not found
-{
+bool Facebook::memberNameCheck(const string& name) // checking if the name is exist Member return true for found and false for not found
+{ // change after merge
 	for (int i = 0; i < logSizeMembers; i++)
 		if (strcmp(members[i]->getName(), name) == MATCH)
 			return true;
 	return false;
 }
 
-bool Facebook::createFanPage(const char* name) 
+bool Facebook::createFanPage(const string& name)
 {
 	if (pageNameCheck(name) == true) // is already in the system
 	{
@@ -147,8 +147,8 @@ bool Facebook::createFanPage(const char* name)
 	return true;
 }
 
-bool Facebook::pageNameCheck(const char* name) // checking if the name is exist Page return true for found and false for not found
-{ 
+bool Facebook::pageNameCheck(const string& name) // checking if the name is exist Page return true for found and false for not found
+{  // change after merge.
 	for (int i = 0; i < logSizeFanPages; i++)
 		if (strcmp(fanPages[i]->getName(), name) == MATCH)
 			return true;
@@ -171,27 +171,27 @@ void Facebook::showAllPages() const
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 
-Member& Facebook::getMember(const char* name) // return member by ref from array of members
-{
+Member& Facebook::getMember(const string& name) // return member by ref from array of members
+{ // change after merge.
 	for (int i = 0; i < logSizeMembers; i++)
 		if (strcmp(name, members[i]->getName()) == MATCH)
 			return *(members[i]);
 }
-const Member& Facebook::getMember(const char* name) const // return member by const ref from array of members
-{
+const Member& Facebook::getMember(const string& name) const // return member by const ref from array of members
+{ // change after merge.
 	for (int i = 0; i < logSizeMembers; i++)
 		if (strcmp(name, members[i]->getName()) == MATCH)
 			return *(members[i]);
 }
 
-const Page& Facebook::getPage(const char* name) const // return page by const ref from array of pages
-{
+const Page& Facebook::getPage(const string& name) const // return page by const ref from array of pages
+{ // change after merge.
 	for (int i = 0; i < logSizeFanPages; i++)
 		if (strcmp(name, fanPages[i]->getName()) == MATCH)
 			return *fanPages[i];
 }
-Page& Facebook::getPage(const char* name) // return page by ref from array of pages
-{
+Page& Facebook::getPage(const string& name) // return page by ref from array of pages
+{ // change after merge
 	for (int i = 0; i < logSizeFanPages; i++)
 		if (strcmp(name, fanPages[i]->getName()) == MATCH)
 			return *fanPages[i];

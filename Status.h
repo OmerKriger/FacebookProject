@@ -3,22 +3,23 @@
 #pragma warning(disable : 4996)
 #include "Date.h"
 #include "supportFunctions.h"
+#include <string>
 
 enum class sType { tText, tPhoto, tVideo };
 class Status
 {
 	Date date; 
-	char* text;
-	const char* const creator;
+	std::string text;
+	const std::string const creator;
 	sType statusType; // default value will be text for text status
-	bool setText(const char* str, sType type);
+	bool setText(const std::string& str, sType type);
 	Status(Status&);
 public:
-	Status(const char* text, const char* name);
-	~Status();
+	Status(const std::string& text, const std::string& name);
+	// ~Status(); // deleted because no allocations
 	const Date& getDate() const;
-	const char* getText() const;
+	const std::string getText() const;
 	void showStatus();
-	const char* getCreator() const;
+	const std::string& getCreator() const;
 };
 #endif

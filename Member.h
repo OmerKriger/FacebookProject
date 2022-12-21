@@ -1,6 +1,8 @@
 #ifndef __Member_H
 #define __Member_H
 #include "Date.h"
+#include <string>
+
 
 enum class sType;
 class Status;
@@ -9,7 +11,7 @@ class Page;
 class Member
 { 
 public:
-	Member(const char* name, Date bDay);
+	Member(const std::string& name, Date bDay);
 	~Member();
 	bool addFriend(Member* newFriend);
 	bool removeFriend(Member* dFriend);
@@ -20,13 +22,13 @@ public:
 	void showMyInterestPages() const;
 	void showLastFriendsStatus() const;
 	void showMyLastStatuses() const;
-	bool addStatus(const char* text, sType type);
-	bool addStatus(const char* text);
+	bool addStatus(const std::string& text, sType type);
+	bool addStatus(const std::string& text);
 	const int& getAmountOfStatus() const { return logSizeMyStatus; }
-	const char* getName() const { return name; }
+	const std::string& getName() const { return name; }
 
 private:
-	char* name;
+	std::string name;
 	Date birthDay;
 	Status** myStatus;
 	Page** InterestPages;
@@ -37,9 +39,9 @@ private:
 	bool addSpaceFriendList();
 	bool addSpaceMyStatusList();
 	bool addSpaceInterestPagesList();
-	int searchFriend(char* fName);
-	int searchPage(const char* pName);
-	bool setName(const char* str);
+	int searchFriend(const std::string& fName); //need to check if can add const // change after merge with vectors
+	int searchPage(const std::string& pName); // change after merge with vectors
+	bool setName(const std::string& str);
 };
 
 

@@ -41,7 +41,7 @@ void Page::showFans() const
 	list<Member*>::const_iterator itrEnd = fans.end();
 	cout << "The Fan List of Page " << name << ":" << endl;
 	for (int i=0; itr!=itrEnd; ++itr, ++i)
-		cout << "Fan #" << i << ": " << (*itr)->getName() << endl;
+		cout << "Fan #" << i + 1 << ": " << (*itr)->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
 }
 bool Page::addStatus(const string& str)

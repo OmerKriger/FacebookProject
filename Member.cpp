@@ -147,7 +147,8 @@ void Member::showMyLastStatuses() const
 	/// </summary>
 	list<Status*>::const_iterator itr = myStatus.begin();
 	list<Status*>::const_iterator itrEnd = myStatus.end();
-	for (int i=0; itr != itrEnd && i<= AMOUNT_SHOW_FRIENDS_STATUSES; --itrEnd, ++i)
+	--itrEnd;
+	for (int i = 0; itr != itrEnd && i <= AMOUNT_SHOW_FRIENDS_STATUSES; --itrEnd, ++i)  // Need to change the order of the statuses so we can do a forward loop.
 		(*itrEnd)->showStatus();
 }
 
@@ -182,7 +183,7 @@ void Member::showMyFriends() const
 	list<Member*>::const_iterator itr = this->friends.begin();
 	list<Member*>::const_iterator itrEnd = this->friends.end();
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
-		cout << "Friend #" << i << " Name: " << (*itr)->getName() << endl;
+		cout << "Friend #" << i + 1 << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Friends List -----------" << endl << endl;
 }
 

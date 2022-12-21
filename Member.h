@@ -2,7 +2,7 @@
 #define __Member_H
 #include "Date.h"
 #include <string>
-
+#include <list>
 
 enum class sType;
 class Status;
@@ -24,23 +24,16 @@ public:
 	void showMyLastStatuses() const;
 	bool addStatus(const std::string& text, sType type);
 	bool addStatus(const std::string& text);
-	const int& getAmountOfStatus() const { return logSizeMyStatus; }
 	const std::string& getName() const { return name; }
+	const int& getAmountOfStatus() const { return (int)myStatus.size(); }
 
 private:
 	std::string name;
 	Date birthDay;
-	Status** myStatus;
-	Page** InterestPages;
-	Member** friends;
+	std::list <Status*> myStatus;
+	std::list <Page*> InterestPages;
+	std::list <Member*> friends;
 	Member(const Member&);
-	int logSizeFriends, logSizeMyStatus, logSizeInterestPages;
-	int phySizeFriends , phySizeMyStatus, phySizeInterestPages;
-	bool addSpaceFriendList();
-	bool addSpaceMyStatusList();
-	bool addSpaceInterestPagesList();
-	int searchFriend(const std::string& fName); //need to check if can add const // change after merge with vectors
-	int searchPage(const std::string& pName); // change after merge with vectors
 	bool setName(const std::string& str);
 };
 

@@ -2,22 +2,23 @@
 using namespace std;
 #include "Facebook.h"
 
-
 Facebook::Facebook()
 {
-	logSizeMembers = logSizeFanPages = phySizeFanPages = phySizeMembers = 0;
-	members = nullptr;
-	fanPages = nullptr;
+	if (TEST)
+		__Init__();
 }
 
 Facebook::~Facebook()
 {
-	for (int i = 0; i < logSizeFanPages; i++)
-		delete fanPages[i];
-	delete[] fanPages;
-	for (int i = 0; i < logSizeMembers; i++)
-		delete members[i];
-	delete[] members;
+	list<Member*>::const_iterator mItr = this->members.begin();
+	list<Member*>::const_iterator mItrEnd = this->members.end();
+	list<Page*>::const_iterator pItr = this->fanPages.begin();
+	list<Page*>::const_iterator pItrEnd = this->fanPages.end();
+
+	for (; pItr != pItrEnd; ++pItr)
+		delete (*pItr);
+	for (; mItr != mItrEnd; ++mItr)
+		delete (*mItr);
 	cout << "Facebook out, over!" << endl;
 }
 
@@ -60,48 +61,6 @@ void Facebook::__Init__()
 	this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.");
 }
 
-bool Facebook::addSpaceForMembers()
-{
-	int newSize;
-	if (phySizeMembers == 0)
-		newSize = 1;
-	else
-		newSize = phySizeMembers * 2;
-	Member** pNewMembers = new Member * [newSize];
-	if (checkAllocate(pNewMembers) == false)
-		return false;
-	if (members != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeMembers; i++) // copy old data
-			pNewMembers[i] = members[i];
-		delete[] members;
-	}
-	members = pNewMembers;
-	phySizeMembers = newSize;
-	return true;
-}
-
-bool Facebook::addSpaceForFanPages()
-{
-	int newSize;
-	if (phySizeFanPages == 0)
-		newSize = 1;
-	else
-		newSize = phySizeFanPages * 2;
-	Page** pNewPages = new Page * [newSize];
-	if (checkAllocate(pNewPages) == false)
-		return false;
-	if (fanPages != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeFanPages; i++) // copy old data
-			pNewPages[i] = fanPages[i];
-		delete[] fanPages;
-	}
-	fanPages = pNewPages;
-	phySizeFanPages = newSize;
-	return true;
-}
-
 bool Facebook::createMember(const string& name, Date bDay)
 {
 	if (memberNameCheck(name) == true)
@@ -115,18 +74,16 @@ bool Facebook::createMember(const string& name, Date bDay)
 		return false;
 	}
 	Member* pMember = new Member(name, bDay);
-	if (phySizeMembers <= logSizeMembers)
-		if (addSpaceForMembers() == false)
-			return false;
-	members[logSizeMembers] = pMember;
-	logSizeMembers++;
+	members.push_back(pMember);
 	return true;
 }
 
-bool Facebook::memberNameCheck(const string& name) // checking if the name is exist Member return true for found and false for not found
-{ // change after merge
-	for (int i = 0; i < logSizeMembers; i++)
-		if (strcmp(members[i]->getName(), name) == MATCH)
+bool Facebook::memberNameCheck(const string& name) const // checking if the name is exist Member return true for found and false for not found
+{
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
+	for (; itr != itrEnd; ++itr )
+		if ((*itr)->getName() == name)
 			return true;
 	return false;
 }
@@ -139,60 +96,69 @@ bool Facebook::createFanPage(const string& name)
 		return false;
 	}
 	Page* pPage = new Page(name);
-	if (phySizeFanPages <= logSizeFanPages)
-		if (addSpaceForFanPages() == false)
-			return false;
-	fanPages[logSizeFanPages] = pPage;
-	logSizeFanPages++;
+	fanPages.push_back(pPage);
 	return true;
 }
 
-bool Facebook::pageNameCheck(const string& name) // checking if the name is exist Page return true for found and false for not found
-{  // change after merge.
-	for (int i = 0; i < logSizeFanPages; i++)
-		if (strcmp(fanPages[i]->getName(), name) == MATCH)
+bool Facebook::pageNameCheck(const string& name) const // checking if the name is exist Page return true for found and false for not found
+{ 
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
+	for (; itr != itrEnd; ++itr)
+		if ((*itr)->getName() == name)
 			return true;
 	return false;
 }
 
 void Facebook::showAllMembers() const
 {
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
 	cout << "-------- All Members in Facebook: --------" << endl;
-	for (int i = 0; i < logSizeMembers; i++)
-		cout << "Member #" << i + 1 << " Name: " << members[i]->getName() << endl;
+	for (int i = 0; itr != itrEnd; ++itr, ++i)
+		cout << "Member #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Member List -----------" << endl << endl;
 }
 
 void Facebook::showAllPages() const
 {
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	cout << "--------- All Pages in Facebook: ---------" << endl;
-	for (int i = 0; i < logSizeFanPages; i++)
-		cout << "Fan Page #" << i + 1 << " Name: " << fanPages[i]->getName() << endl;
+	for (int i=0; itr != itrEnd; ++itr, ++i)
+		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 
 Member& Facebook::getMember(const string& name) // return member by ref from array of members
-{ // change after merge.
-	for (int i = 0; i < logSizeMembers; i++)
-		if (strcmp(name, members[i]->getName()) == MATCH)
-			return *(members[i]);
+{
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
+	for (; itr != itrEnd; ++itr)
+		if (name == (*itr)->getName())
+			return **itr;
 }
 const Member& Facebook::getMember(const string& name) const // return member by const ref from array of members
-{ // change after merge.
-	for (int i = 0; i < logSizeMembers; i++)
-		if (strcmp(name, members[i]->getName()) == MATCH)
-			return *(members[i]);
+{
+	list<Member*>::const_iterator itr = this->members.begin();
+	list<Member*>::const_iterator itrEnd = this->members.end();
+	for (; itr != itrEnd; ++itr)
+		if (name == (*itr)->getName())
+			return **itr;
 }
-
 const Page& Facebook::getPage(const string& name) const // return page by const ref from array of pages
-{ // change after merge.
-	for (int i = 0; i < logSizeFanPages; i++)
-		if (strcmp(name, fanPages[i]->getName()) == MATCH)
-			return *fanPages[i];
+{
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
+	for (; itr != itrEnd; ++itr)
+		if (name == (*itr)->getName())
+			return **itr;
 }
 Page& Facebook::getPage(const string& name) // return page by ref from array of pages
-{ // change after merge
-	for (int i = 0; i < logSizeFanPages; i++)
-		if (strcmp(name, fanPages[i]->getName()) == MATCH)
-			return *fanPages[i];
+{
+	list<Page*>::const_iterator itr = this->fanPages.begin();
+	list<Page*>::const_iterator itrEnd = this->fanPages.end();
+	for (; itr != itrEnd; ++itr)
+		if (name == (*itr)->getName())
+			return **itr;
 }

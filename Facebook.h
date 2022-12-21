@@ -4,7 +4,9 @@
 #include "Page.h"
 #include "supportFunctions.h"
 #include "Date.h"
+#include <list>
 
+#define TEST 1 // TEST == 0 is no test setup
 #define MATCH 0
 
 
@@ -13,13 +15,9 @@ class Page;
 
 class Facebook 
 {
-	Member** members;
-	Page** fanPages;
-	int phySizeMembers, logSizeMembers;
-	int phySizeFanPages, logSizeFanPages;
-	bool addSpaceForMembers();
-	bool addSpaceForFanPages();
-	Facebook(Facebook&);
+	std::list<Member*> members;
+	std::list<Page*> fanPages;
+	Facebook(const Facebook&);
 public:
 	Facebook();
 	~Facebook();
@@ -28,8 +26,8 @@ public:
 	bool createFanPage(const std::string& name);
 	void showAllMembers() const;
 	void showAllPages() const;
-	bool memberNameCheck(const std::string& name);
-	bool pageNameCheck(const std::string& name);
+	bool memberNameCheck(const std::string& name) const;
+	bool pageNameCheck(const std::string& name) const;
 	const Member& getMember(const std::string& name) const;
 	Member& getMember(const std::string& name);
 	const Page& getPage(const std::string& name) const;

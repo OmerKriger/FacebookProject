@@ -4,27 +4,24 @@
 #include "Date.h"
 #include "Status.h"
 #include "supportFunctions.h"
+#include <list>
+#include <algorithm>
 class Member;
 class Status;
 
 class Page
 {
 	std::string name;
-	Member** fans;
-	Status** wall;
-	int logSizeFans, phySizeFans;
-	int logSizeWall, phySizeWall;
+  list<Member*> fans;
+	list<Status*> wall;
 	bool setName(const std::string& str);
 	int searchFan(const std::string& name); // change after merge with vector.
-	bool addSpaceInFans();
-	bool addSpaceInWall();
 	Page(const Page&);
-
 public:
 	Page(const std::string& name);
 	~Page();
 	bool addFan(Member* member);
-	bool removeFan(const std::string& name);
+	bool removeFan(Member* member);
 	void showFans() const;
 	bool addStatus(const std::string& str); // change after merge with vector.
 	void showPageStatus() const;

@@ -8,123 +8,68 @@ using namespace std;
 Page::Page(const string& name)
 {
 	this->name = name;
-	logSizeWall = logSizeFans = phySizeFans = phySizeWall = 0;
-	fans = nullptr;
-	wall = nullptr;
 }
 Page::~Page()
 {
-	delete[]fans;
-	for (int i = 0; i < logSizeWall; i++)
-		delete wall[i];
-	delete[]wall;
+	list<Status*>::iterator itr = wall.begin();
+	list<Status*>::iterator itrEnd = wall.end();
+	for (;itr!=itrEnd; ++itr)
+		delete (*itr);
 }
 
 bool Page::addFan(Member* member)
 {
 	if (member == nullptr)
 		return false;
-	if (searchFan(member->getName()) != NOT_FOUND) // If member already follow this page
+	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
+	if (itrOfFan != fans.end())
 		return false;
-	if (phySizeFans <= logSizeFans)
-		if (addSpaceInFans() == false)
-			return false;
-	fans[logSizeFans] = member;
-	logSizeFans++;
+	fans.push_back(member);
 	return true;
 }
-bool Page::addSpaceInFans()
+bool Page::removeFan(Member* member)
 {
-	int newSize;
-	if (phySizeFans == 0) // check if empty put 1 if not multyply by 2
-		newSize = 1;
-	else
-		newSize = phySizeFans * 2;
-	Member** pNewFans = new Member * [newSize]; // create new array
-	if (checkAllocate(pNewFans) == false)
+	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
+	if (itrOfFan == fans.end())
 		return false;
-	if (fans != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeFans; i++) // copy data from old array
-			pNewFans[i] = fans[i];
-		delete[] fans;
-	}
-	fans = pNewFans;
-	phySizeFans = newSize;
-	return true;
-}
-bool Page::addSpaceInWall()
-{
-	int newSize;
-	if (phySizeWall == 0)
-		newSize = 1;
-	else
-		newSize = phySizeWall * 2;
-	Status** pNewWall = new Status * [newSize];
-	if (checkAllocate(pNewWall) == false)
-		return false;
-	if (wall != nullptr) // if there are already array copy data to new one
-	{
-		for (int i = 0; i < logSizeWall; i++) // copy new data
-			pNewWall[i] = wall[i];
-		delete[] wall;
-	}
-	wall = pNewWall;
-	phySizeWall = newSize;
-	return true;
-}
-int Page::searchFan(const string& name) // change after merge with vector.
-{
-	int index;
-	for (index = 0; index < logSizeFans; index++)
-		if (strcmp(name, fans[index]->getName()) == MATCH)
-			return index;
-	return NOT_FOUND;
-}
-bool Page::removeFan(const string& name)
-{
-	int index = searchFan(name);
-	if (index == NOT_FOUND)
-		return false;
-	fans[index] = fans[logSizeFans - 1];
-	logSizeFans--;
+	fans.erase(itrOfFan);
 	return true;
 }
 void Page::showFans() const
 {
+	list<Member*>::const_iterator itr = fans.begin();
+	list<Member*>::const_iterator itrEnd = fans.end();
 	cout << "The Fan List of Page " << name << ":" << endl;
-	for (int i = 0; i < logSizeFans; i++)
-		cout << "Fan #" << i + 1 << ": " << fans[i]->getName() << endl;
+	for (int i=0; itr!=itrEnd; ++itr, ++i)
+		cout << "Fan #" << i << ": " << (*itr)->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
 }
 bool Page::addStatus(const string& str)
 {
-	Status* status = new Status(str,this->getName()); // create new status with the string sent // change after we put string in status and merge vector.
-	if (phySizeWall <= logSizeWall)
-		if (addSpaceInWall() == false)
-			return false;
-	wall[logSizeWall] = status;
-	logSizeWall++;
+	wall.push_back( new Status(str, this->getName() ) );// create new status with the string sent // change after we put string in status and merge vector.
 	return true;
 }
 void Page::showPageStatus() const
 {
-	if (logSizeWall == 0)
+	if (wall.size() == 0)
 	{
 		cout << "System: " << this->getName() << " has no Status." << endl << endl;
 		return;
 	}
+	list<Status*>::const_iterator itr = wall.begin();
+	list<Status*>::const_iterator itrEnd = wall.end();
 	cout << "-------- All Status of Page " << this->getName() << " --------" << endl; // announcement for start print status
-	for (int i = 0; i < logSizeWall; i++)
+	for(int i=0; itr!= itrEnd; ++itr, ++i)
 	{// print all status
-		Date date = wall[i]->getDate();
-
-		cout << "Status " << i + 1 << "# : " << wall[i]->getText() << " || ";
-		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " " << date.getHours() << ":";
-		int min = date.getMin();
-		if (min < 10)
+		Date date = (*itr)->getDate();
+		cout << "Status " << i << "# : " << (*itr)->getText() << " || ";
+		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " ";
+		if (date.getHours() < 10)
 			cout << "0";
-		cout << "" << min << endl;
+		cout << "" << date.getHours() << ":" << endl;
+		if (date.getMin() < 10)
+			cout << "0";
+		cout << "" << date.getMin() << endl;
 	}
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }

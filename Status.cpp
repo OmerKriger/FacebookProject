@@ -2,25 +2,22 @@
 using namespace std;
 #include "Status.h"
 
-Status::Status(const char* text, const char* name) : creator(name)
+Status::Status(const string& text, const string& name) : creator(name)
 {
 	this->statusType = sType::tText;
 	setText(text, statusType);
 }
 
-Status::~Status()
-{
-	delete[] text;
-}
 
-bool Status::setText(const char* str, sType type = sType::tText)
+
+bool Status::setText(const string& str, sType type = sType::tText)
 {
-	if (text != nullptr)
+	if (text.empty() == false)
 	{
 		cout << "Status Can't be change\n";
 		return false;
 	}
-	else if (strlen(str) < 1)
+	else if (str.size() < 1)
 	{
 		cout << "Status can't be empty\n";
 		return false;
@@ -32,13 +29,12 @@ bool Status::setText(const char* str, sType type = sType::tText)
 	}
 	else
 	{
-		text = _strdup(str);
-		return checkAllocate(text);
+		text = str;
+		return true;
 	}
-
 }
 
-const char* Status::getText() const 
+const string Status::getText() const 
 {
 	return text;
 }
@@ -54,7 +50,7 @@ void Status::showStatus()
 	/// The function show individual status and print the time and date created
 	/// and the text of this status
 	/// </summary>
-	int len = strlen(this->text);
+	int len = this->text.size();
 	cout << "--------- " << this->getCreator() << "'s Status ------------------" << endl; // header
 	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl; // print the date and time
 	cout << "| Time: " << date.getHours() << ":";
@@ -73,7 +69,7 @@ void Status::showStatus()
 
 }
 
-const char* Status::getCreator() const
+const string& Status::getCreator() const
 {
 	return creator;
 }

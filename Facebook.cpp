@@ -61,7 +61,7 @@ void Facebook::__Init__()
 	this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.");
 }
 
-bool Facebook::createMember(const char* name, Date bDay)
+bool Facebook::createMember(const string& name, Date bDay)
 {
 	if (memberNameCheck(name) == true)
 	{
@@ -78,17 +78,17 @@ bool Facebook::createMember(const char* name, Date bDay)
 	return true;
 }
 
-bool Facebook::memberNameCheck(const char* name) const // checking if the name is exist Member return true for found and false for not found
+bool Facebook::memberNameCheck(const string& name) const // checking if the name is exist Member return true for found and false for not found
 {
 	list<Member*>::const_iterator itr = this->members.begin();
 	list<Member*>::const_iterator itrEnd = this->members.end();
 	for (; itr != itrEnd; ++itr )
-		if (strcmp((*itr)->getName(), name) == MATCH)
+		if ((*itr)->getName() == name)
 			return true;
 	return false;
 }
 
-bool Facebook::createFanPage(const char* name) 
+bool Facebook::createFanPage(const string& name)
 {
 	if (pageNameCheck(name) == true) // is already in the system
 	{
@@ -100,12 +100,12 @@ bool Facebook::createFanPage(const char* name)
 	return true;
 }
 
-bool Facebook::pageNameCheck(const char* name) const // checking if the name is exist Page return true for found and false for not found
+bool Facebook::pageNameCheck(const string& name) const // checking if the name is exist Page return true for found and false for not found
 { 
 	list<Page*>::const_iterator itr = this->fanPages.begin();
 	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	for (; itr != itrEnd; ++itr)
-		if (strcmp( (*itr)->getName() , name) == MATCH)
+		if ((*itr)->getName() == name)
 			return true;
 	return false;
 }
@@ -130,36 +130,35 @@ void Facebook::showAllPages() const
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 
-Member& Facebook::getMember(const char* name) // return member by ref from array of members
+Member& Facebook::getMember(const string& name) // return member by ref from array of members
 {
 	list<Member*>::const_iterator itr = this->members.begin();
 	list<Member*>::const_iterator itrEnd = this->members.end();
 	for (; itr != itrEnd; ++itr)
-		if (strcmp(name, (*itr)->getName()) == MATCH)
+		if (name == (*itr)->getName())
 			return **itr;
 }
-const Member& Facebook::getMember(const char* name) const // return member by const ref from array of members
+const Member& Facebook::getMember(const string& name) const // return member by const ref from array of members
 {
 	list<Member*>::const_iterator itr = this->members.begin();
 	list<Member*>::const_iterator itrEnd = this->members.end();
 	for (; itr != itrEnd; ++itr)
-		if (strcmp(name, (*itr)->getName()) == MATCH)
+		if (name == (*itr)->getName())
 			return **itr;
 }
-
-const Page& Facebook::getPage(const char* name) const // return page by const ref from array of pages
+const Page& Facebook::getPage(const string& name) const // return page by const ref from array of pages
 {
 	list<Page*>::const_iterator itr = this->fanPages.begin();
 	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	for (; itr != itrEnd; ++itr)
-		if (strcmp(name, (*itr)->getName()) == MATCH)
+		if (name == (*itr)->getName())
 			return **itr;
 }
-Page& Facebook::getPage(const char* name) // return page by ref from array of pages
+Page& Facebook::getPage(const string& name) // return page by ref from array of pages
 {
 	list<Page*>::const_iterator itr = this->fanPages.begin();
 	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	for (; itr != itrEnd; ++itr)
-		if (strcmp(name, (*itr)->getName()) == MATCH)
+		if (name == (*itr)->getName())
 			return **itr;
 }

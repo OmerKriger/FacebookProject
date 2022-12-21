@@ -11,21 +11,21 @@ class Status;
 
 class Page
 {
-	char* name;
-	list<Member*> fans;
+	std::string name;
+  list<Member*> fans;
 	list<Status*> wall;
-	bool setName(const char* str);
+	bool setName(const std::string& str);
+	int searchFan(const std::string& name); // change after merge with vector.
 	Page(const Page&);
-
 public:
-	Page(const char* name);
+	Page(const std::string& name);
 	~Page();
 	bool addFan(Member* member);
 	bool removeFan(Member* member);
 	void showFans() const;
-	bool addStatus(const char* str);
+	bool addStatus(const std::string& str); // change after merge with vector.
 	void showPageStatus() const;
-	const char* getName() const;
+	const std::string& getName() const;
 };
 
 

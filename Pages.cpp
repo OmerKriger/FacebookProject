@@ -5,9 +5,9 @@ using namespace std;
 #define MATCH 0
 #define NOT_FOUND -1
 
-Page::Page(const char* name)
+Page::Page(const string& name)
 {
-	this->name = _strdup(name);
+	this->name = name;
 }
 Page::~Page()
 {
@@ -44,9 +44,9 @@ void Page::showFans() const
 		cout << "Fan #" << i << ": " << (*itr)->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
 }
-bool Page::addStatus(const char* str)
+bool Page::addStatus(const string& str)
 {
-	wall.push_back( new Status(str, this->getName() ) );
+	wall.push_back( new Status(str, this->getName() ) );// create new status with the string sent // change after we put string in status and merge vector.
 	return true;
 }
 void Page::showPageStatus() const
@@ -73,25 +73,25 @@ void Page::showPageStatus() const
 	}
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }
-bool Page::setName(const char* str)
+bool Page::setName(const string& str)
 {
-	if (name != nullptr)
+	if (name.empty() == false)
 	{
 		cout << "Name can't be change !\n";
 		return false;
 	}
-	else if (strlen(str) < 1)
+	else if (str.size() < 1) // maybe <=
 	{
 		cout << "Name is too short !\n";
 		return false;
 	}
 	else
 	{
-		name = _strdup(str);
-		return checkAllocate(name);
+		name = str;
+		return true;
 	}
 }
-const char* Page::getName() const
+const string& Page::getName() const
 {
 	return name;
 }

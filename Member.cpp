@@ -9,15 +9,13 @@ using namespace std;
 
 // C'tors in Members
 
-Member::Member(const char* name, Date bDay)
+Member::Member(const string& name, Date bDay)
 {
 	setName(name);
 	birthDay = bDay;
 }
 Member::~Member()
 {
-	delete[] name;
-	// Statuses deleting
 	list<Status*>::iterator itr = this->myStatus.begin();
 	list<Status*>::iterator itrEnd = this->myStatus.end();
 	for (; itr != itrEnd; ++itr)
@@ -110,13 +108,13 @@ void Member::showMyStatus() const
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
-bool Member::addStatus(const char* text)
+bool Member::addStatus(const string& text)
 {
 	return addStatus(text, sType::tText);
 }
-bool Member::addStatus(const char* text, sType type)
+bool Member::addStatus(const string& text, sType type)
 {
-	Status* status = new Status(text,this->getName());
+	Status* status = new Status(text,this->getName()); // change after we put strings in status.
 	myStatus.push_back(status);
 	return true;
 }
@@ -154,22 +152,23 @@ void Member::showMyLastStatuses() const
 }
 
 // setters/getters/voids
-bool Member::setName(const char* str)
+bool Member::setName(const string& str)
 {
-	if (name != nullptr)
+	
+	if (name.empty() == false)
 	{
 		cout << "Name can't be change !\n";
 		return false;
 	}
-	else if (strlen(str) < 1)
+	else if (str.size() < 1) // maybe <=
 	{
 		cout << "Name is too short !\n";
 		return false;
 	}
 	else
 	{
-		name = _strdup(str);
-		return checkAllocate(name);
+		name = str;
+		return true;
 	}
 }
 void Member::showMyFriends() const

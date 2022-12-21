@@ -1,6 +1,7 @@
 #ifndef __Member_H
 #define __Member_H
 #include "Date.h"
+#include <list>
 
 enum class sType;
 class Status;
@@ -22,23 +23,16 @@ public:
 	void showMyLastStatuses() const;
 	bool addStatus(const char* text, sType type);
 	bool addStatus(const char* text);
-	const int& getAmountOfStatus() const { return logSizeMyStatus; }
+	const int& getAmountOfStatus() const { return (int)myStatus.size(); }
 	const char* getName() const { return name; }
 
 private:
 	char* name;
 	Date birthDay;
-	Status** myStatus;
-	Page** InterestPages;
-	Member** friends;
+	std::list <Status*> myStatus;
+	std::list <Page*> InterestPages;
+	std::list <Member*> friends;
 	Member(const Member&);
-	int logSizeFriends, logSizeMyStatus, logSizeInterestPages;
-	int phySizeFriends , phySizeMyStatus, phySizeInterestPages;
-	bool addSpaceFriendList();
-	bool addSpaceMyStatusList();
-	bool addSpaceInterestPagesList();
-	int searchFriend(char* fName);
-	int searchPage(const char* pName);
 	bool setName(const char* str);
 };
 

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 using namespace std;
 #include "Member.h"
 #include "Page.h"
@@ -8,7 +7,6 @@ using namespace std;
 #include "Date.h"
 
 // C'tors in Members
-
 Member::Member(const string& name, Date bDay)
 {
 	setName(name);
@@ -44,6 +42,7 @@ bool Member::removeFriend(Member* dFriend)
 	if (dFriend->removeFriend(this) == false)
 		return true;
 }
+
 // Pages functions in Member
 bool Member::addPage(Page& newPage)
 {
@@ -81,6 +80,7 @@ void Member::showMyInterestPages() const
 		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Followed Pages List -----------" << endl << endl;
 }
+
 // Status Functions in Members
 
 void Member::showMyStatus() const
@@ -184,6 +184,24 @@ void Member::showMyFriends() const
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
 		cout << "Friend #" << i + 1 << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Friends List -----------" << endl << endl;
+}
+
+// Operators
+bool Member::operator<(const Member& other) const
+{
+	return this->friends.size() < other.friends.size();
+}
+bool Member::operator>(const Member& other) const
+{
+	return this->friends.size() > other.friends.size();
+}
+bool Member::operator<(const Page& other) const
+{
+	return this->friends.size() < other.getSizeOfFans();
+}
+bool Member::operator>(const Page& other) const
+{
+	return this->friends.size() > other.getSizeOfFans();
 }
 
 

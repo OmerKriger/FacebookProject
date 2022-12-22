@@ -2,13 +2,15 @@
 using namespace std;
 #include "Status.h"
 
+// C'tors
+
 Status::Status(const string& text, const string& name) : creator(name)
 {
 	this->statusType = sType::tText;
 	setText(text, statusType);
 }
 
-
+// setters
 
 bool Status::setText(const string& str, sType type = sType::tText)
 {
@@ -34,6 +36,8 @@ bool Status::setText(const string& str, sType type = sType::tText)
 	}
 }
 
+// Getters
+
 const string Status::getText() const 
 {
 	return text;
@@ -44,7 +48,14 @@ const Date& Status::getDate() const
 	return date;
 }
 
-void Status::showStatus()
+const string& Status::getCreator() const
+{
+	return creator;
+}
+
+// prints
+
+void Status::showStatus() const
 {
 	/// <summary>
 	/// The function show individual status and print the time and date created
@@ -69,7 +80,12 @@ void Status::showStatus()
 
 }
 
-const string& Status::getCreator() const
+// Operators
+bool Status::operator==(const Status& status) const
 {
-	return creator;
+	return this->getText() == status.getText();
+}
+bool Status::operator!=(const Status& status) const
+{
+	return !(*this == status);
 }

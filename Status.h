@@ -16,10 +16,12 @@ class Status
 	Status(Status&);
 public:
 	Status(const std::string& text, const std::string& name);
-	// ~Status(); // deleted because no allocations
 	const Date& getDate() const;
 	const std::string getText() const;
-	void showStatus();
+	void showStatus() const;
 	const std::string& getCreator() const;
+	// Operators
+	bool operator==(const Status& status) const;
+	bool operator!=(const Status& status) const;
 };
 #endif

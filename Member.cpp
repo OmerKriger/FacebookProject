@@ -115,7 +115,7 @@ bool Member::addStatus(const string& text)
 bool Member::addStatus(const string& text, sType type)
 {
 	Status* status = new Status(text,this->getName()); // change after we put strings in status.
-	myStatus.push_back(status);
+	myStatus.push_front(status);
 	return true;
 }
 void Member::showLastFriendsStatus() const
@@ -147,8 +147,8 @@ void Member::showMyLastStatuses() const
 	/// </summary>
 	list<Status*>::const_iterator itr = myStatus.begin();
 	list<Status*>::const_iterator itrEnd = myStatus.end();
-	for (int i=0; itr != itrEnd && i<= AMOUNT_SHOW_FRIENDS_STATUSES; --itrEnd, ++i)
-		(*itrEnd)->showStatus();
+	for (int i = 0; itr != itrEnd && i <= AMOUNT_SHOW_FRIENDS_STATUSES; ++itr, ++i)
+		(*itr)->showStatus();
 }
 
 // setters/getters/voids
@@ -157,7 +157,7 @@ bool Member::setName(const string& str)
 	
 	if (name.empty() == false)
 	{
-		cout << "Name can't be change !\n";
+		cout << "Name can't be changed !\n";
 		return false;
 	}
 	else if (str.size() < 1) // maybe <=
@@ -182,7 +182,7 @@ void Member::showMyFriends() const
 	list<Member*>::const_iterator itr = this->friends.begin();
 	list<Member*>::const_iterator itrEnd = this->friends.end();
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
-		cout << "Friend #" << i << " Name: " << (*itr)->getName() << endl;
+		cout << "Friend #" << i + 1 << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Friends List -----------" << endl << endl;
 }
 

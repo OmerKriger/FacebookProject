@@ -111,7 +111,7 @@ bool checkAllocate(void* ptr)
 		return true;
 }
 
-bool getString(string str)
+bool getString(string& str)
 {
 	/// <summary>
 	/// Function get a string and max len and get from user the text if is too short ask for type again

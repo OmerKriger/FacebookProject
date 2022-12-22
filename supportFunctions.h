@@ -45,7 +45,7 @@ class Facebook;
 bool checkAllocate(void* ptr);
 void printMenu();
 void actionsForMenu(char selection, Facebook& facebook);
-bool getString(std::string str);
+bool getString(std::string& str);
 bool convertStrToIntDate(string birthday, int* day, int* month, int* year);
 void askForFriendList(Facebook& facebook);
 void askForPageList(Facebook& facebook);

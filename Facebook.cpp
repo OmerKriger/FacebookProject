@@ -116,7 +116,7 @@ void Facebook::showAllMembers() const
 	list<Member*>::const_iterator itrEnd = this->members.end();
 	cout << "-------- All Members in Facebook: --------" << endl;
 	for (int i = 0; itr != itrEnd; ++itr, ++i)
-		cout << "Member #" << i << " Name: " << (*itr)->getName() << endl;
+		cout << "Member #" << i + 1 << " Name: " << (*itr)->getName() << endl;
 	cout << "----------- End of Member List -----------" << endl << endl;
 }
 
@@ -126,7 +126,7 @@ void Facebook::showAllPages() const
 	list<Page*>::const_iterator itrEnd = this->fanPages.end();
 	cout << "--------- All Pages in Facebook: ---------" << endl;
 	for (int i=0; itr != itrEnd; ++itr, ++i)
-		cout << "Fan Page #" << i << " Name: " << (*itr)->getName() << endl;
+		cout << "Fan Page #" << i + 1 << " Name: " << (*itr)->getName() << endl;
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 

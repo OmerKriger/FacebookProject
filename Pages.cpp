@@ -4,7 +4,7 @@ using namespace std;
 
 #define MATCH 0
 #define NOT_FOUND -1
-
+// C'tors
 Page::Page(const string& name)
 {
 	this->name = name;
@@ -16,7 +16,7 @@ Page::~Page()
 	for (;itr!=itrEnd; ++itr)
 		delete (*itr);
 }
-
+// Add / Remove
 bool Page::addFan(Member* member)
 {
 	if (member == nullptr)
@@ -34,7 +34,18 @@ bool Page::removeFan(Member* member)
 		return false;
 	fans.erase(itrOfFan);
 	return true;
+	bool Page::addStatus(const string & str)
+	{
+		wall.push_back(new Status(str, this->getName()));// create new status with the string sent // change after we put string in status and merge vector.
+		return true;
+	}
 }
+bool Page::addStatus(const string& str)
+{
+	wall.push_back(new Status(str, this->getName()));// create new status with the string sent // change after we put string in status and merge vector.
+	return true;
+}
+// Prints
 void Page::showFans() const
 {
 	list<Member*>::const_iterator itr = fans.begin();
@@ -43,11 +54,6 @@ void Page::showFans() const
 	for (int i=0; itr!=itrEnd; ++itr, ++i)
 		cout << "Fan #" << i << ": " << (*itr)->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
-}
-bool Page::addStatus(const string& str)
-{
-	wall.push_back( new Status(str, this->getName() ) );// create new status with the string sent // change after we put string in status and merge vector.
-	return true;
 }
 void Page::showPageStatus() const
 {
@@ -73,6 +79,7 @@ void Page::showPageStatus() const
 	}
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }
+// Setters / Getters
 bool Page::setName(const string& str)
 {
 	if (name.empty() == false)
@@ -95,3 +102,27 @@ const string& Page::getName() const
 {
 	return name;
 }
+int Page::getSizeOfFans() const
+{
+	return fans.size();
+}
+
+// Operators
+bool Page::operator<(const Page& other) const
+{
+	return this->fans.size() < other.fans.size();
+}
+bool Page::operator>(const Page& other) const
+{
+	return this->fans.size() > other.fans.size();
+
+}
+bool Page::operator<(const Member& other) const
+{
+	return other < (*this); // based on operator< from member
+}
+bool Page::operator>(const Member& other) const
+{
+	return other < (*this); // based on operator> from member
+}
+

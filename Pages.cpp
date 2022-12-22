@@ -62,11 +62,11 @@ void Page::showPageStatus() const
 	for(int i=0; itr!= itrEnd; ++itr, ++i)
 	{// print all status
 		Date date = (*itr)->getDate();
-		cout << "Status " << i << "# : " << (*itr)->getText() << " || ";
+		cout << "Status " << i + 1 << "# : " << (*itr)->getText() << " || ";
 		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " ";
 		if (date.getHours() < 10)
 			cout << "0";
-		cout << "" << date.getHours() << ":" << endl;
+		cout << "" << date.getHours() << ":";
 		if (date.getMin() < 10)
 			cout << "0";
 		cout << "" << date.getMin() << endl;

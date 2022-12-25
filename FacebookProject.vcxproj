@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -145,7 +145,7 @@
     <ClCompile Include="Pages.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Status.cpp" />
-    <ClCompile Include="supportFunctions.cpp" />
+    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Date.h" />
@@ -153,7 +153,7 @@
     <ClInclude Include="Page.h" />
     <ClInclude Include="Member.h" />
     <ClInclude Include="Status.h" />
-    <ClInclude Include="supportFunctions.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

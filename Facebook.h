@@ -2,13 +2,10 @@
 #define __FACEBOOK_H
 #include "Member.h"
 #include "Page.h"
-#include "supportFunctions.h"
 #include "Date.h"
 #include <list>
 
 #define TEST 1 // TEST == 0 is no test setup
-#define MATCH 0
-
 
 class Member;
 class Page;

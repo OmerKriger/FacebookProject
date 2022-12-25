@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
 #include "Facebook.h"
-
 Facebook::Facebook()
 {
 	if (TEST)

@@ -2,23 +2,6 @@
 #include <iostream>
 using namespace std;
 #include "Date.h"
-#define UNDEFINED -1
-#define DAY_MIN 1
-#define DAY_MAX 31
-#define MONTH_MIN 1
-#define MONTH_MAX 12
-#define HOUR_MAX 23
-#define HOUR_MIN 0
-#define MINS_MAX 59
-#define MINS_MIN 0
-#define FEB 2
-#define APR 4
-#define JUN 6
-#define SEP 9
-#define NOV 11
-#define FEB30 30
-#define FEB29 29
-#define DIV4 4
 
 Date::Date()
 {
@@ -112,7 +95,6 @@ bool Date::setYear(int year)
 	this->year = year;
 	return true;
 }
-
 bool Date::isDefined() const
 {
 	return (year != UNDEFINED) && (month != UNDEFINED) && (day != UNDEFINED) && (hours != UNDEFINED) && (minutes != UNDEFINED);

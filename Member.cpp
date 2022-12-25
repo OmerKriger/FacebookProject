@@ -1,9 +1,9 @@
 #include <iostream>
 using namespace std;
 #include "Member.h"
+#include "Utilities.h"
 #include "Page.h"
 #include "Status.h"
-#include "supportFunctions.h"
 #include "Date.h"
 
 // C'tors in Members
@@ -109,10 +109,6 @@ void Member::showMyStatus() const
 
 } 
 bool Member::addStatus(const string& text)
-{
-	return addStatus(text, sType::tText);
-}
-bool Member::addStatus(const string& text, sType type)
 {
 	Status* status = new Status(text,this->getName()); // change after we put strings in status.
 	myStatus.push_front(status);

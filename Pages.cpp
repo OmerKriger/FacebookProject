@@ -1,9 +1,9 @@
 #include <iostream>
-using namespace std;
 #include "Page.h"
-
+using namespace std;
 #define MATCH 0
 #define NOT_FOUND -1
+
 // C'tors
 Page::Page(const string& name)
 {
@@ -34,13 +34,8 @@ bool Page::removeFan(Member* member)
 		return false;
 	fans.erase(itrOfFan);
 	return true;
-	bool Page::addStatus(const string & str)
-	{
-		wall.push_back(new Status(str, this->getName()));// create new status with the string sent // change after we put string in status and merge vector.
-		return true;
-	}
 }
-bool Page::addStatus(const string& str)
+bool Page::addStatus(const string & str)
 {
 	wall.push_back(new Status(str, this->getName()));// create new status with the string sent // change after we put string in status and merge vector.
 	return true;

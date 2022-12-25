@@ -3,16 +3,12 @@ using namespace std;
 #include "Status.h"
 
 // C'tors
-
 Status::Status(const string& text, const string& name) : creator(name)
 {
-	this->statusType = sType::tText;
-	setText(text, statusType);
+	setText(text);
 }
-
 // setters
-
-bool Status::setText(const string& str, sType type = sType::tText)
+bool Status::setText(const string& str)
 {
 	if (text.empty() == false)
 	{
@@ -24,37 +20,26 @@ bool Status::setText(const string& str, sType type = sType::tText)
 		cout << "Status can't be empty\n";
 		return false;
 	}
-	else if (statusType != sType::tText)
-	{
-		cout << "This status Type isn't supported right now\n";
-		return false;
-	}
 	else
 	{
 		text = str;
 		return true;
 	}
 }
-
 // Getters
-
 const string Status::getText() const 
 {
 	return text;
 }
-
 const Date& Status::getDate() const
 {
 	return date;
 }
-
 const string& Status::getCreator() const
 {
 	return creator;
 }
-
 // prints
-
 void Status::showStatus() const
 {
 	/// <summary>
@@ -79,7 +64,6 @@ void Status::showStatus() const
 
 
 }
-
 // Operators
 bool Status::operator==(const Status& status) const
 {

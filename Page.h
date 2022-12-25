@@ -1,10 +1,9 @@
 #ifndef __PAGES_H
 #define __PAGES_H
 #include "Member.h"
-#include "Date.h"
 #include "Status.h"
-#include "supportFunctions.h"
 #include <list>
+#include <string>
 class Member;
 class Status;
 
@@ -12,8 +11,8 @@ class Page
 {
 	// Data
 	std::string name;
-	list<Member*> fans;
-	list<Status*> wall;
+	std::list<Member*> fans;
+	std::list<Status*> wall;
 	// Setters
 	bool setName(const std::string& str);
 	// C'tors

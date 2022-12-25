@@ -4,7 +4,6 @@
 #include <string>
 #include <list>
 
-enum class sType;
 class Status;
 class Page; 
 
@@ -26,11 +25,10 @@ public:
 	void showLastFriendsStatus() const;
 	void showMyLastStatuses() const;
 	// Statuses
-	bool addStatus(const std::string& text, sType type);
 	bool addStatus(const std::string& text);
 	// Getters
 	const std::string& getName() const { return name; }
-	const int& getAmountOfStatus() const { return (int)myStatus.size(); }
+	const int getAmountOfStatus() const { return (int)myStatus.size(); }
 	// Operators
 	bool operator<(const Member& other) const;
 	bool operator>(const Member& other) const;

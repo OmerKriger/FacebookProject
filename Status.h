@@ -2,17 +2,14 @@
 #define __STATUS_H
 #pragma warning(disable : 4996)
 #include "Date.h"
-#include "supportFunctions.h"
 #include <string>
 
-enum class sType { tText, tPhoto, tVideo };
 class Status
 {
 	Date date; 
 	std::string text;
-	const std::string const creator;
-	sType statusType; // default value will be text for text status
-	bool setText(const std::string& str, sType type);
+	const std::string& creator;
+	bool setText(const std::string& str);
 	Status(Status&);
 public:
 	Status(const std::string& text, const std::string& name);

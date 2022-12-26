@@ -9,8 +9,15 @@ using namespace std;
 // C'tors in Members
 Member::Member(const string& name, Date bDay)
 {
-	setName(name);
-	birthDay = bDay;
+	try
+	{
+		setName(name);
+		birthDay = bDay;
+	}
+	catch (MemberException& e)
+	{
+		throw e;
+	}
 }
 Member::~Member()
 {
@@ -21,50 +28,71 @@ Member::~Member()
 }
 
 // Friends functions in Member
-bool Member::addFriend(Member* newFriend)
+void Member::addFriend(Member* newFriend)
 {
 	if (newFriend == this) // friend cannot add him self
-		return false;
+		throw MemberException("Friend cannot create friendships with himself.\n", MemberException::memberErrorList::FRIEND_HIMSELF);
 	list<Member*>::iterator itrOfFriend = find(friends.begin(), friends.end(), newFriend); // search for newFriend in friends
 	if (itrOfFriend != friends.end()) // if friend is found return false
-		return false;
+		throw MemberException("This Members already friends.\n", MemberException::memberErrorList::ALREADY_FRIENDS);
 	friends.push_back(newFriend);
-
-	if (newFriend->addFriend(this) == false)
-		return true;
+	try
+	{
+		newFriend->addFriend(this);
+	}
+	catch (MemberException& e)
+	{
+		if (e.getErrorCode() != MemberException::memberErrorList::ALREADY_FRIENDS)
+			throw e;
+	}
 }
-bool Member::removeFriend(Member* dFriend)
+void Member::removeFriend(Member* dFriend)
 {
 	list<Member*>::iterator itrOfFriend = find(friends.begin(),friends.end(), dFriend);
 	if (itrOfFriend == friends.end()) // we can't remove friend who is not in friends
-		return false;
+		throw MemberException("This two Members isn't a friends",MemberException::memberErrorList::NOT_FRIENDS);
 	friends.erase(itrOfFriend);
-	if (dFriend->removeFriend(this) == false)
-		return true;
+	try
+	{
+		dFriend->removeFriend(this);
+	}
+	catch (MemberException& e)
+	{
+		if (e.getErrorCode() != MemberException::memberErrorList::NOT_FRIENDS)
+			throw e;
+	}
 }
 
 // Pages functions in Member
-bool Member::addPage(Page& newPage)
+void Member::addPage(Page& newPage)
 {
 	list<Page*>::iterator itrOfPage = find(InterestPages.begin(), InterestPages.end(), &newPage); // search for newFriend in friends
 	if (itrOfPage != InterestPages.end()) // if friend is found return false
-		return false;
+		throw MemberException("This Member already follow after this Page !", MemberException::memberErrorList::ALREADY_FOLLOW);
 	InterestPages.push_back(&newPage);
 	// say to page add this friend to his list
-	newPage.addFan(this);
-	return true;
+	try {
+		newPage.addFan(this);
+	}
+	catch (PageException& e)
+	{
+		throw e;
+	}
 }
-bool Member::removePage(const Page& dPage)
+void Member::removePage(const Page& dPage)
 {
 	list<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), &dPage);
-	if (itrPage == InterestPages.end()) // we can't remove friend who is not in friends
+	if (itrPage == InterestPages.end()) // we can't remove page who is not in followed
+		throw MemberException("This member isn't follow after this page !", MemberException::memberErrorList::NOT_FOLLOW);
+	try
 	{
-		cout << "This member isn't follow after this page !" << endl;
-		return false;
+		(*itrPage)->removeFan(this);
+		InterestPages.erase(itrPage);
 	}
-	(*itrPage)->removeFan(this);
-	InterestPages.erase(itrPage);
-	return true;	
+	catch (PageException& e)
+	{
+		throw e;
+	}
 }
 void Member::showMyInterestPages() const
 {
@@ -108,11 +136,17 @@ void Member::showMyStatus() const
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
-bool Member::addStatus(const string& text)
+void Member::addStatus(const string& text)
 {
-	Status* status = new Status(text,this->getName()); // change after we put strings in status.
-	myStatus.push_front(status);
-	return true;
+	try
+	{
+		Status* status = new Status(text, this->getName()); // change after we put strings in status.
+		myStatus.push_front(status);
+	}
+	catch (StatusException& e)
+	{
+		throw e;
+	}
 }
 void Member::showLastFriendsStatus() const
 {
@@ -148,24 +182,13 @@ void Member::showMyLastStatuses() const
 }
 
 // setters/getters/voids
-bool Member::setName(const string& str)
+void Member::setName(const string& str)
 {
-	
 	if (name.empty() == false)
-	{
-		cout << "Name can't be changed !\n";
-		return false;
-	}
-	else if (str.size() < 1) // maybe <=
-	{
-		cout << "Name is too short !\n";
-		return false;
-	}
-	else
-	{
-		name = str;
-		return true;
-	}
+		throw MemberException("Name can't be changed after has been setted !\n", MemberException::memberErrorList::NAME_SETTED);
+	if (str.size() <= 1)
+		throw MemberException("Name is too short !\n", MemberException::memberErrorList::ILLEGAL_NAME);
+	name = str;
 }
 void Member::showMyFriends() const
 {

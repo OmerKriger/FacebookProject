@@ -5,7 +5,7 @@
 using namespace std;
 
 // enum declerations
-enum Menu // Menu Defines
+const enum Menu // Menu Defines
 {  
 	CREATE_MEMBER = 1, // equal 1 for start counting from 1 and not zero 
 	CREATE_PAGE,
@@ -24,7 +24,7 @@ enum Menu // Menu Defines
 	SHOW_FRIENDS_OF_FRIEND,
 	EXIT
 };
-enum DefinesNum
+const enum DefinesNum
 {
 	NOT_FOUND = -1,
 	MATCH = 0,
@@ -39,7 +39,7 @@ enum DefinesNum
 	ENTERS_FREQ = 60,
 	MAX_STATUS_LEN = 501,
 };
-enum DefinesChars
+const enum DefinesChars
 {
 
 	YES_ANSWER_UPPER = 'Y',
@@ -54,30 +54,30 @@ private:
 	Facebook facebook;
 public:
 	// function declerations
-	bool checkAllocate(void* ptr) const;
-	void printMenu() const;
+	bool checkAllocate(void* ptr)	const;
+	void printMenu()				const;
 	void actionsForMenu(char selection);
 	bool getString(std::string& str) const;
 	bool convertStrToIntDate(string birthday, int* day, int* month, int* year);
-	void askForFriendList() const;
-	void askForPageList() const;
+	void askForFriendList()			const;
+	void askForPageList()			const;
 	bool putEntersInString(string& text);
 	
 	// Controlling function
-	bool createMember();
-	bool createPage();
-	void showFriendsOfMember() const;
-	void showFanPagesOfMember() const;
-	void showStatusOfMember() const;
-	void showStatusOfPage() const;
-	void showLastStatusOfFriends() const;
-	void showAllFansOfPage() const;
-	bool followMemberToPage();
-	bool unfollowMemberToPage();
-	bool createStatusForMember();
-	bool createStatusForPage();
-	bool setFriendship();
-	bool deleteFriendship();
+	void createMember()				noexcept(false);
+	void createPage()				noexcept(false);
+	void showFriendsOfMember()		const;
+	void showFanPagesOfMember()		const;
+	void showStatusOfMember()		const;
+	void showStatusOfPage()			const;
+	void showLastStatusOfFriends()	const;
+	void showAllFansOfPage()		const;
+	void followMemberToPage()		noexcept(false);
+	void unfollowMemberToPage()		noexcept(false);
+	void createStatusForMember()	noexcept(false);
+	void createStatusForPage()		noexcept(false);
+	void setFriendship()			noexcept(false);
+	void deleteFriendship()			noexcept(false);
 
 };
 #endif

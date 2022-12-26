@@ -4,8 +4,6 @@
 #include "Status.h"
 #include <list>
 #include <string>
-class Member;
-class Status;
 
 class Page
 {

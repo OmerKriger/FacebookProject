@@ -31,28 +31,48 @@ void Utilities::actionsForMenu(char selection)
 	switch (selection)
 	{
 	case Menu::CREATE_MEMBER:
-		if (createMember() == false)
-			cout << "Member creating failed!" << endl;
-		else
+		try
+		{
+			createMember();
 			cout << "Member created!" << endl << endl;
+		}
+		catch (...) // need to fix for nir
+		{
+			cout << "Member creating failed!" << endl;
+		}
 		break;
 	case Menu::CREATE_PAGE:
-		if (createPage() == false)
-			cout << "Page creating failed!" << endl;
-		else
+		try
+		{
+			createPage();
 			cout << "Page created!" << endl << endl;
+		}
+		catch (...) // need to fix for nir
+		{
+			cout << "Page creating failed!" << endl;
+		}
 		break;
 	case Menu::CREATE_STATUS_FOR_FRIEND:
-		if (createStatusForMember())
+		try
+		{
+			createStatusForMember();
 			cout << "Member Status Created" << endl;
-		else
+		}
+		catch (...) // need to fix for nir
+		{
 			cout << "Member Status Creating failed!" << endl << endl;
+		}
 		break;
 	case Menu::CREATE_STATUS_FOR_PAGE:
-		if(createStatusForPage())
+		try
+		{
+			createStatusForPage();
 			cout << "Page Status Created" << endl;
-		else
+		}
+		catch (...) // need to fix for nir
+		{
 			cout << "Page Status Creating failed!" << endl << endl;
+		}
 		break;
 	case Menu::SHOW_FRIEND_STATUS:
 		showStatusOfMember(); break;
@@ -61,28 +81,47 @@ void Utilities::actionsForMenu(char selection)
 	case Menu::SHOW_LATEST10_OF_FRIEND:
 		showLastStatusOfFriends(); break;
 	case Menu::MAKE_FRIENDSHIP:
-		if (setFriendship())
+		try
+		{
+			setFriendship();
 			cout << "Friendship Created" << endl;
-		else
+		}
+		catch (...) // need to fix for nir
+		{
 			cout << "The members are already friends" << endl << endl;
+		}
 		break;
 	case Menu::CANCEL_FRIENDSHIP:
-		if (deleteFriendship())
+		try
+		{
+			deleteFriendship();
 			cout << "Friendship deleted" << endl;
-		else
+		}
+		catch (...) // need to fix for nir
+		{
 			cout << "The members are not friends" << endl << endl;
+		}
 		break;
 	case Menu::FOLLOW_PAGE:
-		if (followMemberToPage())
+		try
+		{
+			followMemberToPage();
 			cout << "The member now follows the Fan Page" << endl;
-		else
+		}
+		catch (...) // need to fix for nir
+		{
 			cout << "Member following on Fan Page failed!" << endl;
+		}
 		break;
 	case Menu::UNFOLLOW_PAGE:
-		if(unfollowMemberToPage())
+		try {
+			unfollowMemberToPage();
 			cout << "Member unfollowed the Fan Page successfully" << endl;
-		else
+		}
+		catch (...) // need to fix for nir
+		{
 			cout << "Member cancelation following on Fan Page failed!" << endl;
+		}
 		break;
 	case Menu::SHOW_ALL_MEMBERS:
 		facebook.showAllMembers(); break;
@@ -218,7 +257,7 @@ bool Utilities::putEntersInString(string& text)
 
 // --------------------------------------------- Functions for Actions ---------------------------------------------
 
-bool Utilities::createMember()
+void Utilities::createMember()
 {
 	string name, birthday;
 	int day=0, month=0, year=0;
@@ -237,14 +276,18 @@ bool Utilities::createMember()
 	} while (convertStrToIntDate(birthday, &day, &month, &year) == false);
 	Date bDay(day, month, year);
 	if (!bDay.isDefined())
+		throw DateException("Birthday isn't defined well.\n");
+	try 
 	{
-		cout << "Birthday isn't defined well." << endl;
-		return false;
+		facebook.createMember(name, bDay); // create member and return if successed
 	}
-	return facebook.createMember(name, bDay); // create member and return if successed
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
 
-bool Utilities::createPage()
+void Utilities::createPage()
 {
 	string name;
 	// ask for name of page
@@ -255,7 +298,14 @@ bool Utilities::createPage()
 		cout << "The name '" << name << "' already exists, please try a different name" << endl << "Name: ";
 		getString(name);
 	}
-	return facebook.createFanPage(name); // trying create the name and send if successed
+	try
+	{
+		facebook.createFanPage(name); // trying create the name and send if successed
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
 
 void Utilities::showFriendsOfMember() const
@@ -329,7 +379,7 @@ void Utilities::showStatusOfPage() const
 	facebook.getPage(name).showPageStatus(); // calling for function of this page to show his statys
 }
 
-bool Utilities::setFriendship()
+void Utilities::setFriendship()
 {
 	string nameSource, nameDest;
 	askForFriendList();
@@ -353,10 +403,17 @@ bool Utilities::setFriendship()
 		getString(nameDest);
 		samePerson = (nameDest == nameSource ? true : false);
 	}
-	return facebook.getMember(nameSource).addFriend(&(facebook.getMember(nameDest)));
+	try 
+	{
+		facebook.getMember(nameSource).addFriend(&(facebook.getMember(nameDest)));
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
 
-bool Utilities::deleteFriendship()
+void Utilities::deleteFriendship()
 {
 	string nameSource, nameDest;
 	askForFriendList();
@@ -374,8 +431,16 @@ bool Utilities::deleteFriendship()
 		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the second member: ";
 		getString(nameDest);
 	}
-	return facebook.getMember(nameSource).removeFriend(&(facebook.getMember(nameDest)));
+	try 
+	{
+		facebook.getMember(nameSource).removeFriend(&(facebook.getMember(nameDest)));
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
+
 
 void Utilities::showLastStatusOfFriends() const
 {
@@ -395,7 +460,7 @@ void Utilities::showLastStatusOfFriends() const
 	facebook.getMember(name).showLastFriendsStatus(); // calling for function of this member to show his friends statuses
 }
 
-bool Utilities::followMemberToPage()
+void Utilities::followMemberToPage()
 {
 	string memberName, pageName;
 	askForFriendList();
@@ -417,10 +482,17 @@ bool Utilities::followMemberToPage()
 		getString(pageName);
 	}
 	// create following between member and page
-	return facebook.getMember(memberName).addPage(facebook.getPage(pageName)); // make the member follow after the page
+	try
+	{
+		facebook.getMember(memberName).addPage(facebook.getPage(pageName)); // make the member follow after the page
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
 
-bool Utilities::unfollowMemberToPage()
+void Utilities::unfollowMemberToPage()
 {
 	string memberName, pageName;
 	askForFriendList();
@@ -442,10 +514,17 @@ bool Utilities::unfollowMemberToPage()
 		getString(pageName);
 	}
 	// make unfollowing between member and page
-	return facebook.getMember(memberName).removePage(facebook.getPage(pageName)); // unfollow the member from the page
+	try
+	{
+		facebook.getMember(memberName).removePage(facebook.getPage(pageName)); // unfollow the member from the page
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
 
-bool Utilities::createStatusForMember()
+void Utilities::createStatusForMember()
 {
 	string memberName, statusText;
 	// ask for member
@@ -460,10 +539,17 @@ bool Utilities::createStatusForMember()
 	cout << "Please type the Text and press enter to finish (MAX:"<< MAX_STATUS_LEN-1 << " Chars): " << endl;
 	getString(statusText);
 	putEntersInString(statusText); // put \n in the string every fixed chars that defined
-	return facebook.getMember(memberName).addStatus(statusText); // create the status for this member with the text typed in
+	try
+	{
+		facebook.getMember(memberName).addStatus(statusText); // create the status for this member with the text typed in
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
 
-bool Utilities::createStatusForPage()
+void Utilities::createStatusForPage()
 {
 	string pageName, statusText;
 	// ask for page
@@ -479,8 +565,16 @@ bool Utilities::createStatusForPage()
 	cout << "Please type the Text and press enter to finish (MAX:" << MAX_STATUS_LEN - 1 << " Chars): " << endl;
 	getString(statusText);
 	putEntersInString(statusText); // put \n in the string every fixed chars that defined
-	return facebook.getPage(pageName).addStatus(statusText); // create the status for this page with the text typed in
+	try
+	{
+		facebook.getPage(pageName).addStatus(statusText); // create the status for this page with the text typed in
+	}
+	catch (...) // need to fix for nir
+	{
+
+	}
 }
+
 
 
 

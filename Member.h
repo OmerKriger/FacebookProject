@@ -35,6 +35,8 @@ public:
 	bool operator>(const Member& other) const;
 	bool operator<(const Page& other) const;
 	bool operator>(const Page& other) const;
+	const Member& operator+=(Member & other);
+	const Member& operator+=(Page& page);
 private:
 	std::string name;
 	Date birthDay;

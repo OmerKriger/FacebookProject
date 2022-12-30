@@ -7,7 +7,14 @@ using namespace std;
 // C'tors
 Page::Page(const string& name)
 {
-	this->name = name;
+	try
+	{
+		setName(name);
+	}
+	catch (PageException& e)
+	{
+		throw e;
+	}
 }
 Page::~Page()
 {
@@ -17,28 +24,33 @@ Page::~Page()
 		delete (*itr);
 }
 // Add / Remove
-bool Page::addFan(Member* member)
+void Page::addFan(Member* member)
 {
 	if (member == nullptr)
-		return false;
+		throw PageException("This member doesn't exist\n", PageException::pageErrorList::NOT_FOLLOW);
 	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
 	if (itrOfFan != fans.end())
-		return false;
+		throw PageException("This member already follows the page.\n", PageException::pageErrorList::ALREADY_FOLLOWED);
 	fans.push_back(member);
-	return true;
 }
-bool Page::removeFan(Member* member)
+void Page::removeFan(Member* member)
 {
 	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
 	if (itrOfFan == fans.end())
-		return false;
+		throw PageException("The member is not a fan so we can't remove him.\n", PageException::pageErrorList::NOT_FOLLOW);
 	fans.erase(itrOfFan);
-	return true;
 }
-bool Page::addStatus(const string & str)
+void Page::addStatus(const string& str)
 {
-	wall.push_back(new Status(str, this->getName()));// create new status with the string sent // change after we put string in status and merge vector.
-	return true;
+	try
+	{
+		Status* status = new Status(str, this->getName());
+		wall.push_back(status);
+	}
+	catch (StatusException& e)
+	{
+		throw e;
+	}
 }
 // Prints
 void Page::showFans() const
@@ -75,24 +87,15 @@ void Page::showPageStatus() const
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }
 // Setters / Getters
-bool Page::setName(const string& str)
+void Page::setName(const string& str)
 {
 	if (name.empty() == false)
-	{
-		cout << "Name can't be change !\n";
-		return false;
-	}
-	else if (str.size() < 1) // maybe <=
-	{
-		cout << "Name is too short !\n";
-		return false;
-	}
-	else
-	{
-		name = str;
-		return true;
-	}
+		throw PageException("Name can't be changed after has been setted !\n", PageException::pageErrorList::NAME_SETTED);
+	if (str.size() <= 1)
+		throw PageException("Name is too short !\n", PageException::pageErrorList::ILLEGAL_NAME);
+	name = str;
 }
+
 const string& Page::getName() const
 {
 	return name;
@@ -120,4 +123,6 @@ bool Page::operator>(const Member& other) const
 {
 	return other < (*this); // based on operator> from member
 }
+
+
 

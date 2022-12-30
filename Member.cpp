@@ -34,7 +34,7 @@ void Member::addFriend(Member* newFriend)
 		throw MemberException("Friend cannot create friendships with himself.\n", MemberException::memberErrorList::FRIEND_HIMSELF);
 	list<Member*>::iterator itrOfFriend = find(friends.begin(), friends.end(), newFriend); // search for newFriend in friends
 	if (itrOfFriend != friends.end()) // if friend is found return false
-		throw MemberException("This Members already friends.\n", MemberException::memberErrorList::ALREADY_FRIENDS);
+		throw MemberException("This Members are already friends.\n", MemberException::memberErrorList::ALREADY_FRIENDS);
 	friends.push_back(newFriend);
 	try
 	{
@@ -223,5 +223,15 @@ bool Member::operator>(const Page& other) const
 	return this->friends.size() > other.getSizeOfFans();
 }
 
+const Member& Member::operator+=(Member& other)
+{
+	this->addFriend(&other);
+	return *this;
+}
 
+const Member& Member::operator+=(Page& page)
+{
+	page.addFan(this);
+	return *this;
+}
 

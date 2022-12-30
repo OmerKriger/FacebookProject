@@ -405,7 +405,7 @@ void Utilities::setFriendship()
 	}
 	try 
 	{
-		facebook.getMember(nameSource).addFriend(&(facebook.getMember(nameDest)));
+		facebook.getMember(nameSource) += facebook.getMember(nameDest);
 	}
 	catch (...) // need to fix for nir
 	{
@@ -484,7 +484,7 @@ void Utilities::followMemberToPage()
 	// create following between member and page
 	try
 	{
-		facebook.getMember(memberName).addPage(facebook.getPage(pageName)); // make the member follow after the page
+		facebook.getMember(memberName) += facebook.getPage(pageName);
 	}
 	catch (...) // need to fix for nir
 	{

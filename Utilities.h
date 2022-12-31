@@ -58,7 +58,7 @@ public:
 	void printMenu()				const;
 	void actionsForMenu(char selection);
 	bool getString(std::string& str) const;
-	bool convertStrToIntDate(string birthday, int* day, int* month, int* year);
+	void convertStrToIntDate(string birthday, int* day, int* month, int* year) noexcept(false);
 	void askForFriendList()			const;
 	void askForPageList()			const;
 	bool putEntersInString(string& text);

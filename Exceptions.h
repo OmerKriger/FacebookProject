@@ -46,7 +46,7 @@ public:
 
 class UtilitiesException : public SystemException
 {
-	std::string message = "Page action was failed: ";
+	std::string message = "System action failed: ";
 public:
 	UtilitiesException(const std::string& msg = "undefined") { this->message += msg; }
 };

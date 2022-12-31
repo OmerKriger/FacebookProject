@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #include "Utilities.h"
+#include "Exceptions.h"
 
 // ----------------------------------------- Support Functions for Actions -----------------------------------------
 void Utilities::printMenu() const
@@ -162,14 +163,14 @@ bool Utilities::getString(string& str) const
 	return true;
 }
 
-bool Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* year)
+void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* year)
 {
 	/// <summary>
 	/// Function get string of birthday and return by pointers the day month and year in ints
 	/// </summary>
 	int num = 0;
 	int value = DAY;
-	for (int i = 0; i < MAX_BIRTHDAY_STR; i++)
+	for (int i = 0; i < MAX_BIRTHDAY_STR && i < birthday.size(); i++)
 	{
 		if ('0' <= birthday[i] && birthday[i] <= '9') // if number convert from char to int value (char by char)
 		{
@@ -189,10 +190,8 @@ bool Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 			value++; // skip to next value
 		}
 	}
-	if (*day != 0 && *month != 0 && *year != 0)
-		return true;
-	else
-		return false;
+	if (*day == 0 || *month == 0 || *year == 0)
+		throw DateException();
 }
 
 void Utilities::askForFriendList() const
@@ -260,10 +259,41 @@ bool Utilities::putEntersInString(string& text)
 void Utilities::createMember()
 {
 	string name, birthday;
+	bool isValid = false;
 	int day=0, month=0, year=0;
 	// ask for name
 	cout << "Creating a new Member in Facebook:" << endl << "Please enter a full name (max 30 chars): ";
-	getString(name);
+	while (isValid == false)
+	{
+		getString(name);
+		cout << "Please enter birthday in format DD.MM.YYYY: " << endl;
+		getString(birthday);
+		try
+		{
+			facebook.memberNameCheck(name);
+			convertStrToIntDate(birthday, &day, &month, &year);
+			Date bDay(day, month, year);
+			facebook.createMember(name, bDay);
+			isValid = true;
+		}
+		catch (MemberException& e)
+		{
+			cout <<"" << e.what() << endl;
+		}
+		catch (DateException& e)
+		{
+			cout << "" << e.what() << endl;
+		}
+		catch (...)
+		{
+			cout << "general error" << endl;
+		}
+	}
+
+
+
+	/*
+
 	while (facebook.memberNameCheck(name) == true)
 	{
 		cout << "The name '" << name << "' already exists, please try a different name" << endl << "Name: ";
@@ -285,6 +315,7 @@ void Utilities::createMember()
 	{
 
 	}
+	*/
 }
 
 void Utilities::createPage()

@@ -27,17 +27,17 @@ Page::~Page()
 void Page::addFan(Member* member)
 {
 	if (member == nullptr)
-		throw PageException("This member doesn't exist\n", PageException::pageErrorList::NOT_FOLLOW);
+		throw PageException("This member doesn't exist ", PageException::pageErrorList::NOT_FOLLOW);
 	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
 	if (itrOfFan != fans.end())
-		throw PageException("This member already follows the page.\n", PageException::pageErrorList::ALREADY_FOLLOWED);
+		throw PageException("This member already follows the page. ", PageException::pageErrorList::ALREADY_FOLLOWED);
 	fans.push_back(member);
 }
 void Page::removeFan(Member* member)
 {
 	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
 	if (itrOfFan == fans.end())
-		throw PageException("The member is not a fan so we can't remove him.\n", PageException::pageErrorList::NOT_FOLLOW);
+		throw PageException("The member is not a fan so we can't remove him. ", PageException::pageErrorList::NOT_FOLLOW);
 	fans.erase(itrOfFan);
 }
 void Page::addStatus(const string& str)
@@ -90,9 +90,9 @@ void Page::showPageStatus() const
 void Page::setName(const string& str)
 {
 	if (name.empty() == false)
-		throw PageException("Name can't be changed after has been setted !\n", PageException::pageErrorList::NAME_SETTED);
+		throw PageException("Name can't be changed after has been setted ! ", PageException::pageErrorList::NAME_SETTED);
 	if (str.size() <= 1)
-		throw PageException("Name is too short !\n", PageException::pageErrorList::ILLEGAL_NAME);
+		throw PageException("Name is too short ! ", PageException::pageErrorList::ILLEGAL_NAME);
 	name = str;
 }
 

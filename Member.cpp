@@ -31,10 +31,10 @@ Member::~Member()
 void Member::addFriend(Member* newFriend)
 {
 	if (newFriend == this) // friend cannot add him self
-		throw MemberException("Friend cannot create friendships with himself.\n", MemberException::memberErrorList::FRIEND_HIMSELF);
+		throw MemberException("Friend cannot create friendships with himself. ", MemberException::memberErrorList::FRIEND_HIMSELF);
 	list<Member*>::iterator itrOfFriend = find(friends.begin(), friends.end(), newFriend); // search for newFriend in friends
 	if (itrOfFriend != friends.end()) // if friend is found return false
-		throw MemberException("This Members are already friends.\n", MemberException::memberErrorList::ALREADY_FRIENDS);
+		throw MemberException("This Members are already friends. ", MemberException::memberErrorList::ALREADY_FRIENDS);
 	friends.push_back(newFriend);
 	try
 	{
@@ -185,9 +185,9 @@ void Member::showMyLastStatuses() const
 void Member::setName(const string& str)
 {
 	if (name.empty() == false)
-		throw MemberException("Name can't be changed after has been setted !\n", MemberException::memberErrorList::NAME_SETTED);
+		throw MemberException("Name can't be changed after has been setted ! ", MemberException::memberErrorList::NAME_SETTED);
 	if (str.size() <= 1)
-		throw MemberException("Name is too short !\n", MemberException::memberErrorList::ILLEGAL_NAME);
+		throw MemberException("Name is too short ! ", MemberException::memberErrorList::ILLEGAL_NAME);
 	name = str;
 }
 void Member::showMyFriends() const

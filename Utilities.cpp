@@ -142,7 +142,7 @@ bool Utilities::checkAllocate(void* ptr) const
 {
 	if (ptr == nullptr)
 	{
-		cout << "Allocation failed\n";
+		cout << "Allocation failed ";
 		return false;
 	}
 	else
@@ -188,6 +188,10 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 				*year = num;
 			num = 0; // reset value for next round
 			value++; // skip to next value
+		}
+		else 
+		{
+			throw DateException("Invalid date: Date not format wrong");
 		}
 	}
 	if (*day == 0 || *month == 0 || *year == 0)
@@ -263,15 +267,21 @@ void Utilities::createMember()
 	int day=0, month=0, year=0;
 	// ask for name
 	cout << "Creating a new Member in Facebook:" << endl;
-	while (isValid == false)
+	cout << "Please enter a full name (max 30 chars): " << endl;
+	getString(name);
+	while (facebook.memberNameCheck(name) == true)
 	{
+		cout << "This member name is already exist, Please try again." << endl;
 		cout << "Please enter a full name (max 30 chars): " << endl;
 		getString(name);
+	} 
+	while (isValid == false)
+	{
+
 		cout << "Please enter birthday in format DD.MM.YYYY: " << endl;
 		getString(birthday);
 		try
 		{
-			facebook.memberNameCheck(name);
 			convertStrToIntDate(birthday, &day, &month, &year);
 			Date bDay(day, month, year);
 			facebook.createMember(name, bDay);
@@ -313,6 +323,7 @@ void Utilities::createPage()
 		try
 		{
 			facebook.createFanPage(name);
+			isValid = true;
 		}
 		catch (FacebookException& e)
 		{
@@ -483,7 +494,6 @@ void Utilities::deleteFriendship()
 		cout << "Unknown Error";
 	}
 }
-
 
 void Utilities::showLastStatusOfFriends() const
 {

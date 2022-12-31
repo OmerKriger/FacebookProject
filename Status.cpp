@@ -18,9 +18,9 @@ Status::Status(const string& text, const string& name) : creator(name)
 void Status::setText(const string& str) 
 {
 	if (text.empty() == false)
-		throw StatusException("Status cannot be changed once created \n");
+		throw StatusException("Status cannot be changed once created ");
 	if (str.size() <= 1)
-		throw StatusException("Status can't be empty\n");
+		throw StatusException("Status can't be empty ");
 	text = str;
 }
 // Getters

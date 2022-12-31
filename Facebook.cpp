@@ -9,6 +9,10 @@ Facebook::Facebook()
 
 Facebook::~Facebook()
 {
+	if (COMPARE_TEST)
+	{
+		testCompareOperators();
+	}
 	list<Member*>::const_iterator mItr = this->members.begin();
 	list<Member*>::const_iterator mItrEnd = this->members.end();
 	list<Page*>::const_iterator pItr = this->fanPages.begin();
@@ -20,7 +24,100 @@ Facebook::~Facebook()
 		delete (*mItr);
 	cout << "Facebook out, over!" << endl;
 }
+void Facebook::testCompareOperators() const
+{
+	int res;
+	// test member between member
+	{
+		list<Member*>::const_iterator mItr1 = this->members.begin();
+		list<Member*>::const_iterator mItrEnd1 = this->members.end();
+		for (; mItr1 != mItrEnd1; ++mItr1)
+		{
+			list<Member*>::const_iterator mItr2 = this->members.begin();
+			list<Member*>::const_iterator mItrEnd2 = this->members.end();
+			for (; mItr2 != mItrEnd2; ++mItr2)
+			{
+				if (mItr2 != mItr1)
+				{
+					if (*(*mItr1) < *(*mItr2))
+						res = 1;
+					else
+						res = 0;
+					cout << "Name: " << (*mItr1)->getName() << "Friend Number: " << (*mItr1)->getAmountOfFriends() << " < " << "Name: " << (*mItr2)->getName() << " Friend Number: " << (*mItr2)->getAmountOfFriends() << ", Result: " << res << endl;
+					if (*(*mItr1) > *(*mItr2))
+						res = 1;
+					else
+						res = 0;
+					cout << "Name: " << (*mItr1)->getName() << "Friend Number: " << (*mItr1)->getAmountOfFriends() << " > " << "Name: " << (*mItr2)->getName() << " Friend Number: " << (*mItr2)->getAmountOfFriends() << ", Result: " << res << endl;
+					cout << endl << endl;
+				}
+			}
+		}
+	}
+	{
+		list<Member*>::const_iterator mItr1 = this->members.begin();
+		list<Member*>::const_iterator mItrEnd1 = this->members.end();
+		for (; mItr1 != mItrEnd1; ++mItr1)
+		{
+			list<Page*>::const_iterator mItr2 = this->fanPages.begin();
+			list<Page*>::const_iterator mItrEnd2 = this->fanPages.end();
+			for (; mItr2 != mItrEnd2; ++mItr2)
+			{
+				// member
+				if (*(*mItr1) < *(*mItr2))
+					res = 1;
+				else
+					res = 0;
+				cout << "Name: " << (*mItr1)->getName() << "Friend Number: " << (*mItr1)->getAmountOfFriends() << " < " << "Page Name: " << (*mItr2)->getName() << " Fans Number: " << (*mItr2)->getSizeOfFans() << ", Result: " << res << endl;
+				if (*(*mItr1) > *(*mItr2))
+					res = 1;
+				else
+					res = 0;
+				cout << "Name: " << (*mItr1)->getName() << "Friend Number: " << (*mItr1)->getAmountOfFriends() << " > " << "Page Name: " << (*mItr2)->getName() << " Fans Number: " << (*mItr2)->getSizeOfFans() << ", Result: " << res << endl;
+				// page 
+				if (*(*mItr2) < *(*mItr1))
+					res = 1;
+				else
+					res = 0;
+				cout << "Page Name: " << (*mItr2)->getName() << " Fans Number: " << (*mItr2)->getSizeOfFans() << " < " << "Name: " << (*mItr1)->getName() << "Friend Number: " << (*mItr1)->getAmountOfFriends() << ", Result: " << res << endl;
+				if (*(*mItr2) > *(*mItr1))
+					res = 1;
+				else
+					res = 0;
+				cout << "Page Name: " << (*mItr2)->getName() << " Fans Number: " << (*mItr2)->getSizeOfFans() << " > " << "Name: " << (*mItr1)->getName() << "Friend Number: " << (*mItr1)->getAmountOfFriends() << ", Result: " << res << endl;
+				cout << endl << endl;
+			}
+		}
+	}
+	// page for page
+	{
+		list<Member*>::const_iterator mItr1 = this->members.begin();
+		list<Member*>::const_iterator mItrEnd1 = this->members.end();
+		for (; mItr1 != mItrEnd1; ++mItr1)
+		{
+			list<Member*>::const_iterator mItr2 = this->members.begin();
+			list<Member*>::const_iterator mItrEnd2 = this->members.end();
+			for (; mItr2 != mItrEnd2; ++mItr2)
+			{
+				if (mItr2 != mItr1)
+				{
+					if (*(*mItr1) < *(*mItr2))
+						res = 1;
+					else
+						res = 0;
+					cout << "page Name: " << (*mItr1)->getName() << "fans Number: " << (*mItr1)->getAmountOfFriends() << " < " << "page Name: " << (*mItr2)->getName() << " fans Number: " << (*mItr2)->getAmountOfFriends() << ", Result: " << res << endl;
+					if (*(*mItr1) > *(*mItr2))
+						res = 1;
+					else
+						res = 0;
+					cout << "page Name: " << (*mItr1)->getName() << "fans Number: " << (*mItr1)->getAmountOfFriends() << " > " << "page Name: " << (*mItr2)->getName() << " fans Number: " << (*mItr2)->getAmountOfFriends() << ", Result: " << res << endl;
+					cout << endl << endl;
+				}
+			}
+		}
+	}
 
+}
 void Facebook::__Init__()
 {
 	// This function create default data in system
@@ -62,14 +159,15 @@ void Facebook::__Init__()
 	}
 	catch (...)
 	{
-		throw FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
+		
+		FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
 	}
 }
 
 void Facebook::createMember(const string& name, Date bDay)
 {
 	if (memberNameCheck(name) == true)
-		throw FacebookException("This name already exist in the system\n", FacebookException::facebookErrorList::MEMBER_EXIST);
+		throw FacebookException("This name already exist in the system ", FacebookException::facebookErrorList::MEMBER_EXIST);
 	if (!bDay.isDefined())
 		throw DateException("The birthday is not defined well.");
 	try
@@ -145,7 +243,7 @@ Member& Facebook::getMember(const string& name) // return member by ref from arr
 	for (; itr != itrEnd; ++itr)
 		if (name == (*itr)->getName())
 			return **itr;
-	throw FacebookException("This Member isn't found.\n", FacebookException::facebookErrorList::MEMBER_NOT_FOUND);
+	throw FacebookException("This Member isn't found.", FacebookException::facebookErrorList::MEMBER_NOT_FOUND);
 }
 const Member& Facebook::getMember(const string& name) const // return member by const ref from array of members
 {
@@ -154,7 +252,7 @@ const Member& Facebook::getMember(const string& name) const // return member by 
 	for (; itr != itrEnd; ++itr)
 		if (name == (*itr)->getName())
 			return **itr;
-	throw FacebookException("This Member isn't found.\n", FacebookException::facebookErrorList::MEMBER_NOT_FOUND);
+	throw FacebookException("This Member isn't found. ", FacebookException::facebookErrorList::MEMBER_NOT_FOUND);
 }
 const Page& Facebook::getPage(const string& name) const // return page by const ref from array of pages
 {
@@ -163,7 +261,7 @@ const Page& Facebook::getPage(const string& name) const // return page by const 
 	for (; itr != itrEnd; ++itr)
 		if (name == (*itr)->getName())
 			return **itr;
-	throw FacebookException("This Page isn't found.\n", FacebookException::facebookErrorList::PAGE_NOT_FOUND);
+	throw FacebookException("This Page isn't found.", FacebookException::facebookErrorList::PAGE_NOT_FOUND);
 }
 Page& Facebook::getPage(const string& name) // return page by ref from array of pages
 {
@@ -172,5 +270,5 @@ Page& Facebook::getPage(const string& name) // return page by ref from array of 
 	for (; itr != itrEnd; ++itr)
 		if (name == (*itr)->getName())
 			return **itr;
-	throw FacebookException("This Page isn't found.\n", FacebookException::facebookErrorList::PAGE_NOT_FOUND);
+	throw FacebookException("This Page isn't found. ", FacebookException::facebookErrorList::PAGE_NOT_FOUND);
 }

@@ -30,6 +30,7 @@ public:
 	// Getters
 	const std::string& getName() const { return name; }
 	const int getAmountOfStatus() const { return (int)myStatus.size(); }
+	const int getAmountOfFriends() const { return (int)friends.size(); }
 	// Operators
 	bool operator<(const Member& other) const;
 	bool operator>(const Member& other) const;

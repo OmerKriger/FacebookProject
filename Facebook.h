@@ -7,6 +7,7 @@
 #include <list>
 
 #define TEST 1 // TEST == 0 is no test setup
+#define COMPARE_TEST 1
 
 class Member;
 class Page;
@@ -16,6 +17,7 @@ class Facebook
 	std::list<Member*> members;
 	std::list<Page*> fanPages;
 	Facebook(const Facebook&);
+	void testCompareOperators()								const;
 public:
 	~Facebook();
 	Facebook()												noexcept(false);

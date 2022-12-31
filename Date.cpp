@@ -71,39 +71,39 @@ void Date::setDate(int day, int month, int year)
 void Date::setHour(int hour)
 {
 	if (hour < HOUR_MIN || HOUR_MAX < hour)
-		throw DateException("Hour value can be set between 00 to 23 \n");
+		throw DateException("Hour value can be set between 00 to 23 ");
 	else
 		this->hours = hour;
 }
 void Date::setMinutes(int mins)
 {
 	if (mins < MINS_MIN || MINS_MAX < mins)
-		throw DateException("Minutes value can be set between 00 to 59 \n");
+		throw DateException("Minutes value can be set between 00 to 59 ");
 	else
 		this->minutes = mins;
 }
 void Date::setDay(int day) 
 {
 	if (day < DAY_MIN || DAY_MAX < day)
-		throw DateException("Day value can be set between 1 to 31 \n");
+		throw DateException("Day value can be set between 1 to 31 ");
 	if (day == DAY_MAX && (month == FEB || month == APR || month == JUN || month == SEP || month == NOV))
-		throw DateException("There is no date on the 31st of this month \n");
+		throw DateException("There is no date on the 31st of this month ");
 	if (day == FEB30 && month == FEB)
-		throw DateException("There is no date 30 in the month of February \n");
+		throw DateException("There is no date 30 in the month of February ");
 	if (year % 4 != 0 && month == FEB && day == FEB29) // if year divide by four and month febuary so there is 29 in feb and date is legal
-		throw DateException("There is no date 29 in the month of February in this year \n");
+		throw DateException("There is no date 29 in the month of February in this year ");
 	this->day = day;
 }
 void Date::setMonth(int month)
 {
 	if (month < 1 || 12 < month)
-		throw DateException("Month value can be set between 1 to 12 \n");
+		throw DateException("Month value can be set between 1 to 12 ");
 	this->month = month;
 }
 void Date::setYear(int year)
 {
 	if (year < 1)
-		throw DateException("Year value can be only positive number \n");
+		throw DateException("Year value can be only positive number ");
 	this->year = year;
 }
 bool Date::isDefined() const

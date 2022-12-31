@@ -163,7 +163,7 @@ bool Utilities::getString(string& str) const
 	return true;
 }
 
-void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* year)
+void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* year) noexcept(false)
 {
 	/// <summary>
 	/// Function get string of birthday and return by pointers the day month and year in ints
@@ -191,7 +191,7 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 		}
 	}
 	if (*day == 0 || *month == 0 || *year == 0)
-		throw DateException();
+		throw DateException("Test");
 }
 
 void Utilities::askForFriendList() const
@@ -287,6 +287,10 @@ void Utilities::createMember()
 		catch (SystemException& e)
 		{
 			cout << e.what() << endl;
+		}
+		catch (...)
+		{
+			cout << "Unknown Error";
 		}
 	}
 

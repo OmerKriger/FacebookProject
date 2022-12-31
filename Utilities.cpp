@@ -276,17 +276,17 @@ void Utilities::createMember()
 			facebook.createMember(name, bDay);
 			isValid = true;
 		}
-		catch (MemberException& e)
-		{
-			cout <<"" << e.what() << endl;
-		}
 		catch (DateException& e)
 		{
-			cout << "" << e.what() << endl;
+			cout << e.what() << endl;
 		}
-		catch (...)
+		catch (MemberException& e)
 		{
-			cout << "general error" << endl;
+			cout << e.what() << endl;
+		}
+		catch (SystemException& e)
+		{
+			cout << e.what() << endl;
 		}
 	}
 

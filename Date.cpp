@@ -17,83 +17,94 @@ Date::Date()
 	this->minutes = nowLocal.tm_min;
 	this->year = nowLocal.tm_year + 1900;	
 }
-Date::Date(int day, int month, int year)
+Date::Date(int day, int month, int year) noexcept(false)
 {
 	/// <summary>
 	/// Constractor for Date with only date that given
 	/// </summary>
-	this->day = UNDEFINED, this->month = UNDEFINED, this->year = UNDEFINED;
-	setYear(year);
-	setMonth(month);
-	setDay(day);
-	this->minutes = 00;
-	this->hours = 00;
+	try 
+	{
+		this->day = UNDEFINED, this->month = UNDEFINED, this->year = UNDEFINED;
+		setYear(year);
+		setMonth(month);
+		setDay(day);
+		this->minutes = 00;
+		this->hours = 00;
+	}
+	catch (DateException& e)	
+	{
+		throw e;
+	}
 }
 Date::Date(int day, int month, int year, int minutes, int hours)
 {
 	/// <summary>
 	/// Constractor for Date with full date given with time
 	/// </summary>
-	this->day = UNDEFINED, this->month = UNDEFINED, this->year = UNDEFINED, this->minutes = UNDEFINED, this->hours = UNDEFINED;
-	setYear(year);
-	setMonth(month);
-	setDay(day);
-	setMinutes(minutes);
-	setHour(hours);
+	try
+	{
+		this->day = UNDEFINED, this->month = UNDEFINED, this->year = UNDEFINED, this->minutes = UNDEFINED, this->hours = UNDEFINED;
+		setYear(year);
+		setMonth(month);
+		setDay(day);
+		setMinutes(minutes);
+		setHour(hours);
+	}
+	catch (DateException& e)
+	{
+		throw e;
+	}
 }
-bool Date::setDate(int day, int month, int year) 
+void Date::setDate(int day, int month, int year) 
 {
-	if (!setYear(year))
-		return false;
-	if (!setMonth(month))
-		return false;
-	if (!setDay(day))
-		return false;
-	return true;
+	try
+	{
+		setYear(year);
+		setMonth(month);
+		setDay(day);
+	}
+	catch (DateException& e)
+	{
+		throw e;
+	}
 }
-bool Date::setHour(int hour)
+void Date::setHour(int hour)
 {
 	if (hour < HOUR_MIN || HOUR_MAX < hour)
-		return false;
+		throw DateException("Hour value can be set between 00 to 23 ");
 	else
 		this->hours = hour;
-	return true;
-
 }
-bool Date::setMinutes(int mins)
+void Date::setMinutes(int mins)
 {
 	if (mins < MINS_MIN || MINS_MAX < mins)
-		return false;
+		throw DateException("Minutes value can be set between 00 to 59 ");
 	else
 		this->minutes = mins;
-	return true;
 }
-bool Date::setDay(int day) 
+void Date::setDay(int day) 
 {
 	if (day < DAY_MIN || DAY_MAX < day)
-		return false;
+		throw DateException("Day value can be set between 1 to 31 ");
 	if (day == DAY_MAX && (month == FEB || month == APR || month == JUN || month == SEP || month == NOV))
-		return false;
+		throw DateException("There is no date on the 31st of this month ");
 	if (day == FEB30 && month == FEB)
-		return false;
+		throw DateException("There is no date 30 in the month of February ");
 	if (year % 4 != 0 && month == FEB && day == FEB29) // if year divide by four and month febuary so there is 29 in feb and date is legal
-		return false;
+		throw DateException("There is no date 29 in the month of February in this year ");
 	this->day = day;
-	return true;
 }
-bool Date::setMonth(int month)
+void Date::setMonth(int month)
 {
 	if (month < 1 || 12 < month)
-		return false;
+		throw DateException("Month value can be set between 1 to 12 ");
 	this->month = month;
-	return true;
 }
-bool Date::setYear(int year)
+void Date::setYear(int year)
 {
 	if (year < 1)
-		return false;
+		throw DateException("Year value can be only positive number ");
 	this->year = year;
-	return true;
 }
 bool Date::isDefined() const
 {

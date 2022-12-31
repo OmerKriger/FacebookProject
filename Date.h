@@ -1,6 +1,7 @@
 #ifndef __DATE_H
 #define __DATE_H
 #include <time.h>
+#include "Exceptions.h"
 
 enum DateDefines
 {
@@ -25,16 +26,16 @@ enum DateDefines
 class Date
 {
 	int day, month, year, minutes, hours;
-	bool setDate(int day, int month, int year);
-	bool setDay(int day);
-	bool setMonth(int month);
-	bool setYear(int year);
-	bool setHour(int hour);
-	bool setMinutes(int mins);
+	void setDate(int day, int month, int year) noexcept(false);
+	void setDay(int day) noexcept(false);
+	void setMonth(int month) noexcept(false);
+	void setYear(int year) noexcept(false);
+	void setHour(int hour) noexcept(false);
+	void setMinutes(int mins) noexcept(false);
 public:
 	Date();
-	Date(int day, int month, int year);
-	Date(int day, int month, int year, int minutes, int hours);
+	Date(int day, int month, int year) noexcept(false);
+	Date(int day, int month, int year, int minutes, int hours) noexcept(false);
 	const int& getDay() const { return day; }
 	const int& getMonth() const { return month; }
 	const int& getYear() const { return year; }

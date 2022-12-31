@@ -4,8 +4,6 @@
 #include "Status.h"
 #include <list>
 #include <string>
-class Member;
-class Status;
 
 class Page
 {
@@ -14,17 +12,17 @@ class Page
 	std::list<Member*> fans;
 	std::list<Status*> wall;
 	// Setters
-	bool setName(const std::string& str);
+	void setName(const std::string& str) noexcept(false);
 	// C'tors
 	Page(const Page&);
 public:
 	// C'tors
-	Page(const std::string& name);
+	Page(const std::string& name) noexcept(false);
 	~Page();
 	// Add/Remove
-	bool addFan(Member* member);
-	bool removeFan(Member* member);
-	bool addStatus(const std::string& str);
+	void addFan(Member* member) noexcept(false);
+	void removeFan(Member* member) noexcept(false);
+	void addStatus(const std::string& str) noexcept(false);
 	// Prints
 	void showFans() const;
 	void showPageStatus() const;
@@ -36,7 +34,6 @@ public:
 	bool operator>(const Page& other) const;
 	bool operator<(const Member& other) const;
 	bool operator>(const Member& other) const;
-
 };
 
 

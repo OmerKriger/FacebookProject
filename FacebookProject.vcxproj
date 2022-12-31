@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Date.cpp" />
+    <ClCompile Include="Exceptions.h" />
     <ClCompile Include="Facebook.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pages.cpp" />

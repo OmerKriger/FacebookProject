@@ -5,26 +5,23 @@ using namespace std;
 // C'tors
 Status::Status(const string& text, const string& name) : creator(name)
 {
-	setText(text);
+	try 
+	{
+		setText(text);
+	}
+	catch (StatusException& e)
+	{
+		throw e;
+	}
 }
 // setters
-bool Status::setText(const string& str)
+void Status::setText(const string& str) 
 {
 	if (text.empty() == false)
-	{
-		cout << "Status Can't be change\n";
-		return false;
-	}
-	else if (str.size() < 1)
-	{
-		cout << "Status can't be empty\n";
-		return false;
-	}
-	else
-	{
-		text = str;
-		return true;
-	}
+		throw StatusException("Status cannot be changed once created ");
+	if (str.size() <= 1)
+		throw StatusException("Status can't be empty ");
+	text = str;
 }
 // Getters
 const string Status::getText() const 
@@ -46,7 +43,7 @@ void Status::showStatus() const
 	/// The function show individual status and print the time and date created
 	/// and the text of this status
 	/// </summary>
-	int len = this->text.size();
+	size_t len = this->text.size();
 	cout << "--------- " << this->getCreator() << "'s Status ------------------" << endl; // header
 	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl; // print the date and time
 	cout << "| Time: " << date.getHours() << ":";

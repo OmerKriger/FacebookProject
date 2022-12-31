@@ -7,7 +7,7 @@
 #include <list>
 
 #define TEST 1 // TEST == 0 is no test setup
-#define COMPARE_TEST 1
+#define COMPARE_TEST 0
 
 class Member;
 class Page;

@@ -100,7 +100,7 @@ void Utilities::actionsForMenu(char selection)
 		}
 		catch (...) // need to fix for nir
 		{
-			cout << "Friendship deletion" << endl << endl;
+			cout << "Friendship deletion failed" << endl << endl;
 		}
 		break;
 	case Menu::FOLLOW_PAGE:
@@ -194,7 +194,7 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 			throw DateException("Invalid date: Date not format wrong");
 		}
 	}
-	if (*day == 0 || *month == 0 || *year == 0)
+	if (*day == 0 || *month == 0 || *year == 0 || *year < 1000)
 		throw DateException("Invalid date");
 }
 

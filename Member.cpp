@@ -231,7 +231,7 @@ const Member& Member::operator+=(Member& other)
 
 const Member& Member::operator+=(Page& page)
 {
-	page.addFan(this);
+	this->addPage(page);
 	return *this;
 }
 

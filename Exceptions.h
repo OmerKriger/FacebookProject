@@ -7,7 +7,7 @@ class SystemException : public std::exception
 private:
 	std::string message;
 public:
-	SystemException(const std::string& msg = "General Error - Test") { message = msg; }
+	SystemException(const std::string& msg = "General Error") { message = msg; }
 	const char* what() { return (message).c_str(); }
 };
 

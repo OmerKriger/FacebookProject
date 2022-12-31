@@ -89,7 +89,7 @@ void Utilities::actionsForMenu(char selection)
 		}
 		catch (...) // need to fix for nir
 		{
-			cout << "The members are already friends" << endl << endl;
+			cout << "Friendship Creation failed" << endl << endl;
 		}
 		break;
 	case Menu::CANCEL_FRIENDSHIP:
@@ -100,7 +100,7 @@ void Utilities::actionsForMenu(char selection)
 		}
 		catch (...) // need to fix for nir
 		{
-			cout << "The members are not friends" << endl << endl;
+			cout << "Friendship deletion" << endl << endl;
 		}
 		break;
 	case Menu::FOLLOW_PAGE:
@@ -111,17 +111,17 @@ void Utilities::actionsForMenu(char selection)
 		}
 		catch (...) // need to fix for nir
 		{
-			cout << "Member following on Fan Page failed!" << endl;
+			cout << "Member's follow request failed" << endl;
 		}
 		break;
 	case Menu::UNFOLLOW_PAGE:
 		try {
 			unfollowMemberToPage();
-			cout << "Member unfollowed the Fan Page successfully" << endl;
+			cout << "Member's unfollowed the Fan Page successfully" << endl;
 		}
 		catch (...) // need to fix for nir
 		{
-			cout << "Member cancelation following on Fan Page failed!" << endl;
+			cout << "Member's unfollow request failed" << endl;
 		}
 		break;
 	case Menu::SHOW_ALL_MEMBERS:
@@ -170,7 +170,7 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 	/// </summary>
 	int num = 0;
 	int value = DAY;
-	for (int i = 0; i < MAX_BIRTHDAY_STR && i < birthday.size(); i++)
+	for (int i = 0; i < MAX_BIRTHDAY_STR && i <= birthday.size(); i++)
 	{
 		if ('0' <= birthday[i] && birthday[i] <= '9') // if number convert from char to int value (char by char)
 		{
@@ -191,7 +191,7 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 		}
 	}
 	if (*day == 0 || *month == 0 || *year == 0)
-		throw DateException("Test");
+		throw DateException("Invalid date");
 }
 
 void Utilities::askForFriendList() const
@@ -262,9 +262,10 @@ void Utilities::createMember()
 	bool isValid = false;
 	int day=0, month=0, year=0;
 	// ask for name
-	cout << "Creating a new Member in Facebook:" << endl << "Please enter a full name (max 30 chars): ";
+	cout << "Creating a new Member in Facebook:" << endl;
 	while (isValid == false)
 	{
+		cout << "Please enter a full name (max 30 chars): " << endl;
 		getString(name);
 		cout << "Please enter birthday in format DD.MM.YYYY: " << endl;
 		getString(birthday);
@@ -278,68 +279,57 @@ void Utilities::createMember()
 		}
 		catch (DateException& e)
 		{
-			cout << e.what() << endl;
+			cout << e.what() << ", please try again" << endl;
 		}
 		catch (MemberException& e)
 		{
-			cout << e.what() << endl;
+			throw e;
+		}
+		catch (FacebookException& e)
+		{
+			cout << e.what() << ", please try again" << endl;
 		}
 		catch (SystemException& e)
 		{
-			cout << e.what() << endl;
+			throw e;
 		}
 		catch (...)
 		{
 			cout << "Unknown Error";
 		}
 	}
-
-
-
-	/*
-
-	while (facebook.memberNameCheck(name) == true)
-	{
-		cout << "The name '" << name << "' already exists, please try a different name" << endl << "Name: ";
-		getString(name);
-	}
-	do // ask for birth day
-	{
-		cout << "Please enter birthday in format DD.MM.YYYY: " << endl;
-		getString(birthday);
-	} while (convertStrToIntDate(birthday, &day, &month, &year) == false);
-	Date bDay(day, month, year);
-	if (!bDay.isDefined())
-		throw DateException("Birthday isn't defined well.\n");
-	try 
-	{
-		facebook.createMember(name, bDay); // create member and return if successed
-	}
-	catch (...) // need to fix for nir
-	{
-
-	}
-	*/
 }
 
 void Utilities::createPage()
 {
 	string name;
+	bool isValid = false;
 	// ask for name of page
-	cout << "Creating a new Fan Page in Facebook:" << endl << "Please enter a name for the page (max 30 chars): ";
-	getString(name);
-	while (facebook.pageNameCheck(name) == true)
+	cout << "Creating a new Fan Page in Facebook:" << endl;
+	while (isValid == false)
 	{
-		cout << "The name '" << name << "' already exists, please try a different name" << endl << "Name: ";
+		cout << "Please enter a name for the page (max 30 chars): ";
 		getString(name);
-	}
-	try
-	{
-		facebook.createFanPage(name); // trying create the name and send if successed
-	}
-	catch (...) // need to fix for nir
-	{
-
+		try
+		{
+			facebook.createFanPage(name);
+		}
+		catch (FacebookException& e)
+		{
+			cout << e.what() << ", please try again" << endl;
+		}
+		catch (PageException& e)
+		{
+			throw e;
+		}
+		catch (SystemException& e)
+		{
+			throw e;
+		}
+		catch (...)
+		{
+			cout << "Unknown Error";
+		}
 	}
 }
 
@@ -422,7 +412,7 @@ void Utilities::setFriendship()
 	getString(nameSource);
 	while (facebook.memberNameCheck(nameSource) == false)
 	{
-		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the first member: ";
+		cout << "This member doesn't exist, Please try again." << endl << "Please type the name of the first member: ";
 		getString(nameSource);
 	}
 	cout << "Please type the name of the second member: " << endl;
@@ -442,9 +432,18 @@ void Utilities::setFriendship()
 	{
 		facebook.getMember(nameSource) += facebook.getMember(nameDest);
 	}
-	catch (...) // need to fix for nir
+	catch (MemberException& e)
 	{
-
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (SystemException& e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		cout << "Unknown Error";
 	}
 }
 
@@ -456,23 +455,32 @@ void Utilities::deleteFriendship()
 	getString(nameSource);
 	while (facebook.memberNameCheck(nameSource) == false)
 	{
-		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the first member: ";
+		cout << "This member doesn't exist, Please try again." << endl << "Please type the name of the first member: ";
 		getString(nameSource);
 	}
 	cout << "Please type the name of the second member: " << endl;
 	getString(nameDest);
 	while (facebook.memberNameCheck(nameDest) == false)
 	{
-		cout << "This member isn't exist, Please try again." << endl << "Please type the name of the second member: ";
+		cout << "This member doesn't exist, Please try again." << endl << "Please type the name of the second member: ";
 		getString(nameDest);
 	}
 	try 
 	{
 		facebook.getMember(nameSource).removeFriend(&(facebook.getMember(nameDest)));
 	}
-	catch (...) // need to fix for nir
+	catch (MemberException& e)
 	{
-
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (SystemException& e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		cout << "Unknown Error";
 	}
 }
 
@@ -521,9 +529,23 @@ void Utilities::followMemberToPage()
 	{
 		facebook.getMember(memberName) += facebook.getPage(pageName);
 	}
-	catch (...) // need to fix for nir
+	catch (MemberException& e)
 	{
-
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (PageException& e)
+	{
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (SystemException& e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		cout << "Unknown Error";
 	}
 }
 
@@ -553,9 +575,23 @@ void Utilities::unfollowMemberToPage()
 	{
 		facebook.getMember(memberName).removePage(facebook.getPage(pageName)); // unfollow the member from the page
 	}
-	catch (...) // need to fix for nir
+	catch (MemberException& e)
 	{
-
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (PageException& e)
+	{
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (SystemException& e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		cout << "Unknown Error";
 	}
 }
 
@@ -578,9 +614,18 @@ void Utilities::createStatusForMember()
 	{
 		facebook.getMember(memberName).addStatus(statusText); // create the status for this member with the text typed in
 	}
-	catch (...) // need to fix for nir
+	catch (StatusException& e)
 	{
-
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (SystemException& e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		cout << "Unknown Error";
 	}
 }
 
@@ -604,9 +649,18 @@ void Utilities::createStatusForPage()
 	{
 		facebook.getPage(pageName).addStatus(statusText); // create the status for this page with the text typed in
 	}
-	catch (...) // need to fix for nir
+	catch (StatusException& e)
 	{
-
+		cout << e.what() << endl;
+		throw e;
+	}
+	catch (SystemException& e)
+	{
+		throw e;
+	}
+	catch (...)
+	{
+		cout << "Unknown Error";
 	}
 }
 

@@ -50,7 +50,7 @@ void Member::removeFriend(Member* dFriend)
 {
 	list<Member*>::iterator itrOfFriend = find(friends.begin(),friends.end(), dFriend);
 	if (itrOfFriend == friends.end()) // we can't remove friend who is not in friends
-		throw MemberException("This two Members isn't a friends",MemberException::memberErrorList::NOT_FRIENDS);
+		throw MemberException("This two Members aren't friends",MemberException::memberErrorList::NOT_FRIENDS);
 	friends.erase(itrOfFriend);
 	try
 	{
@@ -68,7 +68,7 @@ void Member::addPage(Page& newPage)
 {
 	list<Page*>::iterator itrOfPage = find(InterestPages.begin(), InterestPages.end(), &newPage); // search for newFriend in friends
 	if (itrOfPage != InterestPages.end()) // if friend is found return false
-		throw MemberException("This Member already follow after this Page !", MemberException::memberErrorList::ALREADY_FOLLOW);
+		throw MemberException("This Member already follows this Page !", MemberException::memberErrorList::ALREADY_FOLLOW);
 	InterestPages.push_back(&newPage);
 	// say to page add this friend to his list
 	try {
@@ -83,7 +83,7 @@ void Member::removePage(const Page& dPage)
 {
 	list<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), &dPage);
 	if (itrPage == InterestPages.end()) // we can't remove page who is not in followed
-		throw MemberException("This member isn't follow after this page !", MemberException::memberErrorList::NOT_FOLLOW);
+		throw MemberException("This member does'nt follow this page !", MemberException::memberErrorList::NOT_FOLLOW);
 	try
 	{
 		(*itrPage)->removeFan(this);
@@ -140,7 +140,7 @@ void Member::addStatus(const string& text)
 {
 	try
 	{
-		Status* status = new Status(text, this->getName()); // change after we put strings in status.
+		Status* status = new Status(text, this->getName()); 
 		myStatus.push_front(status);
 	}
 	catch (StatusException& e)

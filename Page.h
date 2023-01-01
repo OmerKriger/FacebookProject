@@ -1,34 +1,39 @@
 #ifndef __PAGES_H
 #define __PAGES_H
 #include "Member.h"
-#include "Date.h"
 #include "Status.h"
-#include "supportFunctions.h"
-class Member;
-class Status;
+#include <list>
+#include <string>
 
 class Page
 {
-	char* name;
-	Member** fans;
-	Status** wall;
-	int logSizeFans, phySizeFans;
-	int logSizeWall, phySizeWall;
-	bool setName(const char* str);
-	int searchFan(const char* name);
-	bool addSpaceInFans();
-	bool addSpaceInWall();
+	// Data
+	std::string name;
+	std::list<Member*> fans;
+	std::list<Status*> wall;
+	// Setters
+	void setName(const std::string& str) noexcept(false);
+	// C'tors
 	Page(const Page&);
-
 public:
-	Page(const char* name);
+	// C'tors
+	Page(const std::string& name) noexcept(false);
 	~Page();
-	bool addFan(Member* member);
-	bool removeFan(const char* name);
+	// Add/Remove
+	void addFan(Member* member) noexcept(false);
+	void removeFan(Member* member) noexcept(false);
+	void addStatus(const std::string& str) noexcept(false);
+	// Prints
 	void showFans() const;
-	bool addStatus(const char* str);
 	void showPageStatus() const;
-	const char* getName() const;
+	// Getters
+	const std::string& getName() const;
+	int getSizeOfFans() const;
+	// Operators
+	bool operator<(const Page& other) const;
+	bool operator>(const Page& other) const;
+	bool operator<(const Member& other) const;
+	bool operator>(const Member& other) const;
 };
 
 

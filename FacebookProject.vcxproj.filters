@@ -27,7 +27,7 @@
     <ClCompile Include="Status.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="supportFunctions.cpp">
+    <ClCompile Include="Utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Facebook.cpp">
@@ -35,6 +35,9 @@
     </ClCompile>
     <ClCompile Include="Date.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Exceptions.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,13 +50,13 @@
     <ClInclude Include="Status.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="supportFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Facebook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Date.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

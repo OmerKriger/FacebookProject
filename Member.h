@@ -1,48 +1,51 @@
 #ifndef __Member_H
 #define __Member_H
 #include "Date.h"
+#include "Exceptions.h"
+#include <string>
+#include <list>
 
-enum class sType;
 class Status;
 class Page; 
 
 class Member
 { 
 public:
-	Member(const char* name, Date bDay);
+	// C'tors
+	Member(const std::string& name, Date bDay) noexcept(false);
 	~Member();
-	bool addFriend(Member* newFriend);
-	bool removeFriend(Member* dFriend);
-	bool addPage(Page& newPage);
-	bool removePage(const Page& dPage);
+	// Add/Remove functions
+	void addFriend(Member* newFriend) noexcept(false);
+	void removeFriend(Member* dFriend) noexcept(false);
+	void addPage(Page& newPage) noexcept(false);
+	void removePage(const Page& dPage) noexcept(false);
+	// Prints
 	void showMyStatus() const;
 	void showMyFriends() const;
 	void showMyInterestPages() const;
 	void showLastFriendsStatus() const;
 	void showMyLastStatuses() const;
-	bool addStatus(const char* text, sType type);
-	bool addStatus(const char* text);
-	int getAmountOfStatus() const { return logSizeMyStatus; }
-	const char* getName() const { return name; }
-
+	// Statuses
+	void addStatus(const std::string& text) noexcept(false);
+	// Getters
+	const std::string& getName() const { return name; }
+	const int getAmountOfStatus() const { return (int)myStatus.size(); }
+	const int getAmountOfFriends() const { return (int)friends.size(); }
+	// Operators
+	bool operator<(const Member& other) const;
+	bool operator>(const Member& other) const;
+	bool operator<(const Page& other) const;
+	bool operator>(const Page& other) const;
+	const Member& operator+=(Member & other);
+	const Member& operator+=(Page& page);
 private:
-	char* name;
+	std::string name;
 	Date birthDay;
-	Status** myStatus;
-	Page** InterestPages;
-	Member** friends;
-	Member(const Member&);
-	int logSizeFriends, logSizeMyStatus, logSizeInterestPages;
-	int phySizeFriends , phySizeMyStatus, phySizeInterestPages;
-	bool addSpaceFriendList();
-	bool addSpaceMyStatusList();
-	bool addSpaceInterestPagesList();
-	int searchFriend(char* fName);
-	int searchPage(const char* pName);
-	bool setName(const char* str);
+	std::list <Status*> myStatus;
+	std::list <Page*> InterestPages;
+	std::list <Member*> friends;
+	Member(const Member&); // here to cancel use
+	void setName(const std::string& str) noexcept(false);
 };
-
-
-
 
 #endif

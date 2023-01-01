@@ -2,59 +2,48 @@
 using namespace std;
 #include "Status.h"
 
-Status::Status(const char* text, const char* name) : creator(name)
+// C'tors
+Status::Status(const string& text, const string& name) : creator(name)
 {
-	this->statusType = sType::tText;
-	setText(text, statusType);
+	try 
+	{
+		setText(text);
+	}
+	catch (StatusException& e)
+	{
+		throw e;
+	}
 }
-
-Status::~Status()
+// setters
+void Status::setText(const string& str) 
 {
-	delete[] text;
+	if (text.empty() == false)
+		throw StatusException("Status cannot be changed once created ");
+	if (str.size() <= 1)
+		throw StatusException("Status can't be empty ");
+	text = str;
 }
-
-bool Status::setText(const char* str, sType type = sType::tText)
-{
-	if (text != nullptr)
-	{
-		cout << "Status Can't be change\n";
-		return false;
-	}
-	else if (strlen(str) < 1)
-	{
-		cout << "Status can't be empty\n";
-		return false;
-	}
-	else if (statusType != sType::tText)
-	{
-		cout << "This status Type isn't supported right now\n";
-		return false;
-	}
-	else
-	{
-		text = _strdup(str);
-		return checkAllocate(text);
-	}
-
-}
-
-const char* Status::getText() const 
+// Getters
+const string Status::getText() const 
 {
 	return text;
 }
-
 const Date& Status::getDate() const
 {
 	return date;
 }
-
-void Status::showStatus()
+const string& Status::getCreator() const
+{
+	return creator;
+}
+// prints
+void Status::showStatus() const
 {
 	/// <summary>
 	/// The function show individual status and print the time and date created
 	/// and the text of this status
 	/// </summary>
-	int len = strlen(this->text);
+	size_t len = this->text.size();
 	cout << "--------- " << this->getCreator() << "'s Status ------------------" << endl; // header
 	cout << "| Date: " << date.getDay() << "." << date.getMonth() << "." << date.getYear() << endl; // print the date and time
 	cout << "| Time: " << date.getHours() << ":";
@@ -72,8 +61,12 @@ void Status::showStatus()
 
 
 }
-
-const char* Status::getCreator() const
+// Operators
+bool Status::operator==(const Status& status) const
 {
-	return creator;
+	return this->getText() == status.getText();
+}
+bool Status::operator!=(const Status& status) const
+{
+	return !(*this == status);
 }

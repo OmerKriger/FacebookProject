@@ -1,11 +1,5 @@
-#include <iostream>
-using namespace std;
 #include "ImageStatus.h"
-
-ImageStatus::ImageStatus(string text, string name, string image) : Status(text, name)
-{
-	this->image = image;
-}
+using namespace std;
 
 void ImageStatus::showStatus() const
 {

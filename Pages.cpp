@@ -5,6 +5,7 @@ using namespace std;
 #define NOT_FOUND -1
 
 // C'tors
+
 Page::Page(const string& name)
 {
 	try
@@ -16,6 +17,7 @@ Page::Page(const string& name)
 		throw e;
 	}
 }
+
 Page::~Page()
 {
 	list<Status*>::iterator itr = wall.begin();
@@ -23,7 +25,9 @@ Page::~Page()
 	for (;itr!=itrEnd; ++itr)
 		delete (*itr);
 }
+
 // Add / Remove
+
 void Page::addFan(Member* member)
 {
 	if (member == nullptr)
@@ -33,6 +37,7 @@ void Page::addFan(Member* member)
 		throw PageException("This member already follows the page. ", PageException::pageErrorList::ALREADY_FOLLOWED);
 	fans.push_back(member);
 }
+
 void Page::removeFan(Member* member)
 {
 	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
@@ -40,6 +45,7 @@ void Page::removeFan(Member* member)
 		throw PageException("The member is not a fan so we can't remove him. ", PageException::pageErrorList::NOT_FOLLOW);
 	fans.erase(itrOfFan);
 }
+
 void Page::addStatus(const string& str)
 {
 	try
@@ -52,7 +58,9 @@ void Page::addStatus(const string& str)
 		throw e;
 	}
 }
+
 // Prints
+
 void Page::showFans() const
 {
 	list<Member*>::const_iterator itr = fans.begin();
@@ -62,6 +70,7 @@ void Page::showFans() const
 		cout << "Fan #" << i + 1 << ": " << (*itr)->getName() << endl;
 	cout << "---- End of Fan List ----" << endl << endl;
 }
+
 void Page::showPageStatus() const
 {
 	if (wall.size() == 0)
@@ -73,7 +82,8 @@ void Page::showPageStatus() const
 	list<Status*>::const_iterator itrEnd = wall.end();
 	cout << "-------- All Status of Page " << this->getName() << " --------" << endl; // announcement for start print status
 	for(int i=0; itr!= itrEnd; ++itr, ++i)
-	{// print all status
+	{ 
+		// print all status
 		Date date = (*itr)->getDate();
 		cout << "Status " << i + 1 << "# : " << (*itr)->getText() << " || ";
 		cout << date.getDay() << "." << date.getMonth() << "." << date.getYear() << " ";
@@ -86,7 +96,9 @@ void Page::showPageStatus() const
 	}
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }
+
 // Setters / Getters
+
 void Page::setName(const string& str)
 {
 	if (name.empty() == false)
@@ -100,25 +112,30 @@ const string& Page::getName() const
 {
 	return name;
 }
+
 int Page::getSizeOfFans() const
 {
 	return fans.size();
 }
 
 // Operators
+
 bool Page::operator<(const Page& other) const
 {
 	return this->fans.size() < other.fans.size();
 }
+
 bool Page::operator>(const Page& other) const
 {
 	return this->fans.size() > other.fans.size();
 
 }
+
 bool Page::operator<(const Member& other) const
 {
 	return other < (*this); // based on operator< from member
 }
+
 bool Page::operator>(const Member& other) const
 {
 	return other < (*this); // based on operator> from member

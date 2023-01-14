@@ -1,8 +1,8 @@
-#include <iostream>
-using namespace std;
 #include "VideoStatus.h"
+using namespace std;
 
-VideoStatus::VideoStatus(std::string text, std::string name, std::string video) : Status(text, name)
+
+VideoStatus::VideoStatus(const std::string& text, const std::string& name, const std::string& video) : Status(text, name)
 {
 	this->video = video;
 }

@@ -1,15 +1,15 @@
 #ifndef __VIDEOSTATUS_H
 #define __VIDEOSTATUS_H
-
-#include "Status.h"
+#include <string>
 #include <iostream>
+#include "Status.h"
 
 class VideoStatus : public Status
 {
 	std::string video;
 	VideoStatus(VideoStatus&);
 public:
-	VideoStatus(std::string text, std::string name, std::string video);
+	VideoStatus(const std::string& text, const std::string& name, const std::string& video);
 	virtual void showStatus() const override;
 	void showVideo() const;
 };

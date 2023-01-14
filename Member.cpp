@@ -3,7 +3,6 @@ using namespace std;
 #include "Member.h"
 #include "Utilities.h"
 #include "Page.h"
-#include "Status.h"
 #include "ImageStatus.h"
 #include "VideoStatus.h"
 #include "Date.h"

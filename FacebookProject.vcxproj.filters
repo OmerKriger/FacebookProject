@@ -39,6 +39,12 @@
     <ClCompile Include="Exceptions.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="ImageStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Member.h">
@@ -57,6 +63,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoStatus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

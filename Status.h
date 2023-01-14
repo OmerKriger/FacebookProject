@@ -7,16 +7,18 @@
 
 class Status
 {
+	Status(Status&);
+protected:
 	Date date; 
 	std::string text;
 	const std::string& creator;
 	void setText(const std::string& str) noexcept(false);
-	Status(Status&);
 public:
 	Status(const std::string& text, const std::string& name) noexcept(false);
+	virtual ~Status() {};
 	const Date& getDate() const;
 	const std::string getText() const;
-	void showStatus() const;
+	virtual void showStatus() const;
 	const std::string& getCreator() const;
 	// Operators
 	bool operator==(const Status& status) const;

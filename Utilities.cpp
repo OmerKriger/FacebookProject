@@ -37,7 +37,7 @@ void Utilities::actionsForMenu(char selection)
 			createMember();
 			cout << "Member created!" << endl << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Member creating failed!" << endl;
 		}
@@ -48,7 +48,7 @@ void Utilities::actionsForMenu(char selection)
 			createPage();
 			cout << "Page created!" << endl << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Page creating failed!" << endl;
 		}
@@ -59,7 +59,7 @@ void Utilities::actionsForMenu(char selection)
 			createStatusForMember();
 			cout << "Member Status Created" << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Member Status Creating failed!" << endl << endl;
 		}
@@ -70,7 +70,7 @@ void Utilities::actionsForMenu(char selection)
 			createStatusForPage();
 			cout << "Page Status Created" << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Page Status Creating failed!" << endl << endl;
 		}
@@ -87,7 +87,7 @@ void Utilities::actionsForMenu(char selection)
 			setFriendship();
 			cout << "Friendship Created" << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Friendship Creation failed" << endl << endl;
 		}
@@ -98,7 +98,7 @@ void Utilities::actionsForMenu(char selection)
 			deleteFriendship();
 			cout << "Friendship deleted" << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Friendship deletion failed" << endl << endl;
 		}
@@ -109,7 +109,7 @@ void Utilities::actionsForMenu(char selection)
 			followMemberToPage();
 			cout << "The member now follows the Fan Page" << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Member's follow request failed" << endl;
 		}
@@ -119,7 +119,7 @@ void Utilities::actionsForMenu(char selection)
 			unfollowMemberToPage();
 			cout << "Member's unfollowed the Fan Page successfully" << endl;
 		}
-		catch (...) // need to fix for nir
+		catch (...) 
 		{
 			cout << "Member's unfollow request failed" << endl;
 		}
@@ -607,7 +607,8 @@ void Utilities::unfollowMemberToPage()
 
 void Utilities::createStatusForMember()
 {
-	string memberName, statusText;
+	string memberName, statusText, path = "";
+	int statusType;
 	// ask for member
 	askForFriendList();
 	cout << "Please type the name of a member to create status: " << endl;
@@ -617,12 +618,25 @@ void Utilities::createStatusForMember()
 		cout << "This member doesn't exist, Please try again." << endl << "Please type the name of a member to create status: ";
 		getString(memberName);
 	}
+	cout << "Choose status type,  press 1 for text, press 2 for image, press 3 for video: ";
+	cin >> statusType;
+	getchar(); // to flush buffer.
+	while (statusType != 1 && statusType != 2 && statusType != 3)
+	{
+		cout << "Invalid choice, try again: ";
+		cin >> statusType;
+	}
+	if (statusType != 1)
+	{
+		cout << "Please enter Path: ";
+		getString(path);
+	}
 	cout << "Please type the Text and press enter to finish (MAX:"<< MAX_STATUS_LEN-1 << " Chars): " << endl;
 	getString(statusText);
 	putEntersInString(statusText); // put \n in the string every fixed chars that defined
 	try
 	{
-		facebook.getMember(memberName).addStatus(statusText); // create the status for this member with the text typed in
+		facebook.getMember(memberName).addStatus(statusText, statusType, path); // create the status for this member with the text typed in
 	}
 	catch (StatusException& e)
 	{

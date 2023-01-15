@@ -122,6 +122,7 @@ void Facebook::__Init__()
 {
 	// This function create default data in system
 	// creating defualt Members
+	string emptyStr = "";
 	try
 	{
 		this->createMember("Omer Kriger", Date(10, 5, 1998));
@@ -150,16 +151,15 @@ void Facebook::__Init__()
 		this->getPage("Toto Wolff").addStatus("No, Mikey, No, No, Mikey, That Was So Not Right!");
 		this->getPage("Toto Wolff").addStatus("Danke Seb.");
 		// creating default Status for Members
-		this->getMember("Omer Kriger").addStatus("In case I don't see ya good afternoon, good evening and goodnight.");
-		this->getMember("Omer Kriger").addStatus("CrossFit is just Fight Club if the first two rules were the opposite.");
-		this->getMember("Nir Peretz").addStatus("Something clever");
-		this->getMember("Nir Peretz").addStatus("More clever than the first status");
-		this->getMember("Mark Zuckerberg").addStatus("Shlomo Artzi stole my songs !!");
-		this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.");
+		this->getMember("Omer Kriger").addStatus("In case I don't see ya good afternoon, good evening and goodnight.", 1, emptyStr);
+		this->getMember("Omer Kriger").addStatus("CrossFit is just Fight Club if the first two rules were the opposite.", 1, emptyStr);
+		this->getMember("Nir Peretz").addStatus("Something clever", 1, emptyStr);
+		this->getMember("Nir Peretz").addStatus("More clever than the first status", 1, emptyStr);
+		this->getMember("Mark Zuckerberg").addStatus("Shlomo Artzi stole my songs !!", 1, emptyStr);
+		this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.", 1, emptyStr);
 	}
 	catch (...)
 	{
-		
 		FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
 	}
 }

@@ -5,6 +5,13 @@
 #include <string>
 #include <list>
 
+const enum statusType
+{
+	TEXT = 1, // equal 1 for start counting from 1 and not zero 
+	IMAGE,
+	VIDEO
+};
+
 class Status;
 class Page; 
 
@@ -26,7 +33,7 @@ public:
 	void showLastFriendsStatus() const;
 	void showMyLastStatuses() const;
 	// Statuses
-	void addStatus(const std::string& text) noexcept(false);
+	void addStatus(const std::string& text, int statusType, std::string& path) noexcept(false);
 	// Getters
 	const std::string& getName() const { return name; }
 	const int getAmountOfStatus() const { return (int)myStatus.size(); }

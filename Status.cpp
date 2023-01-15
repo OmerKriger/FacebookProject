@@ -58,8 +58,6 @@ void Status::showStatus() const
 		else
 			cout << text[i];
 	cout << endl << "--------------------------------------------------" << endl << endl; // bottom of status
-
-
 }
 // Operators
 bool Status::operator==(const Status& status) const

@@ -3,7 +3,8 @@ using namespace std;
 #include "Member.h"
 #include "Utilities.h"
 #include "Page.h"
-#include "Status.h"
+#include "ImageStatus.h"
+#include "VideoStatus.h"
 #include "Date.h"
 
 // C'tors in Members
@@ -132,20 +133,51 @@ void Member::showMyStatus() const
 		if (date.getMin() < 10)
 			cout << "0";
 		cout << "" << date.getMin() << endl;
+		if (typeid(*(*itr)) == typeid(ImageStatus))
+			((ImageStatus*)(*itr))->showImage();
+		if (typeid(*(*itr)) == typeid(VideoStatus))
+			((VideoStatus*)(*itr))->showVideo();
 	}
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
-void Member::addStatus(const string& text)
+void Member::addStatus(const string& text, int statusType, string& path)
 {
-	try
+	switch (statusType)
 	{
-		Status* status = new Status(text, this->getName()); 
-		myStatus.push_front(status);
-	}
-	catch (StatusException& e)
-	{
-		throw e;
+	case statusType::TEXT:
+		try
+		{
+			Status* status = new Status(text, this->getName());
+			myStatus.push_front(status);
+		}
+		catch (StatusException& e)
+		{
+			throw e;
+		}
+		break;
+	case statusType::IMAGE:
+		try
+		{
+			Status* status = new ImageStatus(text, this->getName(), path);
+			myStatus.push_front(status);
+		}
+		catch (StatusException& e)
+		{
+			throw e;
+		}
+		break;
+	case statusType::VIDEO:
+		try
+		{
+			Status* status = new VideoStatus(text, this->getName(), path);
+			myStatus.push_front(status);
+		}
+		catch (StatusException& e)
+		{
+			throw e;
+		}
+		break;
 	}
 }
 void Member::showLastFriendsStatus() const

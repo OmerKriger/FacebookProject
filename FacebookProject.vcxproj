@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackupRecovery.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="Exceptions.h" />
     <ClCompile Include="Facebook.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="VideoStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackupRecovery.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="Facebook.h" />
     <ClInclude Include="ImageStatus.h" />

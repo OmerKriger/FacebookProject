@@ -620,7 +620,7 @@ void Utilities::createStatusForMember()
 	}
 	cout << "Choose status type,  press 1 for text, press 2 for image, press 3 for video: ";
 	cin >> statusType;
-	getchar(); // to flush buffer.
+	(void)getchar(); // to flush buffer.
 	while (statusType != 1 && statusType != 2 && statusType != 3)
 	{
 		cout << "Invalid choice, try again: ";

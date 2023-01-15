@@ -1,4 +1,3 @@
-#include <iostream>
 using namespace std;
 #include "Status.h"
 
@@ -13,6 +12,18 @@ Status::Status(const string& text, const string& name) : creator(name)
 	{
 		throw e;
 	}
+}
+Status::Status(ifstream& inFile) : date(inFile)
+{
+	BackupRecovery::loadString(inFile, this->text);
+	BackupRecovery::loadString(inFile, this->creator);	
+}
+// save class
+void Status::save(std::ofstream& outFile) const
+{
+	this->date.save(outFile);
+	BackupRecovery::saveString(outFile, this->text);
+	BackupRecovery::saveString(outFile, this->creator);
 }
 // setters
 void Status::setText(const string& str) 

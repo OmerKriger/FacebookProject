@@ -17,6 +17,10 @@ Date::Date()
 	this->minutes = nowLocal.tm_min;
 	this->year = nowLocal.tm_year + 1900;	
 }
+Date::Date(std::ifstream& inFile)
+{
+	inFile.read((char*)this, sizeof(*this));
+}
 Date::Date(int day, int month, int year) noexcept(false)
 {
 	/// <summary>
@@ -54,6 +58,10 @@ Date::Date(int day, int month, int year, int minutes, int hours)
 	{
 		throw e;
 	}
+}
+void Date::save(std::ofstream& outFile) const
+{
+	outFile.write((const char*)this, sizeof(*this));
 }
 void Date::setDate(int day, int month, int year) 
 {

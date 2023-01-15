@@ -22,8 +22,11 @@ Page::~Page()
 {
 	list<Status*>::iterator itr = wall.begin();
 	list<Status*>::iterator itrEnd = wall.end();
-	for (;itr!=itrEnd; ++itr)
+	for (; itr != itrEnd; ++itr)
+	{
+
 		delete (*itr);
+	}
 }
 
 // Add / Remove

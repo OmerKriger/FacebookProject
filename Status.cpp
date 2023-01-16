@@ -1,8 +1,9 @@
-using namespace std;
 #include "Status.h"
+using namespace std;
+
 
 // C'tors
-Status::Status(const string& text, const string& name) : creator(name)
+Status::Status(const string& text, const string& name) : creator(name), hasSaved(false)
 {
 	try 
 	{
@@ -13,17 +14,22 @@ Status::Status(const string& text, const string& name) : creator(name)
 		throw e;
 	}
 }
-Status::Status(ifstream& inFile) : date(inFile)
+
+Status::Status(ifstream& inFile) : date(inFile), hasSaved(false)
 {
 	BackupRecovery::loadString(inFile, this->text);
 	BackupRecovery::loadString(inFile, this->creator);	
 }
 // save class
-void Status::save(std::ofstream& outFile) const
+void Status::save(std::ofstream& outFile)
 {
+	if (hasSaved)
+		return;
+	hasSaved = true; // flag for no double save
 	this->date.save(outFile);
 	BackupRecovery::saveString(outFile, this->text);
 	BackupRecovery::saveString(outFile, this->creator);
+
 }
 // setters
 void Status::setText(const string& str) 

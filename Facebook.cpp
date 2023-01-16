@@ -13,15 +13,21 @@ Facebook::~Facebook()
 	{
 		testCompareOperators();
 	}
+
+	// Setup for deleting
 	list<Member*>::const_iterator mItr = this->members.begin();
 	list<Member*>::const_iterator mItrEnd = this->members.end();
 	list<Page*>::const_iterator pItr = this->fanPages.begin();
 	list<Page*>::const_iterator pItrEnd = this->fanPages.end();
-
+	// Setup for saving in new files
+	BackupRecovery::deleteFilesContent();
+	// Delete pages
 	for (; pItr != pItrEnd; ++pItr)
 		delete (*pItr);
+	// Delete members
 	for (; mItr != mItrEnd; ++mItr)
 		delete (*mItr);
+
 	cout << "Facebook out, over!" << endl;
 }
 void Facebook::testCompareOperators() const
@@ -160,7 +166,7 @@ void Facebook::__Init__()
 	}
 	catch (...)
 	{
-		FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
+		throw FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
 	}
 }
 
@@ -271,4 +277,24 @@ Page& Facebook::getPage(const string& name) // return page by ref from array of 
 		if (name == (*itr)->getName())
 			return **itr;
 	throw FacebookException("This Page isn't found. ", FacebookException::facebookErrorList::PAGE_NOT_FOUND);
+}
+
+void Facebook::addMember(Member* newMember)
+{
+	if (newMember == nullptr)
+		throw "..."; // TODO: need to fix
+	if (memberNameCheck(newMember->getName()))
+		throw "Already exist"; // TOOD: need to fix
+
+	members.push_back(newMember);
+}
+
+void Facebook::addPage(Page* newPage)   
+{
+	if (newPage == nullptr)
+		throw "..."; // TODO: need to fix
+	if (memberNameCheck(newPage->getName()))
+		throw "Already exist"; // TOOD: need to fix
+
+	fanPages.push_back(newPage);
 }

@@ -18,11 +18,13 @@ class Page
 public:
 	// C'tors
 	Page(const std::string& name) noexcept(false);
+	Page(std::ifstream& inFile) noexcept(false);
 	~Page();
 	// Add/Remove
 	void addFan(Member* member) noexcept(false);
 	void removeFan(Member* member) noexcept(false);
 	void addStatus(const std::string& str) noexcept(false);
+	void addStatus(Status* status) noexcept(false);
 	// Prints
 	void showFans() const;
 	void showPageStatus() const;

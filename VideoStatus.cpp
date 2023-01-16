@@ -18,8 +18,10 @@ void VideoStatus::showStatus() const
 	showVideo();
 }
 
-void VideoStatus::save(std::ofstream& outFile) const
+void VideoStatus::save(std::ofstream& outFile)
 {
+	if (hasSaved)
+		return;
 	Status::save(outFile);
 	BackupRecovery::saveString(outFile, this->video);
 }

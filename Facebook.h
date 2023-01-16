@@ -32,6 +32,10 @@ public:
 	Member& getMember(const std::string& name)				noexcept(false);
 	const Page& getPage(const std::string& name)			const noexcept(false);
 	Page& getPage(const std::string& name)					noexcept(false);
+private: // private methods with friend access
+	void addMember(Member* newMember);
+	void addPage(Page* newPage);
+	friend class BackupRecovery;
 };
 
 #endif

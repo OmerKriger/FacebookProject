@@ -15,7 +15,7 @@ public:
 	VideoStatus(std::ifstream& inFile);
 	VideoStatus(const std::string& text, const std::string& name, const std::string& video);
 	virtual void showStatus() const override;
-	virtual void save(std::ofstream& outFile) const override;
+	virtual void save(std::ofstream& outFile) override;
 	void showVideo() const;
 };
 #endif

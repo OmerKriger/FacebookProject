@@ -15,7 +15,7 @@ public:
 	ImageStatus(const std::string& text, const std::string& name,const std::string& image) : Status(text,name), image(image) {}
 	virtual void showStatus() const override;
 	void showImage() const;
-	virtual void save(std::ofstream& outFile) const override;
+	virtual void save(std::ofstream& outFile) override;
 };
 
 #endif

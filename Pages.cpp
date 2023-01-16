@@ -18,15 +18,29 @@ Page::Page(const string& name)
 	}
 }
 
+Page::Page(std::ifstream& inFile) noexcept(false)
+{
+	BackupRecovery::loadString(inFile, this->name);
+}
+
 Page::~Page()
 {
+	// Open Files
+	ofstream outFileStatus(strPath[Path::STATUS], ios::binary | ios::app);
+	ofstream outFilePages(strPath[Path::PAGE], ios::binary | ios::app);
+	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = wall.begin();
 	list<Status*>::iterator itrEnd = wall.end();
 	for (; itr != itrEnd; ++itr)
 	{
-
+		BackupRecovery::saveStatus(outFileStatus, *itr, Owner::PAGE);
 		delete (*itr);
 	}
+	// Save the fan page
+	BackupRecovery::saveFanPage(outFilePages, *this); 
+	// Close files
+	outFileStatus.close();
+	outFilePages.close();
 }
 
 // Add / Remove
@@ -60,6 +74,11 @@ void Page::addStatus(const string& str)
 	{
 		throw e;
 	}
+}
+
+void Page::addStatus(Status* status) noexcept(false)
+{
+	wall.push_back(status);
 }
 
 // Prints

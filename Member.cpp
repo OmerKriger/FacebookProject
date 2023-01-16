@@ -20,12 +20,33 @@ Member::Member(const string& name, Date bDay)
 		throw e;
 	}
 }
+Member::Member(std::ifstream& inFile) : birthDay(inFile)
+{
+	BackupRecovery::loadString(inFile, this->name);
+}
 Member::~Member()
 {
+	// Open files for saving before delete
+	ofstream outFileStatus(strPath[Path::STATUS], ios::binary | ios::app);
+	ofstream outFileConnection(strPath[Path::CONNECTION], ios::binary | ios::app); 
+	ofstream outFileMember(strPath[Path::MEMBER], ios::binary | ios::app);
+	// TODO: run over the friend list and fanPage and save connection (BackupRecovery::saveMember\Page)
+	// TODO: think how don't run about connection 2 times and dont put it 2 times in save function
+
+	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = this->myStatus.begin();
 	list<Status*>::iterator itrEnd = this->myStatus.end();
 	for (; itr != itrEnd; ++itr)
+	{
+		BackupRecovery::saveStatus(outFileStatus, *itr,Owner::MEMBER); // save status in storage for next run
 		delete (*itr);
+	}
+	// Save Member
+	BackupRecovery::saveMember(outFileMember, *this);
+	// Close Files
+	outFileStatus.close();
+	outFileConnection.close();
+	outFileMember.close();
 }
 
 // Friends functions in Member
@@ -141,6 +162,10 @@ void Member::showMyStatus() const
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
+void Member::addStatus(Status* status)
+{
+	myStatus.push_front(status);
+}
 void Member::addStatus(const string& text, int statusType, string& path)
 {
 	switch (statusType)
@@ -255,13 +280,13 @@ bool Member::operator>(const Page& other) const
 	return this->friends.size() > other.getSizeOfFans();
 }
 
-const Member& Member::operator+=(Member& other)
+Member& Member::operator+=(Member& other)
 {
 	this->addFriend(&other);
 	return *this;
 }
 
-const Member& Member::operator+=(Page& page)
+Member& Member::operator+=(Page& page)
 {
 	this->addPage(page);
 	return *this;

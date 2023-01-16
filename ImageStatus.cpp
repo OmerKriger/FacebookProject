@@ -19,8 +19,10 @@ void ImageStatus::showImage() const
 	system(path.c_str());
 }
 
-void ImageStatus::save(std::ofstream& outFile) const
+void ImageStatus::save(std::ofstream& outFile) 
 {
+	if (hasSaved)
+		return;
 	Status::save(outFile);
 	BackupRecovery::saveString(outFile, this->image);
 }

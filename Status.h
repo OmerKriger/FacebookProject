@@ -14,13 +14,13 @@ protected:
 	Date date; 
 	std::string text;
 	std::string creator;
+	bool hasSaved;
 	void setText(const std::string& str) noexcept(false);
 public:
-	Status(Status&) = default;
 	Status(std::ifstream& inFile);
 	Status(const std::string& text, const std::string& name) noexcept(false);
-	virtual ~Status() {};
-	virtual void save(std::ofstream& outFile) const;
+	virtual ~Status() {}
+	virtual void save(std::ofstream& outFile); // Can't be const - change flag inside
 	const Date& getDate() const;
 	const std::string getText() const;
 	virtual void showStatus() const;

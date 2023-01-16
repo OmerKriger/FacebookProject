@@ -2,10 +2,9 @@
 #define __UTILITIES_H
 #include <string>
 #include "Facebook.h"
-using namespace std;
 
 // enum declerations
-const enum Menu // Menu Defines
+enum Menu // Menu Defines
 {  
 	CREATE_MEMBER = 1, // equal 1 for start counting from 1 and not zero 
 	CREATE_PAGE,
@@ -24,7 +23,7 @@ const enum Menu // Menu Defines
 	SHOW_FRIENDS_OF_FRIEND,
 	EXIT
 };
-const enum DefinesNum
+enum DefinesNum
 {
 	NOT_FOUND = -1,
 	MATCH = 0,
@@ -39,7 +38,7 @@ const enum DefinesNum
 	ENTERS_FREQ = 60,
 	MAX_STATUS_LEN = 501,
 };
-const enum DefinesChars
+enum DefinesChars
 {
 
 	YES_ANSWER_UPPER = 'Y',
@@ -58,11 +57,12 @@ public:
 	void printMenu()				const;
 	void actionsForMenu(char selection);
 	bool getString(std::string& str) const;
-	void convertStrToIntDate(string birthday, int* day, int* month, int* year) noexcept(false);
+	void convertStrToIntDate(std::string birthday, int* day, int* month, int* year) noexcept(false);
 	void askForFriendList()			const;
 	void askForPageList()			const;
-	bool putEntersInString(string& text);
-	
+	bool putEntersInString(std::string& text);
+	bool YesOrNoCheck(char input)	const;
+
 	// Controlling function
 	void createMember()				noexcept(false);
 	void createPage()				noexcept(false);

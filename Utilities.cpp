@@ -386,7 +386,7 @@ void Utilities::showStatusOfMember() const
 	getString(name);
 	while (facebook.memberNameCheck(name) == false)
 	{
-		cout << "This member doesn't exist, Please try again." << endl << "Type a member's name you would like to see his Status ";
+		cout << "This member doesn't exist, Please try again." << endl << "Type a member's name you would like to see his Status: ";
 		getString(name);
 	}
 	facebook.getMember(name).showMyStatus(); // calling for function of this member to show his status

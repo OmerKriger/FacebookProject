@@ -20,7 +20,6 @@ Member::~Member()
 	// Open files for saving before delete
 	ofstream outFileStatus(BackupRecovery::getPath((int)Path::STATUS), ios::binary | ios::app);
 	ofstream outFileMember(BackupRecovery::getPath((int)Path::MEMBER), ios::binary | ios::app);
-
 	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = this->myStatus.begin();
 	list<Status*>::iterator itrEnd = this->myStatus.end();

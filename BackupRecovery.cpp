@@ -2,6 +2,7 @@
 #include "Facebook.h"
 using namespace std;
 
+// set Files Paths
 string BackupRecovery::pathMembers = "Member.bin";
 string BackupRecovery::pathFanPages = "FanPage.bin";
 string BackupRecovery::pathConnections = "Connection.bin";
@@ -26,8 +27,8 @@ BackupRecovery::BackupRecovery(Facebook& facebook) : facebook(facebook)
 	// Start loading
 	loadFanPages();
 	loadMembers();
-	loadConnections();
 	loadStatuses();
+	loadConnections();
 	// change flag for no loading again
 	loaded = true;
 }
@@ -145,7 +146,7 @@ void BackupRecovery::loadConnections()
 	while (!isEOF)
 	{
 		inFileConnection->read((char*)&typeConnection, sizeof(typeConnection));
-		if (!inFileStatus->good())
+		if (inFileConnection->eof())
 		{
 			isEOF = true;
 			break;
@@ -255,7 +256,15 @@ void BackupRecovery::saveStatus(ofstream& outFile, Status* status, int OwnerClas
 
 void BackupRecovery::saveMember(ofstream& outFile,const Member& Member)
 {
-	Member.save(outFile);
+	try 
+	{
+		Member.save(outFile);
+	}
+	catch (MemberException& e) // catch only MemberExceptions
+	{
+		if (e.getErrorCode() != MemberException::memberErrorList::ALREADY_FRIENDS) // if they already friends is ok
+			throw e; // throw if is different error
+	}
 }
 
 void BackupRecovery::saveFanPage(ofstream& outFile,const Page& FanPage)

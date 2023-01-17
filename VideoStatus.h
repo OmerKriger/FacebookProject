@@ -14,6 +14,7 @@ class VideoStatus : public Status
 public:
 	VideoStatus(std::ifstream& inFile);
 	VideoStatus(const std::string& text, const std::string& name, const std::string& video);
+	const std::string& getPath() { return video; };
 	virtual void showStatus() const override;
 	virtual void save(std::ofstream& outFile) override;
 	void showVideo() const;

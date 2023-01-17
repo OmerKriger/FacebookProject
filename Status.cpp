@@ -1,21 +1,16 @@
 #include "Status.h"
+#include "ImageStatus.h"
+#include "VideoStatus.h"
 using namespace std;
 
 
 // C'tors
-Status::Status(const string& text, const string& name) : creator(name), hasSaved(false)
+Status::Status(const string& text, const string& name) : creator(name), isSaved(false)
 {
-	try 
-	{
-		setText(text);
-	}
-	catch (StatusException& e)
-	{
-		throw e;
-	}
+	setText(text);
 }
 
-Status::Status(ifstream& inFile) : date(inFile), hasSaved(false)
+Status::Status(ifstream& inFile) : date(inFile), isSaved(false)
 {
 	BackupRecovery::loadString(inFile, this->text);
 	BackupRecovery::loadString(inFile, this->creator);	
@@ -23,9 +18,9 @@ Status::Status(ifstream& inFile) : date(inFile), hasSaved(false)
 // save class
 void Status::save(std::ofstream& outFile)
 {
-	if (hasSaved)
+	if (isSaved)
 		return;
-	hasSaved = true; // flag for no double save
+	isSaved = true; // flag for no double save
 	this->date.save(outFile);
 	BackupRecovery::saveString(outFile, this->text);
 	BackupRecovery::saveString(outFile, this->creator);
@@ -79,7 +74,15 @@ void Status::showStatus() const
 // Operators
 bool Status::operator==(const Status& status) const
 {
-	return this->getText() == status.getText();
+	if (typeid(*this) != typeid(status) || this->getText() != status.getText())
+		return false;
+	if (typeid(*this) == typeid(ImageStatus))
+		if (((ImageStatus*)this)->getPath() != ((ImageStatus*)(&status))->getPath())
+			return false;
+	if (typeid(*this) == typeid(VideoStatus))
+		if (((VideoStatus*)this)->getPath() != ((VideoStatus*)(&status))->getPath())
+			return false;
+	return true;
 }
 bool Status::operator!=(const Status& status) const
 {

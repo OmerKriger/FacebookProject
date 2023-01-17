@@ -29,6 +29,8 @@ public:
 	void removeFriend(Member* dFriend) noexcept(false);
 	void addPage(Page& newPage) noexcept(false);
 	void removePage(const Page& dPage) noexcept(false);
+	//Save
+	virtual void save(std::ofstream& outFile); // Can't be const - change flag inside
 	// Prints
 	void showMyStatus() const;
 	void showMyFriends() const;
@@ -53,6 +55,7 @@ public:
 private:
 	std::string name;
 	Date birthDay;
+	bool isSaved;
 	std::list <Status*> myStatus;
 	std::list <Page*> InterestPages;
 	std::list <Member*> friends;

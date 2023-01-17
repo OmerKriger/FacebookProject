@@ -9,6 +9,7 @@ class Page
 {
 	// Data
 	std::string name;
+	bool isSaved;
 	std::list<Member*> fans;
 	std::list<Status*> wall;
 	// Setters
@@ -20,6 +21,8 @@ public:
 	Page(const std::string& name) noexcept(false);
 	Page(std::ifstream& inFile) noexcept(false);
 	~Page();
+	//Save
+	virtual void save(std::ofstream& outFile); // Can't be const - change flag inside
 	// Add/Remove
 	void addFan(Member* member) noexcept(false);
 	void removeFan(Member* member) noexcept(false);

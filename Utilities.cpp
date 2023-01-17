@@ -299,17 +299,9 @@ void Utilities::createMember()
 		{
 			cout << e.what() << ", please try again" << endl;
 		}
-		catch (MemberException& e)
-		{
-			throw e;
-		}
 		catch (FacebookException& e)
 		{
 			cout << e.what() << ", please try again" << endl;
-		}
-		catch (SystemException& e)
-		{
-			throw e;
 		}
 		catch (...)
 		{
@@ -336,14 +328,6 @@ void Utilities::createPage()
 		catch (FacebookException& e)
 		{
 			cout << e.what() << ", please try again" << endl;
-		}
-		catch (PageException& e)
-		{
-			throw e;
-		}
-		catch (SystemException& e)
-		{
-			throw e;
 		}
 		catch (...)
 		{
@@ -456,10 +440,6 @@ void Utilities::setFriendship()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -491,10 +471,6 @@ void Utilities::deleteFriendship()
 	catch (MemberException& e)
 	{
 		cout << e.what() << endl;
-		throw e;
-	}
-	catch (SystemException& e)
-	{
 		throw e;
 	}
 	catch (...)
@@ -557,10 +533,6 @@ void Utilities::followMemberToPage()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -601,10 +573,6 @@ void Utilities::unfollowMemberToPage()
 	catch (PageException& e)
 	{
 		cout << e.what() << endl;
-		throw e;
-	}
-	catch (SystemException& e)
-	{
 		throw e;
 	}
 	catch (...)
@@ -651,10 +619,6 @@ void Utilities::createStatusForMember()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -684,10 +648,6 @@ void Utilities::createStatusForPage()
 	catch (StatusException& e)
 	{
 		cout << e.what() << endl;
-		throw e;
-	}
-	catch (SystemException& e)
-	{
 		throw e;
 	}
 	catch (...)

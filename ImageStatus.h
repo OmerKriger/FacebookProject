@@ -13,6 +13,7 @@ class ImageStatus : public Status
 public:
 	ImageStatus(std::ifstream& inFile);
 	ImageStatus(const std::string& text, const std::string& name,const std::string& image) : Status(text,name), image(image) {}
+	const std::string& getPath() { return image; };
 	virtual void showStatus() const override;
 	void showImage() const;
 	virtual void save(std::ofstream& outFile) override;

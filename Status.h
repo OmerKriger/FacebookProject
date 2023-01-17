@@ -14,7 +14,7 @@ protected:
 	Date date; 
 	std::string text;
 	std::string creator;
-	bool hasSaved;
+	bool isSaved;
 	void setText(const std::string& str) noexcept(false);
 public:
 	Status(std::ifstream& inFile);

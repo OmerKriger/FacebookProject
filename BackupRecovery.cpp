@@ -39,9 +39,13 @@ void BackupRecovery::loadMembers() noexcept(false)
 		{
 			facebook.addMember(pMember);
 		}
+		catch (FacebookException& e)
+		{
+			this->errors += e.what();
+		}
 		catch (...)
 		{
-			// TODO: need to complete add error to error list
+			this->errors += "Unknown error while loading member.";
 		}
 	}
 }
@@ -58,9 +62,13 @@ void BackupRecovery::loadFanPages() noexcept(false)
 		{
 			facebook.addPage(pFanPage);
 		}
+		catch (FacebookException& e)
+		{
+			this->errors += e.what();
+		}
 		catch (...)
 		{
-			// TODO: need to complete add error to error list
+			this->errors += "Unknown error while loading Page.";
 		}
 	}
 }
@@ -88,9 +96,13 @@ void BackupRecovery::loadConnections() noexcept(false) // TODO: finish while loo
 				facebook.getMember(name1).addPage(facebook.getPage(name2));
 			}
 		}
-		catch (...) // TODO: need to complete add error to error list and continue to next (for each error Status, Page, Member)
+		catch (FacebookException& e)
 		{
-
+			this->errors += e.what();
+		}
+		catch (...)
+		{
+			this->errors += "Unknown error while loading connections.";
 		}
 	}
 }
@@ -115,9 +127,17 @@ void BackupRecovery::loadStatuses() noexcept(false) // TODO: finish while loop
 				facebook.getPage(status->getCreator()).addStatus(status);
 			}
 		}
-		catch (...) // TODO: need to complete add error to error list and continue to next (for each error Status, Page, Member)
+		catch (FacebookException& e)
 		{
-
+			this->errors += e.what();
+		}
+		catch (StatusException& e)
+		{
+			this->errors += e.what();
+		}
+		catch (...)
+		{
+			this->errors += "Unknown error while loading statuses.";
 		}
 	}
 }
@@ -125,7 +145,7 @@ void BackupRecovery::loadStatuses() noexcept(false) // TODO: finish while loop
 void BackupRecovery::saveStatus(std::ofstream& outFile, Status* status, int OwnerClassType)
 {
 	if (OwnerClassType != Owner::MEMBER && OwnerClassType != Owner::PAGE)
-		throw "General Error"; // TODO: Need to change create speical error
+		throw FacebookException("Status can't be saved because he has no member/page attached.", FacebookException::facebookErrorList::UNDEFINED);
 
 	outFile.write((const char*)OwnerClassType, sizeof(OwnerClassType));
 	status->save(outFile);
@@ -133,10 +153,12 @@ void BackupRecovery::saveStatus(std::ofstream& outFile, Status* status, int Owne
 
 void BackupRecovery::saveMember(std::ofstream& outFile, Member& Member)
 {
+	Member.save(outFile);
 }
 
 void BackupRecovery::saveFanPage(std::ofstream& outFile, Page& FanPage)
 {
+	FanPage.save(outFile);
 }
 
 void BackupRecovery::saveConnection(std::ofstream& outFile, const Member& Member1, const Member& Member2)

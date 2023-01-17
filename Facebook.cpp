@@ -176,15 +176,8 @@ void Facebook::createMember(const string& name, Date bDay)
 		throw FacebookException("This name already exist in the system ", FacebookException::facebookErrorList::MEMBER_EXIST);
 	if (!bDay.isDefined())
 		throw DateException("The birthday is not defined well.");
-	try
-	{
-		Member* pMember = new Member(name, bDay);
-		members.push_back(pMember);
-	}
-	catch (MemberException& e)
-	{
-		throw e;
-	}
+	Member* pMember = new Member(name, bDay);
+	members.push_back(pMember);
 }
 
 bool Facebook::memberNameCheck(const string& name) const // checking if the name is exist Member return true for found and false for not found
@@ -201,15 +194,8 @@ void Facebook::createFanPage(const string& name)
 {
 	if (pageNameCheck(name) == true) // is already in the system
 		throw FacebookException("This name already exist in the system", FacebookException::facebookErrorList::PAGE_EXIST);
-	try
-	{
-		Page* pPage = new Page(name);
-		fanPages.push_back(pPage);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+	Page* pPage = new Page(name);
+	fanPages.push_back(pPage);
 }
 
 bool Facebook::pageNameCheck(const string& name) const // checking if the name is exist Page return true for found and false for not found
@@ -282,19 +268,17 @@ Page& Facebook::getPage(const string& name) // return page by ref from array of 
 void Facebook::addMember(Member* newMember)
 {
 	if (newMember == nullptr)
-		throw "..."; // TODO: need to fix
+		throw FacebookException("The new member cannot be created", FacebookException::facebookErrorList::UNDEFINED);
 	if (memberNameCheck(newMember->getName()))
-		throw "Already exist"; // TOOD: need to fix
-
+		throw FacebookException("Already exist", FacebookException::facebookErrorList::MEMBER_EXIST);
 	members.push_back(newMember);
 }
 
 void Facebook::addPage(Page* newPage)   
 {
 	if (newPage == nullptr)
-		throw "..."; // TODO: need to fix
+		throw FacebookException("The new Page cannot be created", FacebookException::facebookErrorList::UNDEFINED);
 	if (memberNameCheck(newPage->getName()))
-		throw "Already exist"; // TOOD: need to fix
-
+		throw FacebookException("Already exist", FacebookException::facebookErrorList::PAGE_EXIST);
 	fanPages.push_back(newPage);
 }

@@ -10,16 +10,10 @@ using namespace std;
 // C'tors in Members
 Member::Member(const string& name, Date bDay)
 {
-	try
-	{
-		setName(name);
-		birthDay = bDay;
-	}
-	catch (MemberException& e)
-	{
-		throw e;
-	}
+	setName(name);
+	birthDay = bDay;
 }
+
 Member::Member(std::ifstream& inFile) : birthDay(inFile)
 {
 	BackupRecovery::loadString(inFile, this->name);
@@ -47,6 +41,15 @@ Member::~Member()
 	outFileStatus.close();
 	outFileConnection.close();
 	outFileMember.close();
+}
+
+void Member::save(std::ofstream& outFile)
+{
+	if (isSaved)
+		return;
+	isSaved = true; // flag for no double save
+	this->birthDay.save(outFile);
+	BackupRecovery::saveString(outFile, this->name);
 }
 
 // Friends functions in Member
@@ -93,28 +96,16 @@ void Member::addPage(Page& newPage)
 		throw MemberException("This Member already follows this Page !", MemberException::memberErrorList::ALREADY_FOLLOW);
 	InterestPages.push_back(&newPage);
 	// say to page add this friend to his list
-	try {
-		newPage.addFan(this);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+	newPage.addFan(this);
 }
 void Member::removePage(const Page& dPage)
 {
 	list<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), &dPage);
 	if (itrPage == InterestPages.end()) // we can't remove page who is not in followed
 		throw MemberException("This member does'nt follow this page !", MemberException::memberErrorList::NOT_FOLLOW);
-	try
-	{
-		(*itrPage)->removeFan(this);
-		InterestPages.erase(itrPage);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+
+	(*itrPage)->removeFan(this);
+	InterestPages.erase(itrPage);
 }
 void Member::showMyInterestPages() const
 {
@@ -171,37 +162,16 @@ void Member::addStatus(const string& text, int statusType, string& path)
 	switch (statusType)
 	{
 	case statusType::TEXT:
-		try
-		{
-			Status* status = new Status(text, this->getName());
-			myStatus.push_front(status);
-		}
-		catch (StatusException& e)
-		{
-			throw e;
-		}
+		Status* status = new Status(text, this->getName());
+		myStatus.push_front(status);
 		break;
 	case statusType::IMAGE:
-		try
-		{
-			Status* status = new ImageStatus(text, this->getName(), path);
-			myStatus.push_front(status);
-		}
-		catch (StatusException& e)
-		{
-			throw e;
-		}
+		Status* status = new ImageStatus(text, this->getName(), path);
+		myStatus.push_front(status);
 		break;
 	case statusType::VIDEO:
-		try
-		{
-			Status* status = new VideoStatus(text, this->getName(), path);
-			myStatus.push_front(status);
-		}
-		catch (StatusException& e)
-		{
-			throw e;
-		}
+		Status* status = new VideoStatus(text, this->getName(), path);
+		myStatus.push_front(status);
 		break;
 	}
 }

@@ -6,82 +6,58 @@ using namespace std;
 
 // C'tors
 
-Page::Page(const string& name)
-{
-	setName(name);
-}
-
-Page::Page(std::ifstream& inFile) noexcept(false)
-{
-	BackupRecovery::loadString(inFile, this->name);
-}
+Page::Page(const string& name) : Entity(name)
+{}
 
 Page::~Page()
 {
-	// Open Files
-	ofstream outFileStatus(strPath[Path::STATUS], ios::binary | ios::app);
-	ofstream outFilePages(strPath[Path::PAGE], ios::binary | ios::app);
-	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = wall.begin();
 	list<Status*>::iterator itrEnd = wall.end();
 	for (; itr != itrEnd; ++itr)
 	{
-		BackupRecovery::saveStatus(outFileStatus, *itr, Owner::PAGE);
 		delete (*itr);
 	}
-	// Save the fan page
-	BackupRecovery::saveFanPage(outFilePages, *this); 
-	// Close files
-	outFileStatus.close();
-	outFilePages.close();
 }
-
-void Page::save(ofstream& outFile)
-{
-	if (isSaved)
-		return;
-	isSaved = true; // flag for no double save
-	BackupRecovery::saveString(outFile, this->name);
-}
-
 
 // Add / Remove
 
-void Page::addFan(Member* member)
+void Page::addConnection(Entity* member)
 {
 	if (member == nullptr)
 		throw PageException("This member doesn't exist ", PageException::pageErrorList::NOT_FOLLOW);
-	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
-	if (itrOfFan != fans.end())
+	list<Entity*>::iterator itrOfFan = find(connections.begin(), connections.end(), member);
+	if (itrOfFan != connections.end())
 		throw PageException("This member already follows the page. ", PageException::pageErrorList::ALREADY_FOLLOWED);
-	fans.push_back(member);
+	connections.push_back(member);
 }
 
-void Page::removeFan(Member* member)
+void Page::removeConnection(Entity* member)
 {
-	list<Member*>::iterator itrOfFan = find(fans.begin(), fans.end(), member);
-	if (itrOfFan == fans.end())
+	list<Entity*>::iterator itrOfFan = find(connections.begin(), connections.end(), member);
+	if (itrOfFan == connections.end())
 		throw PageException("The member is not a fan so we can't remove him. ", PageException::pageErrorList::NOT_FOLLOW);
-	fans.erase(itrOfFan);
+	connections.erase(itrOfFan);
 }
 
 void Page::addStatus(const string& str)
 {
-	Status* status = new Status(str, this->getName());
-	wall.push_back(status);
-}
-
-void Page::addStatus(Status* status) noexcept(false)
-{
-	wall.push_back(status);
+	try
+	{
+		Status* status = new Status(str, this->getName());
+		wall.push_back(status);
+	}
+	catch (StatusException& e)
+	{
+		throw e;
+	}
 }
 
 // Prints
 
 void Page::showFans() const
 {
-	list<Member*>::const_iterator itr = fans.begin();
-	list<Member*>::const_iterator itrEnd = fans.end();
+	list<Entity*>::const_iterator itr = connections.begin();
+	list<Entity*>::const_iterator itrEnd = connections.end();
 	cout << "The Fan List of Page " << name << ":" << endl;
 	for (int i=0; itr!=itrEnd; ++itr, ++i)
 		cout << "Fan #" << i + 1 << ": " << (*itr)->getName() << endl;
@@ -115,7 +91,7 @@ void Page::showPageStatus() const
 }
 
 // Setters / Getters
-
+/*
 void Page::setName(const string& str)
 {
 	if (name.empty() == false)
@@ -124,27 +100,18 @@ void Page::setName(const string& str)
 		throw PageException("Name is too short ! ", PageException::pageErrorList::ILLEGAL_NAME);
 	name = str;
 }
-
-const string& Page::getName() const
-{
-	return name;
-}
-
-int Page::getSizeOfFans() const
-{
-	return fans.size();
-}
+*/
 
 // Operators
 
 bool Page::operator<(const Page& other) const
 {
-	return this->fans.size() < other.fans.size();
+	return this->connections.size() < other.connections.size();
 }
 
 bool Page::operator>(const Page& other) const
 {
-	return this->fans.size() > other.fans.size();
+	return this->connections.size() > other.connections.size();
 
 }
 

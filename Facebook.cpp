@@ -1,10 +1,36 @@
 #include <iostream>
-using namespace std;
 #include "Facebook.h"
+#include "BackupRecovery.h"
+using namespace std;
+
+
 Facebook::Facebook()
 {
-	if (TEST)
+	bool loaded = false;
+	try 
+	{
+		BackupRecovery recoveryFacebook(*this); // recover the data if is exist
+		loaded = true;
+	}
+	catch (BackupRecoveryException& e)
+	{
+		cout << e.what() << endl;
+	}
+	if (isEmpty() && TEST) // if after recovery nothing inside and Test is on put default data
 		__Init__();
+}
+
+void Facebook::saveFacebookConnections() const noexcept(false)
+{
+	list<Member*>::const_iterator mItr = this->members.begin();
+	list<Member*>::const_iterator mItrEnd = this->members.end();
+	ofstream outFileConnection(BackupRecovery::getPath((int)Path::CONNECTION), ios::binary | ios::app);
+	for (; mItr != mItrEnd; ++mItr)
+	{
+		(*mItr)->saveFriends(outFileConnection);
+		(*mItr)->saveInterestPages(outFileConnection);
+	}
+	outFileConnection.close();
 }
 
 Facebook::~Facebook()
@@ -13,14 +39,15 @@ Facebook::~Facebook()
 	{
 		testCompareOperators();
 	}
-
 	// Setup for deleting
 	list<Member*>::const_iterator mItr = this->members.begin();
 	list<Member*>::const_iterator mItrEnd = this->members.end();
 	list<Page*>::const_iterator pItr = this->fanPages.begin();
 	list<Page*>::const_iterator pItrEnd = this->fanPages.end();
-	// Setup for saving in new files
+	// Setup for saving in new files - delete all old files
 	BackupRecovery::deleteFilesContent();
+	// Save Connections between Member-Member and Member-Page before delete
+	saveFacebookConnections();
 	// Delete pages
 	for (; pItr != pItrEnd; ++pItr)
 		delete (*pItr);
@@ -228,6 +255,14 @@ void Facebook::showAllPages() const
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
 }
 
+bool Facebook::isEmpty() const
+{
+	if (members.size() == 0 && fanPages.size() == 0)
+		return true;
+	else
+		return false;
+}
+
 Member& Facebook::getMember(const string& name) // return member by ref from array of members
 {
 	list<Member*>::const_iterator itr = this->members.begin();
@@ -278,7 +313,7 @@ void Facebook::addPage(Page* newPage)
 {
 	if (newPage == nullptr)
 		throw FacebookException("The new Page cannot be created", FacebookException::facebookErrorList::UNDEFINED);
-	if (memberNameCheck(newPage->getName()))
+	if (pageNameCheck(newPage->getName()))
 		throw FacebookException("Already exist", FacebookException::facebookErrorList::PAGE_EXIST);
 	fanPages.push_back(newPage);
 }

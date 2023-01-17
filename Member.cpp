@@ -1,55 +1,70 @@
 #include <iostream>
 using namespace std;
-#include "Member.h"
+#include "BackupRecovery.h"
 #include "Utilities.h"
-#include "Page.h"
-#include "ImageStatus.h"
-#include "VideoStatus.h"
-#include "Date.h"
-
 // C'tors in Members
-Member::Member(const string& name, Date bDay)
+Member::Member(const string& name, const Date& bDay)
 {
-	setName(name);
-	birthDay = bDay;
+	this->isSavedMember = this->isSavedInterestPages = this->isSavedFriends = false;
+	this->setName(name);
+	this->birthDay = bDay;
 }
 
 Member::Member(std::ifstream& inFile) : birthDay(inFile)
 {
+	this->isSavedMember = this->isSavedInterestPages = this->isSavedFriends = false;
 	BackupRecovery::loadString(inFile, this->name);
 }
 Member::~Member()
 {
 	// Open files for saving before delete
-	ofstream outFileStatus(strPath[Path::STATUS], ios::binary | ios::app);
-	ofstream outFileConnection(strPath[Path::CONNECTION], ios::binary | ios::app); 
-	ofstream outFileMember(strPath[Path::MEMBER], ios::binary | ios::app);
-	// TODO: run over the friend list and fanPage and save connection (BackupRecovery::saveMember\Page)
-	// TODO: think how don't run about connection 2 times and dont put it 2 times in save function
+	ofstream outFileStatus(BackupRecovery::getPath((int)Path::STATUS), ios::binary | ios::app);
+	ofstream outFileMember(BackupRecovery::getPath((int)Path::MEMBER), ios::binary | ios::app);
 
 	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = this->myStatus.begin();
 	list<Status*>::iterator itrEnd = this->myStatus.end();
 	for (; itr != itrEnd; ++itr)
 	{
-		BackupRecovery::saveStatus(outFileStatus, *itr,Owner::MEMBER); // save status in storage for next run
+		BackupRecovery::saveStatus(outFileStatus, *itr, (int)Owner::MEMBER); // save status in storage for next run
 		delete (*itr);
 	}
 	// Save Member
 	BackupRecovery::saveMember(outFileMember, *this);
 	// Close Files
 	outFileStatus.close();
-	outFileConnection.close();
 	outFileMember.close();
 }
 
-void Member::save(std::ofstream& outFile)
+void Member::save(std::ofstream& outFile) const
 {
-	if (isSaved)
+	if (isSavedMember)
 		return;
-	isSaved = true; // flag for no double save
+	isSavedMember = true; // flag for no double save
 	this->birthDay.save(outFile);
 	BackupRecovery::saveString(outFile, this->name);
+}
+
+void Member::saveFriends(std::ofstream& outFile) const
+{
+	if (isSavedFriends)
+		return;
+	isSavedFriends = true;
+	list<Member*>::const_iterator pItr = friends.begin();
+	list<Member*>::const_iterator pItrEnd = friends.end();
+	for (; pItr != pItrEnd; ++pItr)
+		BackupRecovery::saveConnection(outFile, *this, *(*pItr));
+}
+
+void Member::saveInterestPages(std::ofstream& outFile) const
+{
+	if (isSavedInterestPages)
+		return;
+	isSavedInterestPages = true;
+	list<Page*>::const_iterator pItr = InterestPages.begin();
+	list<Page*>::const_iterator pItrEnd = InterestPages.end();
+	for (; pItr != pItrEnd; ++pItr)
+		BackupRecovery::saveConnection(outFile, *this, *(*pItr));
 }
 
 // Friends functions in Member
@@ -153,24 +168,26 @@ void Member::showMyStatus() const
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
-void Member::addStatus(Status* status)
+void Member::addStatus(Status* status) 
 {
+	// overloading for add status from storage
 	myStatus.push_front(status);
 }
-void Member::addStatus(const string& text, int statusType, string& path)
+void Member::addStatus(const string& text, int sType, string& path)
 {
-	switch (statusType)
+	Status* status;
+	switch (sType)
 	{
-	case statusType::TEXT:
-		Status* status = new Status(text, this->getName());
+	case Status::statusType::TEXT:
+		status = new Status(text, this->getName());
 		myStatus.push_front(status);
 		break;
-	case statusType::IMAGE:
-		Status* status = new ImageStatus(text, this->getName(), path);
+	case Status::statusType::IMAGE:
+		status = new ImageStatus(text, this->getName(), path);
 		myStatus.push_front(status);
 		break;
-	case statusType::VIDEO:
-		Status* status = new VideoStatus(text, this->getName(), path);
+	case Status::statusType::VIDEO:
+		status = new VideoStatus(text, this->getName(), path);
 		myStatus.push_front(status);
 		break;
 	}

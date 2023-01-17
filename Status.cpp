@@ -1,6 +1,6 @@
 #include "Status.h"
-#include "ImageStatus.h"
-#include "VideoStatus.h"
+#include "BackupRecovery.h"
+
 using namespace std;
 
 
@@ -16,16 +16,24 @@ Status::Status(ifstream& inFile) : date(inFile), isSaved(false)
 	BackupRecovery::loadString(inFile, this->creator);	
 }
 // save class
-void Status::save(std::ofstream& outFile)
+void Status::save(std::ofstream& outFile) const
 {
 	if (isSaved)
 		return;
 	isSaved = true; // flag for no double save
+	this->saveType(outFile);
 	this->date.save(outFile);
 	BackupRecovery::saveString(outFile, this->text);
 	BackupRecovery::saveString(outFile, this->creator);
 
 }
+void Status::saveType(ofstream& outFile) const
+{
+	char type[TYPE_LEN];
+	strncpy(type, typeid(*this).name() + 6, TYPE_LEN);
+	outFile.write((const char*)type, TYPE_LEN);
+}
+
 // setters
 void Status::setText(const string& str) 
 {

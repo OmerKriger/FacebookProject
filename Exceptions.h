@@ -11,6 +11,17 @@ public:
 	const char* what() { return (message).c_str(); }
 };
 
+class BackupRecoveryException : public SystemException
+{
+	std::string message = "Failing in load file: ";
+	int errorCode;
+public:
+	const enum backupRecoveryErrorList { UNDEFINED = 0, END_OF_FILE, FILE_CLOSED, FILE_BAD };
+	BackupRecoveryException(const std::string& msg = "undefined", int errorCode = 0) : errorCode(errorCode) { this->message += msg; }
+	int getErrorCode() const { return errorCode; }
+	const char* what() { return (message).c_str(); }
+};
+
 class MemberException : public SystemException
 {
 	std::string message = "Action on Member failed: ";

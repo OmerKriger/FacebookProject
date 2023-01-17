@@ -1,11 +1,6 @@
 #ifndef __VIDEOSTATUS_H
 #define __VIDEOSTATUS_H
-#include <string>
-#include <iostream>
-#include <fstream>
 #include "Status.h"
-#include "BackupRecovery.h"
-
 
 class VideoStatus : public Status
 {
@@ -16,7 +11,7 @@ public:
 	VideoStatus(const std::string& text, const std::string& name, const std::string& video);
 	const std::string& getPath() { return video; };
 	virtual void showStatus() const override;
-	virtual void save(std::ofstream& outFile) override;
+	virtual void save(std::ofstream& outFile) const override;
 	void showVideo() const;
 };
 #endif

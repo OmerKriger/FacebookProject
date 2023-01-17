@@ -1,15 +1,17 @@
 #ifndef __PAGES_H
 #define __PAGES_H
-#include "Member.h"
-#include "Status.h"
 #include <list>
 #include <string>
+#include "Member.h"
+
+class Date;
+class Status;
 
 class Page
 {
 	// Data
 	std::string name;
-	bool isSaved;
+	mutable bool isSaved;
 	std::list<Member*> fans;
 	std::list<Status*> wall;
 	// Setters
@@ -22,7 +24,7 @@ public:
 	Page(std::ifstream& inFile) noexcept(false);
 	~Page();
 	//Save
-	virtual void save(std::ofstream& outFile); // Can't be const - change flag inside
+	void save(std::ofstream& outFile) const;
 	// Add/Remove
 	void addFan(Member* member) noexcept(false);
 	void removeFan(Member* member) noexcept(false);

@@ -1,4 +1,5 @@
 #include "VideoStatus.h"
+#include "BackupRecovery.h"
 using namespace std;
 
 
@@ -18,9 +19,9 @@ void VideoStatus::showStatus() const
 	showVideo();
 }
 
-void VideoStatus::save(std::ofstream& outFile)
+void VideoStatus::save(std::ofstream& outFile) const
 {
-	if (hasSaved)
+	if (isSaved)
 		return;
 	Status::save(outFile);
 	BackupRecovery::saveString(outFile, this->video);

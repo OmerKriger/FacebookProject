@@ -1,5 +1,7 @@
 #include <iostream>
+#include "BackupRecovery.h"
 #include "Page.h"
+#include "Status.h"
 using namespace std;
 #define MATCH 0
 #define NOT_FOUND -1
@@ -19,14 +21,14 @@ Page::Page(std::ifstream& inFile) noexcept(false)
 Page::~Page()
 {
 	// Open Files
-	ofstream outFileStatus(strPath[Path::STATUS], ios::binary | ios::app);
-	ofstream outFilePages(strPath[Path::PAGE], ios::binary | ios::app);
+	ofstream outFileStatus(BackupRecovery::getPath((int)Path::STATUS), ios::binary | ios::app);
+	ofstream outFilePages(BackupRecovery::getPath((int)Path::PAGE), ios::binary | ios::app);
 	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = wall.begin();
 	list<Status*>::iterator itrEnd = wall.end();
 	for (; itr != itrEnd; ++itr)
 	{
-		BackupRecovery::saveStatus(outFileStatus, *itr, Owner::PAGE);
+		BackupRecovery::saveStatus(outFileStatus, *itr, (int)Owner::PAGE);
 		delete (*itr);
 	}
 	// Save the fan page
@@ -36,7 +38,7 @@ Page::~Page()
 	outFilePages.close();
 }
 
-void Page::save(ofstream& outFile)
+void Page::save(ofstream& outFile) const
 {
 	if (isSaved)
 		return;

@@ -2,7 +2,6 @@
 using namespace std;
 #include "Utilities.h"
 #include "Exceptions.h"
-
 // ----------------------------------------- Support Functions for Actions -----------------------------------------
 void Utilities::printMenu() const
 {
@@ -244,7 +243,7 @@ void Utilities::askForPageList() const
 
 bool Utilities::putEntersInString(string& text)
 {
-	int i= DefinesNum::ENTERS_FREQ, len = text.size();
+	int i = DefinesNum::ENTERS_FREQ, len = text.size();
 	while (i<len) // run on the string in jumps till i bigger than len of text
 	{
 		if (text[i] == ' ') // if found space we will change it to enter

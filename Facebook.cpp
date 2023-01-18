@@ -1,10 +1,36 @@
 #include <iostream>
-using namespace std;
 #include "Facebook.h"
+#include "BackupRecovery.h"
+using namespace std;
+
+
 Facebook::Facebook()
 {
-	if (TEST)
+	bool loaded = false;
+	try 
+	{
+		BackupRecovery recoveryFacebook(*this); // recover the data if is exist
+		loaded = true;
+	}
+	catch (BackupRecoveryException& e)
+	{
+		cout << e.what() << endl;
+	}
+	if (isEmpty() && TEST) // if after recovery nothing inside and Test is on put default data
 		__Init__();
+}
+
+void Facebook::saveFacebookConnections() const noexcept(false)
+{
+	list<Member*>::const_iterator mItr = this->members.begin();
+	list<Member*>::const_iterator mItrEnd = this->members.end();
+	ofstream outFileConnection(BackupRecovery::getPath((int)Path::CONNECTION), ios::binary | ios::app);
+	for (; mItr != mItrEnd; ++mItr)
+	{
+		(*mItr)->saveFriends(outFileConnection);
+		(*mItr)->saveInterestPages(outFileConnection);
+	}
+	outFileConnection.close();
 }
 
 Facebook::~Facebook()
@@ -13,15 +39,22 @@ Facebook::~Facebook()
 	{
 		testCompareOperators();
 	}
+	// Setup for deleting
 	list<Member*>::const_iterator mItr = this->members.begin();
 	list<Member*>::const_iterator mItrEnd = this->members.end();
 	list<Page*>::const_iterator pItr = this->fanPages.begin();
 	list<Page*>::const_iterator pItrEnd = this->fanPages.end();
-
+	// Setup for saving in new files - delete all old files
+	BackupRecovery::deleteFilesContent();
+	// Save Connections between Member-Member and Member-Page before delete
+	saveFacebookConnections();
+	// Delete pages
 	for (; pItr != pItrEnd; ++pItr)
 		delete (*pItr);
+	// Delete members
 	for (; mItr != mItrEnd; ++mItr)
 		delete (*mItr);
+
 	cout << "Facebook out, over!" << endl;
 }
 void Facebook::testCompareOperators() const
@@ -122,6 +155,7 @@ void Facebook::__Init__()
 {
 	// This function create default data in system
 	// creating defualt Members
+	string emptyStr = "", s="hasd";
 	try
 	{
 		this->createMember("Omer Kriger", Date(10, 5, 1998));
@@ -143,24 +177,23 @@ void Facebook::__Init__()
 		this->getMember("Omer Kriger").addFriend(&(this->getMember("Mark Zuckerberg")));
 		this->getMember("Nir Peretz").addFriend(&(this->getMember("Mark Zuckerberg")));
 		// creating default Status for Pages
-		this->getPage("Eduardo Saverin").addStatus("You wake up in the morning and discover Mark stole your stocks....");
-		this->getPage("Eduardo Saverin").addStatus("I Hate Mark Zuckerberg !!");
-		this->getPage("Nike").addStatus("Just Do It.");
-		this->getPage("Nike").addStatus("I need a new Air Jorden.");
-		this->getPage("Toto Wolff").addStatus("No, Mikey, No, No, Mikey, That Was So Not Right!");
-		this->getPage("Toto Wolff").addStatus("Danke Seb.");
+		this->getPage("Eduardo Saverin").addStatus("You wake up in the morning and discover Mark stole your stocks....", Status::TEXT, emptyStr);
+		this->getPage("Eduardo Saverin").addStatus("I Hate Mark Zuckerberg !!", Status::TEXT, emptyStr);
+		this->getPage("Nike").addStatus("Just Do It.", Status::TEXT, emptyStr);
+		this->getPage("Nike").addStatus("I need a new Air Jorden.", Status::TEXT, emptyStr);
+		this->getPage("Toto Wolff").addStatus("No, Mikey, No, No, Mikey, That Was So Not Right!", Status::TEXT, emptyStr);
+		this->getPage("Toto Wolff").addStatus("Danke Seb.", Status::TEXT, emptyStr);
 		// creating default Status for Members
-		this->getMember("Omer Kriger").addStatus("In case I don't see ya good afternoon, good evening and goodnight.");
-		this->getMember("Omer Kriger").addStatus("CrossFit is just Fight Club if the first two rules were the opposite.");
-		this->getMember("Nir Peretz").addStatus("Something clever");
-		this->getMember("Nir Peretz").addStatus("More clever than the first status");
-		this->getMember("Mark Zuckerberg").addStatus("Shlomo Artzi stole my songs !!");
-		this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.");
+		this->getMember("Omer Kriger").addStatus("In case I don't see ya good afternoon, good evening and goodnight.", Status::TEXT, emptyStr);
+		this->getMember("Omer Kriger").addStatus("CrossFit is just Fight Club if the first two rules were the opposite.", Status::TEXT, emptyStr);
+		this->getMember("Nir Peretz").addStatus("Something clever", Status::TEXT, emptyStr);
+		this->getMember("Nir Peretz").addStatus("More clever than the first status", Status::TEXT, emptyStr);
+		this->getMember("Mark Zuckerberg").addStatus("Shlomo Artzi stole my songs !!", Status::TEXT, emptyStr);
+		this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.", Status::TEXT, emptyStr);
 	}
 	catch (...)
 	{
-		
-		FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
+		throw FacebookException("The setup for Testing (default data) creating failed (Facebook::__Init__)", FacebookException::facebookErrorList::INIT_FAILED);
 	}
 }
 
@@ -170,15 +203,8 @@ void Facebook::createMember(const string& name, Date bDay)
 		throw FacebookException("This name already exist in the system ", FacebookException::facebookErrorList::MEMBER_EXIST);
 	if (!bDay.isDefined())
 		throw DateException("The birthday is not defined well.");
-	try
-	{
-		Member* pMember = new Member(name, bDay);
-		members.push_back(pMember);
-	}
-	catch (MemberException& e)
-	{
-		throw e;
-	}
+	Member* pMember = new Member(name, bDay);
+	members.push_back(pMember);
 }
 
 bool Facebook::memberNameCheck(const string& name) const // checking if the name is exist Member return true for found and false for not found
@@ -195,15 +221,8 @@ void Facebook::createFanPage(const string& name)
 {
 	if (pageNameCheck(name) == true) // is already in the system
 		throw FacebookException("This name already exist in the system", FacebookException::facebookErrorList::PAGE_EXIST);
-	try
-	{
-		Page* pPage = new Page(name);
-		fanPages.push_back(pPage);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+	Page* pPage = new Page(name);
+	fanPages.push_back(pPage);
 }
 
 bool Facebook::pageNameCheck(const string& name) const // checking if the name is exist Page return true for found and false for not found
@@ -234,6 +253,14 @@ void Facebook::showAllPages() const
 	for (int i=0; itr != itrEnd; ++itr, ++i)
 		cout << "Fan Page #" << i + 1 << " Name: " << (*itr)->getName() << endl;
 	cout << "---------- End of Fan Page List ----------" << endl << endl;
+}
+
+bool Facebook::isEmpty() const
+{
+	if (members.size() == 0 && fanPages.size() == 0)
+		return true;
+	else
+		return false;
 }
 
 Member& Facebook::getMember(const string& name) // return member by ref from array of members
@@ -271,4 +298,22 @@ Page& Facebook::getPage(const string& name) // return page by ref from array of 
 		if (name == (*itr)->getName())
 			return **itr;
 	throw FacebookException("This Page isn't found. ", FacebookException::facebookErrorList::PAGE_NOT_FOUND);
+}
+
+void Facebook::addMember(Member* newMember)
+{
+	if (newMember == nullptr)
+		throw FacebookException("The new member cannot be created", FacebookException::facebookErrorList::UNDEFINED);
+	if (memberNameCheck(newMember->getName()))
+		throw FacebookException("Already exist", FacebookException::facebookErrorList::MEMBER_EXIST);
+	members.push_back(newMember);
+}
+
+void Facebook::addPage(Page* newPage)   
+{
+	if (newPage == nullptr)
+		throw FacebookException("The new Page cannot be created", FacebookException::facebookErrorList::UNDEFINED);
+	if (pageNameCheck(newPage->getName()))
+		throw FacebookException("Already exist", FacebookException::facebookErrorList::PAGE_EXIST);
+	fanPages.push_back(newPage);
 }

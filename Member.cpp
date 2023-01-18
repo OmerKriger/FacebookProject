@@ -1,30 +1,69 @@
 #include <iostream>
 using namespace std;
-#include "Member.h"
+#include "BackupRecovery.h"
 #include "Utilities.h"
-#include "Page.h"
-#include "Status.h"
-#include "Date.h"
-
 // C'tors in Members
-Member::Member(const string& name, Date bDay)
+Member::Member(const string& name, const Date& bDay)
 {
-	try
-	{
-		setName(name);
-		birthDay = bDay;
-	}
-	catch (MemberException& e)
-	{
-		throw e;
-	}
+	this->isSavedMember = this->isSavedInterestPages = this->isSavedFriends = false;
+	this->setName(name);
+	this->birthDay = bDay;
+}
+
+Member::Member(std::ifstream& inFile) : birthDay(inFile)
+{
+	this->isSavedMember = this->isSavedInterestPages = this->isSavedFriends = false;
+	BackupRecovery::loadString(inFile, this->name);
 }
 Member::~Member()
 {
+	// Open files for saving before delete
+	ofstream outFileStatus(BackupRecovery::getPath((int)Path::STATUS), ios::binary | ios::app);
+	ofstream outFileMember(BackupRecovery::getPath((int)Path::MEMBER), ios::binary | ios::app);
+	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = this->myStatus.begin();
 	list<Status*>::iterator itrEnd = this->myStatus.end();
 	for (; itr != itrEnd; ++itr)
+	{
+		BackupRecovery::saveStatus(outFileStatus, *itr, (int)Owner::MEMBER); // save status in storage for next run
 		delete (*itr);
+	}
+	// Save Member
+	BackupRecovery::saveMember(outFileMember, *this);
+	// Close Files
+	outFileStatus.close();
+	outFileMember.close();
+}
+
+void Member::save(std::ofstream& outFile) const
+{
+	if (isSavedMember)
+		return;
+	isSavedMember = true; // flag for no double save
+	this->birthDay.save(outFile);
+	BackupRecovery::saveString(outFile, this->name);
+}
+
+void Member::saveFriends(std::ofstream& outFile) const
+{
+	if (isSavedFriends)
+		return;
+	isSavedFriends = true;
+	list<Member*>::const_iterator pItr = friends.begin();
+	list<Member*>::const_iterator pItrEnd = friends.end();
+	for (; pItr != pItrEnd; ++pItr)
+		BackupRecovery::saveConnection(outFile, *this, *(*pItr));
+}
+
+void Member::saveInterestPages(std::ofstream& outFile) const
+{
+	if (isSavedInterestPages)
+		return;
+	isSavedInterestPages = true;
+	list<Page*>::const_iterator pItr = InterestPages.begin();
+	list<Page*>::const_iterator pItrEnd = InterestPages.end();
+	for (; pItr != pItrEnd; ++pItr)
+		BackupRecovery::saveConnection(outFile, *this, *(*pItr));
 }
 
 // Friends functions in Member
@@ -71,28 +110,16 @@ void Member::addPage(Page& newPage)
 		throw MemberException("This Member already follows this Page !", MemberException::memberErrorList::ALREADY_FOLLOW);
 	InterestPages.push_back(&newPage);
 	// say to page add this friend to his list
-	try {
-		newPage.addFan(this);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+	newPage.addFan(this);
 }
 void Member::removePage(const Page& dPage)
 {
 	list<Page*>::iterator itrPage = find(InterestPages.begin(), InterestPages.end(), &dPage);
 	if (itrPage == InterestPages.end()) // we can't remove page who is not in followed
 		throw MemberException("This member does'nt follow this page !", MemberException::memberErrorList::NOT_FOLLOW);
-	try
-	{
-		(*itrPage)->removeFan(this);
-		InterestPages.erase(itrPage);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+
+	(*itrPage)->removeFan(this);
+	InterestPages.erase(itrPage);
 }
 void Member::showMyInterestPages() const
 {
@@ -132,20 +159,36 @@ void Member::showMyStatus() const
 		if (date.getMin() < 10)
 			cout << "0";
 		cout << "" << date.getMin() << endl;
+		if (typeid(*(*itr)) == typeid(ImageStatus))
+			((ImageStatus*)(*itr))->showImage();
+		if (typeid(*(*itr)) == typeid(VideoStatus))
+			((VideoStatus*)(*itr))->showVideo();
 	}
 	cout << "----------- End of Status List of "<< this->getName() << " -----------" << endl << endl;
 
 } 
-void Member::addStatus(const string& text)
+void Member::addStatus(Status* status) 
 {
-	try
+	// overloading for add status from storage
+	myStatus.push_front(status);
+}
+void Member::addStatus(const string& text, int sType, string& path)
+{
+	Status* status;
+	switch (sType)
 	{
-		Status* status = new Status(text, this->getName()); 
+	case Status::statusType::TEXT:
+		status = new Status(text, this->getName());
 		myStatus.push_front(status);
-	}
-	catch (StatusException& e)
-	{
-		throw e;
+		break;
+	case Status::statusType::IMAGE:
+		status = new ImageStatus(text, this->getName(), path);
+		myStatus.push_front(status);
+		break;
+	case Status::statusType::VIDEO:
+		status = new VideoStatus(text, this->getName(), path);
+		myStatus.push_front(status);
+		break;
 	}
 }
 void Member::showLastFriendsStatus() const
@@ -223,13 +266,13 @@ bool Member::operator>(const Page& other) const
 	return this->friends.size() > other.getSizeOfFans();
 }
 
-const Member& Member::operator+=(Member& other)
+Member& Member::operator+=(Member& other)
 {
 	this->addFriend(&other);
 	return *this;
 }
 
-const Member& Member::operator+=(Page& page)
+Member& Member::operator+=(Page& page)
 {
 	this->addPage(page);
 	return *this;

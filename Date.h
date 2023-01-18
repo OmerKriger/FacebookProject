@@ -1,6 +1,7 @@
 #ifndef __DATE_H
 #define __DATE_H
 #include <time.h>
+#include <fstream>
 #include "Exceptions.h"
 
 enum DateDefines
@@ -34,8 +35,10 @@ class Date
 	void setMinutes(int mins) noexcept(false);
 public:
 	Date();
+	Date(std::ifstream& inFile);
 	Date(int day, int month, int year) noexcept(false);
 	Date(int day, int month, int year, int minutes, int hours) noexcept(false);
+	void save(std::ofstream& outFile)	const;
 	const int& getDay() const { return day; }
 	const int& getMonth() const { return month; }
 	const int& getYear() const { return year; }

@@ -139,22 +139,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackupRecovery.cpp" />
     <ClCompile Include="Date.cpp" />
     <ClCompile Include="Exceptions.h" />
     <ClCompile Include="Facebook.cpp" />
+    <ClCompile Include="ImageStatus.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pages.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="VideoStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackupRecovery.h" />
     <ClInclude Include="Date.h" />
     <ClInclude Include="Facebook.h" />
+    <ClInclude Include="ImageStatus.h" />
     <ClInclude Include="Page.h" />
     <ClInclude Include="Member.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="Utilities.h" />
+    <ClInclude Include="VideoStatus.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

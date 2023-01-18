@@ -1,14 +1,17 @@
 #ifndef __PAGES_H
 #define __PAGES_H
-#include "Member.h"
-#include "Status.h"
 #include <list>
 #include <string>
+#include "Member.h"
+
+class Date;
+class Status;
 
 class Page
 {
 	// Data
 	std::string name;
+	mutable bool isSaved;
 	std::list<Member*> fans;
 	std::list<Status*> wall;
 	// Setters
@@ -18,11 +21,15 @@ class Page
 public:
 	// C'tors
 	Page(const std::string& name) noexcept(false);
+	Page(std::ifstream& inFile) noexcept(false);
 	~Page();
+	//Save
+	void save(std::ofstream& outFile) const;
 	// Add/Remove
 	void addFan(Member* member) noexcept(false);
 	void removeFan(Member* member) noexcept(false);
-	void addStatus(const std::string& str) noexcept(false);
+	void addStatus(const std::string& text, int sType, std::string& path) noexcept(false);
+	void addStatus(Status* status) noexcept(false);
 	// Prints
 	void showFans() const;
 	void showPageStatus() const;

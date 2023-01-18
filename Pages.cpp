@@ -1,5 +1,7 @@
 #include <iostream>
+#include "BackupRecovery.h"
 #include "Page.h"
+#include "Status.h"
 using namespace std;
 #define MATCH 0
 #define NOT_FOUND -1
@@ -8,23 +10,42 @@ using namespace std;
 
 Page::Page(const string& name)
 {
-	try
-	{
-		setName(name);
-	}
-	catch (PageException& e)
-	{
-		throw e;
-	}
+	setName(name);
+}
+
+Page::Page(std::ifstream& inFile) noexcept(false)
+{
+	BackupRecovery::loadString(inFile, this->name);
 }
 
 Page::~Page()
 {
+	// Open Files
+	ofstream outFileStatus(BackupRecovery::getPath((int)Path::STATUS), ios::binary | ios::app);
+	ofstream outFilePages(BackupRecovery::getPath((int)Path::PAGE), ios::binary | ios::app);
+	// Setup iterators for save and delete status
 	list<Status*>::iterator itr = wall.begin();
 	list<Status*>::iterator itrEnd = wall.end();
-	for (;itr!=itrEnd; ++itr)
+	for (; itr != itrEnd; ++itr)
+	{
+		BackupRecovery::saveStatus(outFileStatus, *itr, (int)Owner::PAGE);
 		delete (*itr);
+	}
+	// Save the fan page
+	BackupRecovery::saveFanPage(outFilePages, *this); 
+	// Close files
+	outFileStatus.close();
+	outFilePages.close();
 }
+
+void Page::save(ofstream& outFile) const
+{
+	if (isSaved)
+		return;
+	isSaved = true; // flag for no double save
+	BackupRecovery::saveString(outFile, this->name);
+}
+
 
 // Add / Remove
 
@@ -46,17 +67,29 @@ void Page::removeFan(Member* member)
 	fans.erase(itrOfFan);
 }
 
-void Page::addStatus(const string& str)
+void Page::addStatus(const string& text, int sType, string& path)
 {
-	try
+	Status* status;
+	switch (sType)
 	{
-		Status* status = new Status(str, this->getName());
-		wall.push_back(status);
+	case Status::statusType::TEXT:
+		status = new Status(text, this->getName());
+		wall .push_front(status);
+		break;
+	case Status::statusType::IMAGE:
+		status = new ImageStatus(text, this->getName(), path);
+		wall.push_front(status);
+		break;
+	case Status::statusType::VIDEO:
+		status = new VideoStatus(text, this->getName(), path);
+		wall.push_front(status);
+		break;
 	}
-	catch (StatusException& e)
-	{
-		throw e;
-	}
+}
+
+void Page::addStatus(Status* status) noexcept(false)
+{
+	wall.push_back(status);
 }
 
 // Prints
@@ -93,6 +126,10 @@ void Page::showPageStatus() const
 		if (date.getMin() < 10)
 			cout << "0";
 		cout << "" << date.getMin() << endl;
+		if (typeid(*(*itr)) == typeid(ImageStatus))
+			((ImageStatus*)(*itr))->showImage();
+		if (typeid(*(*itr)) == typeid(VideoStatus))
+			((VideoStatus*)(*itr))->showVideo();
 	}
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }

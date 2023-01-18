@@ -2,7 +2,6 @@
 using namespace std;
 #include "Utilities.h"
 #include "Exceptions.h"
-
 // ----------------------------------------- Support Functions for Actions -----------------------------------------
 void Utilities::printMenu() const
 {
@@ -155,9 +154,9 @@ bool Utilities::getString(string& str) const
 	/// Function get a string and max len and get from user the text if is too short ask for type again
 	/// </summary>
 	getline(cin, str);
-	while (str.size() < MINIMUM_STRING)
+	while (str.size() < DefinesNum::MINIMUM_STRING)
 	{
-		cout << "A minimum length is "<< MINIMUM_STRING << " chars, try again" << endl;
+		cout << "A minimum length is "<< DefinesNum::MINIMUM_STRING << " chars, try again" << endl;
 		getline(cin, str);
 	}
 	return true;
@@ -169,8 +168,8 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 	/// Function get string of birthday and return by pointers the day month and year in ints
 	/// </summary>
 	int num = 0;
-	int value = DAY;
-	for (int i = 0; i < MAX_BIRTHDAY_STR && i <= birthday.size(); i++)
+	int value = DefinesNum::DAY;
+	for (int i = 0; i < DefinesNum::MAX_BIRTHDAY_STR && i <= birthday.size(); i++)
 	{
 		if ('0' <= birthday[i] && birthday[i] <= '9') // if number convert from char to int value (char by char)
 		{
@@ -180,11 +179,11 @@ void Utilities::convertStrToIntDate(string birthday, int* day, int* month, int* 
 		else if (birthday[i] == '.' || birthday[i] == '/' || birthday[i] == '\n' || birthday[i] == '\0') // check for splicer like / or . or end line or end of text
 		{ 
 			// check which value we recived and set by pointer the value
-			if (value == DAY)
+			if (value == DefinesNum::DAY)
 				*day = num;
-			else if (value == MONTH)
+			else if (value == DefinesNum::MONTH)
 				*month = num;
-			else if (value == YEAR)
+			else if (value == DefinesNum::YEAR)
 				*year = num;
 			num = 0; // reset value for next round
 			value++; // skip to next value
@@ -208,7 +207,7 @@ void Utilities::askForFriendList() const
 	cout << "Do you need the member lists ? (Y/N): ";
 	cin >> answer;
 	cin.get();
-	while (answer != YES_ANSWER_UPPER && answer != YES_ANSWER_LOWER && answer != NO_ANSWER_LOWER && answer != NO_ANSWER_UPPER)
+	while (YesOrNoCheck(answer))
 	{
 		cout << "You choice isn't defined, please try again" << endl;
 		cout << "Do you need the member lists ? (Y/N): ";
@@ -230,7 +229,7 @@ void Utilities::askForPageList() const
 	cout << "Do you need the fan page lists ? (Y/N): ";
 	cin >> answer;
 	cin.get();
-	while (answer != YES_ANSWER_UPPER && answer != YES_ANSWER_LOWER && answer != NO_ANSWER_LOWER && answer != NO_ANSWER_UPPER)
+	while (YesOrNoCheck(answer))
 	{
 		cout << "You choice isn't defined, please try again" << endl;
 		cout << "Do you need the fan page ? (Y/N): ";
@@ -244,18 +243,26 @@ void Utilities::askForPageList() const
 
 bool Utilities::putEntersInString(string& text)
 {
-	int i= ENTERS_FREQ, len = text.size();
+	int i = DefinesNum::ENTERS_FREQ, len = text.size();
 	while (i<len) // run on the string in jumps till i bigger than len of text
 	{
 		if (text[i] == ' ') // if found space we will change it to enter
 		{
 			text[i] = '\n'; // change space to enter
-			i += ENTERS_FREQ; // jump to next time we should hit enter
+			i += DefinesNum::ENTERS_FREQ; // jump to next time we should hit enter
 		}
 		else // if not found space we will continue for next char
 			i++;
 	}
 	return true;
+}
+
+bool Utilities::YesOrNoCheck(char input) const
+{
+	if (input != DefinesChars::YES_ANSWER_UPPER && input != DefinesChars::YES_ANSWER_LOWER && input != DefinesChars::NO_ANSWER_LOWER && input != DefinesChars::NO_ANSWER_UPPER)
+		return true;
+	else
+		return false;
 }
 
 // --------------------------------------------- Functions for Actions ---------------------------------------------
@@ -291,17 +298,9 @@ void Utilities::createMember()
 		{
 			cout << e.what() << ", please try again" << endl;
 		}
-		catch (MemberException& e)
-		{
-			throw e;
-		}
 		catch (FacebookException& e)
 		{
 			cout << e.what() << ", please try again" << endl;
-		}
-		catch (SystemException& e)
-		{
-			throw e;
 		}
 		catch (...)
 		{
@@ -329,14 +328,6 @@ void Utilities::createPage()
 		{
 			cout << e.what() << ", please try again" << endl;
 		}
-		catch (PageException& e)
-		{
-			throw e;
-		}
-		catch (SystemException& e)
-		{
-			throw e;
-		}
 		catch (...)
 		{
 			cout << "Unknown Error";
@@ -348,7 +339,7 @@ void Utilities::showFriendsOfMember() const
 {
 	string name;
 	askForFriendList();
-	cout << "Please Type a name of a member to see his friends:: " << endl;
+	cout << "Please Type a name of a member to see his friends: " << endl;
 	getString(name);
 	while (facebook.memberNameCheck(name) == false)
 	{
@@ -395,7 +386,7 @@ void Utilities::showStatusOfMember() const
 	getString(name);
 	while (facebook.memberNameCheck(name) == false)
 	{
-		cout << "This member doesn't exist, Please try again." << endl << "Type a member's name you would like to see his Status ";
+		cout << "This member doesn't exist, Please try again." << endl << "Type a member's name you would like to see his Status: ";
 		getString(name);
 	}
 	facebook.getMember(name).showMyStatus(); // calling for function of this member to show his status
@@ -448,10 +439,6 @@ void Utilities::setFriendship()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -483,10 +470,6 @@ void Utilities::deleteFriendship()
 	catch (MemberException& e)
 	{
 		cout << e.what() << endl;
-		throw e;
-	}
-	catch (SystemException& e)
-	{
 		throw e;
 	}
 	catch (...)
@@ -549,10 +532,6 @@ void Utilities::followMemberToPage()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -595,10 +574,6 @@ void Utilities::unfollowMemberToPage()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -620,7 +595,7 @@ void Utilities::createStatusForMember()
 	}
 	cout << "Choose status type,  press 1 for text, press 2 for image, press 3 for video: ";
 	cin >> statusType;
-	getchar(); // to flush buffer.
+	(void)getchar(); // to flush buffer.
 	while (statusType != 1 && statusType != 2 && statusType != 3)
 	{
 		cout << "Invalid choice, try again: ";
@@ -631,7 +606,7 @@ void Utilities::createStatusForMember()
 		cout << "Please enter Path: ";
 		getString(path);
 	}
-	cout << "Please type the Text and press enter to finish (MAX:"<< MAX_STATUS_LEN-1 << " Chars): " << endl;
+	cout << "Please type the Text and press enter to finish (MAX:"<< (int)DefinesNum::MAX_STATUS_LEN-1 << " Chars): " << endl;
 	getString(statusText);
 	putEntersInString(statusText); // put \n in the string every fixed chars that defined
 	try
@@ -643,10 +618,6 @@ void Utilities::createStatusForMember()
 		cout << e.what() << endl;
 		throw e;
 	}
-	catch (SystemException& e)
-	{
-		throw e;
-	}
 	catch (...)
 	{
 		cout << "Unknown Error";
@@ -655,7 +626,8 @@ void Utilities::createStatusForMember()
 
 void Utilities::createStatusForPage()
 {
-	string pageName, statusText;
+	string pageName, statusText, path = "";
+	int statusType;
 	// ask for page
 	askForPageList();
 	cout << "Please type the name of a fan page to create status: " << endl;
@@ -665,21 +637,30 @@ void Utilities::createStatusForPage()
 		cout << "This page doesn't exist, Please try again." << endl << "Please type the name of a fan page to create status: ";
 		getString(pageName);
 	}
+	cout << "Choose status type,  press 1 for text, press 2 for image, press 3 for video: ";
+	cin >> statusType;
+	(void)getchar(); // to flush buffer.
+	while (statusType != 1 && statusType != 2 && statusType != 3)
+	{
+		cout << "Invalid choice, try again: ";
+		cin >> statusType;
+	}
+	if (statusType != 1)
+	{
+		cout << "Please enter Path: ";
+		getString(path);
+	}
 	// ask for text to status
-	cout << "Please type the Text and press enter to finish (MAX:" << MAX_STATUS_LEN - 1 << " Chars): " << endl;
+	cout << "Please type the Text and press enter to finish (MAX:" << (int)DefinesNum::MAX_STATUS_LEN - 1 << " Chars): " << endl;
 	getString(statusText);
 	putEntersInString(statusText); // put \n in the string every fixed chars that defined
 	try
 	{
-		facebook.getPage(pageName).addStatus(statusText); // create the status for this page with the text typed in
+		facebook.getPage(pageName).addStatus(statusText, statusType, path); // create the status for this page with the text typed in
 	}
 	catch (StatusException& e)
 	{
 		cout << e.what() << endl;
-		throw e;
-	}
-	catch (SystemException& e)
-	{
 		throw e;
 	}
 	catch (...)

@@ -155,7 +155,7 @@ void Facebook::__Init__()
 {
 	// This function create default data in system
 	// creating defualt Members
-	string emptyStr = "";
+	string emptyStr = "", s="hasd";
 	try
 	{
 		this->createMember("Omer Kriger", Date(10, 5, 1998));
@@ -177,19 +177,19 @@ void Facebook::__Init__()
 		this->getMember("Omer Kriger").addFriend(&(this->getMember("Mark Zuckerberg")));
 		this->getMember("Nir Peretz").addFriend(&(this->getMember("Mark Zuckerberg")));
 		// creating default Status for Pages
-		this->getPage("Eduardo Saverin").addStatus("You wake up in the morning and discover Mark stole your stocks....");
-		this->getPage("Eduardo Saverin").addStatus("I Hate Mark Zuckerberg !!");
-		this->getPage("Nike").addStatus("Just Do It.");
-		this->getPage("Nike").addStatus("I need a new Air Jorden.");
-		this->getPage("Toto Wolff").addStatus("No, Mikey, No, No, Mikey, That Was So Not Right!");
-		this->getPage("Toto Wolff").addStatus("Danke Seb.");
+		this->getPage("Eduardo Saverin").addStatus("You wake up in the morning and discover Mark stole your stocks....", Status::TEXT, emptyStr);
+		this->getPage("Eduardo Saverin").addStatus("I Hate Mark Zuckerberg !!", Status::TEXT, emptyStr);
+		this->getPage("Nike").addStatus("Just Do It.", Status::TEXT, emptyStr);
+		this->getPage("Nike").addStatus("I need a new Air Jorden.", Status::TEXT, emptyStr);
+		this->getPage("Toto Wolff").addStatus("No, Mikey, No, No, Mikey, That Was So Not Right!", Status::TEXT, emptyStr);
+		this->getPage("Toto Wolff").addStatus("Danke Seb.", Status::TEXT, emptyStr);
 		// creating default Status for Members
-		this->getMember("Omer Kriger").addStatus("In case I don't see ya good afternoon, good evening and goodnight.", 1, emptyStr);
-		this->getMember("Omer Kriger").addStatus("CrossFit is just Fight Club if the first two rules were the opposite.", 1, emptyStr);
-		this->getMember("Nir Peretz").addStatus("Something clever", 1, emptyStr);
-		this->getMember("Nir Peretz").addStatus("More clever than the first status", 1, emptyStr);
-		this->getMember("Mark Zuckerberg").addStatus("Shlomo Artzi stole my songs !!", 1, emptyStr);
-		this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.", 1, emptyStr);
+		this->getMember("Omer Kriger").addStatus("In case I don't see ya good afternoon, good evening and goodnight.", Status::TEXT, emptyStr);
+		this->getMember("Omer Kriger").addStatus("CrossFit is just Fight Club if the first two rules were the opposite.", Status::TEXT, emptyStr);
+		this->getMember("Nir Peretz").addStatus("Something clever", Status::TEXT, emptyStr);
+		this->getMember("Nir Peretz").addStatus("More clever than the first status", Status::TEXT, emptyStr);
+		this->getMember("Mark Zuckerberg").addStatus("Shlomo Artzi stole my songs !!", Status::TEXT, emptyStr);
+		this->getMember("Mark Zuckerberg").addStatus("Maybe your battery is dead in your IP.", Status::TEXT, emptyStr);
 	}
 	catch (...)
 	{

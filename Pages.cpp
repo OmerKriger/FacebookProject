@@ -67,10 +67,24 @@ void Page::removeFan(Member* member)
 	fans.erase(itrOfFan);
 }
 
-void Page::addStatus(const string& str)
+void Page::addStatus(const string& text, int sType, string& path)
 {
-	Status* status = new Status(str, this->getName());
-	wall.push_back(status);
+	Status* status;
+	switch (sType)
+	{
+	case Status::statusType::TEXT:
+		status = new Status(text, this->getName());
+		wall .push_front(status);
+		break;
+	case Status::statusType::IMAGE:
+		status = new ImageStatus(text, this->getName(), path);
+		wall.push_front(status);
+		break;
+	case Status::statusType::VIDEO:
+		status = new VideoStatus(text, this->getName(), path);
+		wall.push_front(status);
+		break;
+	}
 }
 
 void Page::addStatus(Status* status) noexcept(false)
@@ -112,6 +126,10 @@ void Page::showPageStatus() const
 		if (date.getMin() < 10)
 			cout << "0";
 		cout << "" << date.getMin() << endl;
+		if (typeid(*(*itr)) == typeid(ImageStatus))
+			((ImageStatus*)(*itr))->showImage();
+		if (typeid(*(*itr)) == typeid(VideoStatus))
+			((VideoStatus*)(*itr))->showVideo();
 	}
 	cout << "----------- End of Status List of " << this->getName() << " -----------" << endl << endl; // announcement for end print status
 }

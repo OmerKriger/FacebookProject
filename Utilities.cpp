@@ -626,7 +626,8 @@ void Utilities::createStatusForMember()
 
 void Utilities::createStatusForPage()
 {
-	string pageName, statusText;
+	string pageName, statusText, path = "";
+	int statusType;
 	// ask for page
 	askForPageList();
 	cout << "Please type the name of a fan page to create status: " << endl;
@@ -636,13 +637,26 @@ void Utilities::createStatusForPage()
 		cout << "This page doesn't exist, Please try again." << endl << "Please type the name of a fan page to create status: ";
 		getString(pageName);
 	}
+	cout << "Choose status type,  press 1 for text, press 2 for image, press 3 for video: ";
+	cin >> statusType;
+	(void)getchar(); // to flush buffer.
+	while (statusType != 1 && statusType != 2 && statusType != 3)
+	{
+		cout << "Invalid choice, try again: ";
+		cin >> statusType;
+	}
+	if (statusType != 1)
+	{
+		cout << "Please enter Path: ";
+		getString(path);
+	}
 	// ask for text to status
 	cout << "Please type the Text and press enter to finish (MAX:" << (int)DefinesNum::MAX_STATUS_LEN - 1 << " Chars): " << endl;
 	getString(statusText);
 	putEntersInString(statusText); // put \n in the string every fixed chars that defined
 	try
 	{
-		facebook.getPage(pageName).addStatus(statusText); // create the status for this page with the text typed in
+		facebook.getPage(pageName).addStatus(statusText, statusType, path); // create the status for this page with the text typed in
 	}
 	catch (StatusException& e)
 	{

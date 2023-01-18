@@ -28,7 +28,7 @@ public:
 	// Add/Remove
 	void addFan(Member* member) noexcept(false);
 	void removeFan(Member* member) noexcept(false);
-	void addStatus(const std::string& str) noexcept(false);
+	void addStatus(const std::string& text, int sType, std::string& path) noexcept(false);
 	void addStatus(Status* status) noexcept(false);
 	// Prints
 	void showFans() const;
